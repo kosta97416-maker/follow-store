@@ -7,7 +7,7 @@ const AE_CONFIG = {
   appKey: process.env.ALIEXPRESS_APP_KEY || '532692',
   appSecret: process.env.ALIEXPRESS_APP_SECRET || '',
   baseUrl: 'https://api-sg.aliexpress.com/sync',
-  trackingId: 'followtrend',
+  tracking_id: 'default',
 };
 
 function signRequest(params) {
