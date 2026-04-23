@@ -23,20 +23,12 @@ function callRapidAPI(endpoint, params) {
       }
     };
 
-    console.log('[RapidAPI] Calling:', endpoint, params);
-
     var req = https.request(options, function(res) {
       var data = '';
       res.on('data', function(c) { data += c; });
       res.on('end', function() {
-        try {
-          var parsed = JSON.parse(data);
-          console.log('[RapidAPI] Status:', res.statusCode);
-          resolve(parsed);
-        } catch(e) {
-          console.log('[RapidAPI] Parse error:', data.substring(0, 300));
-          reject(new Error('Parse error: ' + data.substring(0, 100)));
-        }
+        try { resolve(JSON.parse(data)); }
+        catch(e) { reject(new Error('Parse error')); }
       });
     });
     req.on('error', reject);
@@ -44,57 +36,64 @@ function callRapidAPI(endpoint, params) {
   });
 }
 
-function searchProducts(keyword) {
+function parseProducts(data, niche) {
+  var products = [];
+  try {
+    var resultList = data.result.resultList || [];
+    resultList.forEach(function(entry) {
+      var item = entry.item;
+      if (!item) return;
+
+      var price = item.sku && item.sku.def && item.sku.def.promotionPrice
+        ? parseFloat(item.sku.def.promotionPrice) : 0;
+      var title = item.title || '';
+      var pid = item.itemId || '';
+      var img = item.image ? ('https:' + item.image) : '';
+      var rating = item.averageStarRate ? parseFloat(item.averageStarRate) : 4.5;
+      var sales = parseInt(item.sales || 0);
+
+      if (!title || price <= 0) return;
+
+      var score = Math.round(
+        (rating / 5) * 40 +
+        Math.min(sales / 500, 1) * 40 +
+        20
+      );
+
+      products.push({
+        id: String(pid),
+        name: title.substring(0, 80),
+        image: img,
+        price: price,
+        oldPrice: parseFloat((price * 1.5).toFixed(2)),
+        rating: rating,
+        sales: sales,
+        niche: niche || 'general',
+        score: score,
+        gapFR: score,
+        isWinner: score >= 60,
+        supplier: 'AliExpress',
+        badge: sales > 100 ? 'hot' : 'new',
+        link: 'https:' + (item.itemUrl || '//www.aliexpress.com/item/' + pid + '.html'),
+        followLink: 'https://followtrend.shop?product=' + pid
+      });
+    });
+  } catch(e) {
+    console.log('[Parser error]', e.message);
+  }
+  return products;
+}
+
+function searchProducts(keyword, niche) {
   return callRapidAPI('item_search_2', {
     q: keyword,
-    sort: 'default',
+    sort: 'salesDesc',
     page: '1',
-    countryCode: 'FR',
-    currency: 'EUR',
-    locale: 'fr_FR'
+    region: 'FR',
+    locale: 'fr_FR',
+    currency: 'EUR'
   }).then(function(data) {
-    var products = [];
-    try {
-      var items = data.result && data.result.resultList ? data.result.resultList :
-                  data.items || data.result || [];
-      if (!Array.isArray(items)) {
-        items = items.items || items.products || items.data || [];
-      }
-      items.slice(0, 10).forEach(function(item, i) {
-        var p = item.item || item.product || item;
-        var price = p.sku && p.sku.def && p.sku.def.promotionPrice ? parseFloat(p.sku.def.promotionPrice) :
-                    p.prices && p.prices.salePrice ? parseFloat(p.prices.salePrice.minPrice) :
-                    p.price ? parseFloat(p.price) :
-                    parseFloat(p.salePrice || p.minPrice || 0);
-        var title = p.title || p.name || p.productTitle || '';
-        var pid = p.itemId || p.productId || p.id || String(Date.now() + i);
-        var img = p.image || (p.images && p.images[0]) || p.mainImage || p.imageUrl || '';
-        var rating = p.averageStar || p.rating || p.starRating || 4.5;
-        var reviews = p.totalCount || p.reviews || 0;
-
-        if (title && price > 0) {
-          var score = Math.round((parseFloat(rating) / 5) * 50 + Math.min(reviews / 1000, 1) * 30 + 20);
-          products.push({
-            id: String(pid),
-            name: String(title).substring(0, 80),
-            image: String(img).replace(/^\/\//, 'https://'),
-            price: price,
-            oldPrice: parseFloat((price * 1.5).toFixed(2)),
-            rating: parseFloat(rating),
-            reviews: reviews,
-            score: score,
-            gapFR: score,
-            isWinner: score >= 65,
-            supplier: 'AliExpress',
-            link: 'https://www.aliexpress.com/item/' + pid + '.html',
-            followLink: 'https://followtrend.shop?product=' + pid
-          });
-        }
-      });
-    } catch(e) {
-      console.log('[Parser error]', e.message, JSON.stringify(data).substring(0, 300));
-    }
-    return products;
+    return parseProducts(data, niche);
   });
 }
 
@@ -110,8 +109,7 @@ var server = http.createServer(function(req, res) {
     res.writeHead(200);
     res.end(JSON.stringify({
       status: 'ok',
-      service: 'FOLLOW. Backend v5 — RapidAPI',
-      rapidApiKey: RAPIDAPI_KEY.substring(0, 8) + '...',
+      service: 'FOLLOW. Backend v6 — RapidAPI',
       timestamp: new Date().toISOString()
     }));
     return;
@@ -119,7 +117,7 @@ var server = http.createServer(function(req, res) {
 
   if (action === 'search') {
     var keyword = parsed.query.keyword || 'patch sommeil';
-    searchProducts(keyword).then(function(products) {
+    searchProducts(keyword, 'general').then(function(products) {
       res.writeHead(200);
       res.end(JSON.stringify({ success: true, products: products, total: products.length }));
     }).catch(function(e) {
@@ -131,11 +129,11 @@ var server = http.createServer(function(req, res) {
 
   if (action === 'gaphunter') {
     var niches = [
-      { keyword: 'sleep patch wellness', niche: 'wellness' },
-      { keyword: 'noise cancelling earplugs', niche: 'hearing' },
-      { keyword: 'ring light portable', niche: 'creator' },
-      { keyword: 'nasal dilator breathing', niche: 'breathing' },
-      { keyword: 'cable organizer desk', niche: 'home' }
+      { keyword: 'sleep aid patch insomnia', niche: 'wellness' },
+      { keyword: 'noise cancelling earplugs loop', niche: 'hearing' },
+      { keyword: 'ring light portable selfie', niche: 'creator' },
+      { keyword: 'nasal dilator breathing strip', niche: 'breathing' },
+      { keyword: 'cable organizer desk magnetic', niche: 'home' }
     ];
 
     var allProducts = [];
@@ -149,13 +147,17 @@ var server = http.createServer(function(req, res) {
         return true;
       });
       unique.sort(function(a, b) { return b.score - a.score; });
+      console.log('[GapHunter] Total winners:', unique.length);
       res.writeHead(200);
-      res.end(JSON.stringify({ success: true, winners: unique.slice(0, 15), total: unique.length }));
+      res.end(JSON.stringify({
+        success: true,
+        winners: unique.slice(0, 15),
+        total: unique.length
+      }));
     }
 
     niches.forEach(function(n) {
-      searchProducts(n.keyword).then(function(products) {
-        products.forEach(function(p) { p.niche = n.niche; });
+      searchProducts(n.keyword, n.niche).then(function(products) {
         console.log('[GapHunter]', n.niche, '->', products.length, 'produits');
         allProducts = allProducts.concat(products);
         done++;
@@ -172,9 +174,9 @@ var server = http.createServer(function(req, res) {
   if (action === 'debug') {
     callRapidAPI('item_search_2', {
       q: 'patch sommeil',
-      sort: 'default',
+      sort: 'salesDesc',
       page: '1',
-      countryCode: 'FR',
+      region: 'FR',
       currency: 'EUR'
     }).then(function(data) {
       res.writeHead(200);
@@ -194,5 +196,5 @@ var server = http.createServer(function(req, res) {
 });
 
 server.listen(PORT, function() {
-  console.log('FOLLOW. Backend v5 RapidAPI actif sur port ' + PORT);
+  console.log('FOLLOW. Backend v6 actif sur port ' + PORT);
 });
