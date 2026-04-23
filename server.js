@@ -2,118 +2,105 @@ const https = require('https');
 const http = require('http');
 const url = require('url');
 
-const ZENROWS_KEY = process.env.ZENROWS_API_KEY || 'e67a90b35de47dc52aa59740c6648e5e1b5254bd';
+const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || '5e346a9416msh3835a2ef8542a9ap133da7jsndd267e77175e';
+const RAPIDAPI_HOST = 'aliexpress-datahub.p.rapidapi.com';
 const PORT = process.env.PORT || 3000;
 
-function scrapeAliExpress(searchUrl) {
+function callRapidAPI(endpoint, params) {
   return new Promise(function(resolve, reject) {
-    var apiUrl = 'https://api.zenrows.com/v1/?apikey=' + ZENROWS_KEY +
-      '&url=' + encodeURIComponent(searchUrl) +
-      '&js_render=true&wait=4000';
+    var query = Object.keys(params).map(function(k) {
+      return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+    }).join('&');
 
-    https.get(apiUrl, function(res) {
+    var options = {
+      hostname: RAPIDAPI_HOST,
+      path: '/' + endpoint + '?' + query,
+      method: 'GET',
+      headers: {
+        'x-rapidapi-host': RAPIDAPI_HOST,
+        'x-rapidapi-key': RAPIDAPI_KEY,
+        'Content-Type': 'application/json'
+      }
+    };
+
+    console.log('[RapidAPI] Calling:', endpoint, params);
+
+    var req = https.request(options, function(res) {
       var data = '';
       res.on('data', function(c) { data += c; });
-      res.on('end', function() { resolve(data); });
-    }).on('error', reject);
+      res.on('end', function() {
+        try {
+          var parsed = JSON.parse(data);
+          console.log('[RapidAPI] Status:', res.statusCode);
+          resolve(parsed);
+        } catch(e) {
+          console.log('[RapidAPI] Parse error:', data.substring(0, 300));
+          reject(new Error('Parse error: ' + data.substring(0, 100)));
+        }
+      });
+    });
+    req.on('error', reject);
+    req.end();
   });
 }
 
-function extractProducts(html, niche) {
-  var products = [];
-
-  try {
-    // Méthode 1: cherche window._data__ ou __listing_offers_data
-    var dataMatch = html.match(/window\.__INIT_DATA__\s*=\s*(\{.+?\});/s) ||
-                    html.match(/"mods":\{"itemList":\{"content":(\[.+?\])/s) ||
-                    html.match(/,"items":(\[.+?\]),"totalCount"/s);
-
-    if (dataMatch) {
-      var items = JSON.parse(dataMatch[1]);
+function searchProducts(keyword) {
+  return callRapidAPI('item_search_2', {
+    q: keyword,
+    sort: 'default',
+    page: '1',
+    countryCode: 'FR',
+    currency: 'EUR',
+    locale: 'fr_FR'
+  }).then(function(data) {
+    var products = [];
+    try {
+      var items = data.result && data.result.resultList ? data.result.resultList :
+                  data.items || data.result || [];
       if (!Array.isArray(items)) {
-        items = items.items || items.content || [];
+        items = items.items || items.products || items.data || [];
       }
       items.slice(0, 10).forEach(function(item, i) {
-        var price = item.price && item.price.minPrice ? parseFloat(item.price.minPrice) :
-                    item.salePrice ? parseFloat(item.salePrice) : 0;
-        var title = item.title || item.name || item.productTitle || '';
-        var pid = item.productId || item.itemId || String(Date.now() + i);
-        var img = item.image || item.imageUrl || item.mainImage || '';
-        var rating = item.starRating || item.avgStar || 4.5;
+        var p = item.item || item.product || item;
+        var price = p.sku && p.sku.def && p.sku.def.promotionPrice ? parseFloat(p.sku.def.promotionPrice) :
+                    p.prices && p.prices.salePrice ? parseFloat(p.prices.salePrice.minPrice) :
+                    p.price ? parseFloat(p.price) :
+                    parseFloat(p.salePrice || p.minPrice || 0);
+        var title = p.title || p.name || p.productTitle || '';
+        var pid = p.itemId || p.productId || p.id || String(Date.now() + i);
+        var img = p.image || (p.images && p.images[0]) || p.mainImage || p.imageUrl || '';
+        var rating = p.averageStar || p.rating || p.starRating || 4.5;
+        var reviews = p.totalCount || p.reviews || 0;
 
         if (title && price > 0) {
-          var score = Math.round((parseFloat(rating) / 5) * 60 + 40);
+          var score = Math.round((parseFloat(rating) / 5) * 50 + Math.min(reviews / 1000, 1) * 30 + 20);
           products.push({
             id: String(pid),
             name: String(title).substring(0, 80),
             image: String(img).replace(/^\/\//, 'https://'),
             price: price,
-            oldPrice: parseFloat((price * 1.4).toFixed(2)),
+            oldPrice: parseFloat((price * 1.5).toFixed(2)),
             rating: parseFloat(rating),
-            niche: niche,
+            reviews: reviews,
             score: score,
             gapFR: score,
-            isWinner: score >= 70,
+            isWinner: score >= 65,
             supplier: 'AliExpress',
             link: 'https://www.aliexpress.com/item/' + pid + '.html',
             followLink: 'https://followtrend.shop?product=' + pid
           });
         }
       });
+    } catch(e) {
+      console.log('[Parser error]', e.message, JSON.stringify(data).substring(0, 300));
     }
-
-    // Méthode 2: regex sur les données produits dans le HTML
-    if (products.length === 0) {
-      var priceReg = /"minActivityAmount":\{"value":"?([0-9.]+)"?/g;
-      var titleReg = /"title":"([^"]{10,150})"/g;
-      var pidReg = /"productId":(\d{10,})/g;
-      var imgReg = /"imageUrl":"(https?:[^"]+\.(jpg|jpeg|png|webp))"/g;
-
-      var prices = [], titles = [], pids = [], imgs = [];
-      var m;
-
-      while ((m = priceReg.exec(html)) !== null) prices.push(m[1]);
-      while ((m = titleReg.exec(html)) !== null) {
-        if (m[1].indexOf('\\') === -1 && m[1].length > 10) titles.push(m[1]);
-      }
-      while ((m = pidReg.exec(html)) !== null) pids.push(m[1]);
-      while ((m = imgReg.exec(html)) !== null) imgs.push(m[1]);
-
-      var count = Math.min(prices.length, titles.length, pids.length, 8);
-      for (var i = 0; i < count; i++) {
-        var price2 = parseFloat(prices[i] || 0);
-        if (price2 > 0 && titles[i]) {
-          var score2 = 75 + Math.floor(Math.random() * 20);
-          products.push({
-            id: pids[i] || String(Date.now() + i),
-            name: titles[i].substring(0, 80),
-            image: imgs[i] || '',
-            price: price2,
-            oldPrice: parseFloat((price2 * 1.4).toFixed(2)),
-            rating: 4.5 + Math.random() * 0.4,
-            niche: niche,
-            score: score2,
-            gapFR: score2,
-            isWinner: true,
-            supplier: 'AliExpress',
-            link: 'https://www.aliexpress.com/item/' + (pids[i] || '') + '.html',
-            followLink: 'https://followtrend.shop?product=' + (pids[i] || i)
-          });
-        }
-      }
-    }
-
-  } catch(e) {
-    console.log('[Parser error]', e.message);
-  }
-
-  return products;
+    return products;
+  });
 }
 
 var server = http.createServer(function(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Content-Type', 'application/json');
-
   if (req.method === 'OPTIONS') { res.writeHead(200); res.end(); return; }
 
   var parsed = url.parse(req.url, true);
@@ -121,17 +108,20 @@ var server = http.createServer(function(req, res) {
 
   if (action === 'health') {
     res.writeHead(200);
-    res.end(JSON.stringify({ status:'ok', service:'FOLLOW. Backend v4', timestamp: new Date().toISOString() }));
+    res.end(JSON.stringify({
+      status: 'ok',
+      service: 'FOLLOW. Backend v5 — RapidAPI',
+      rapidApiKey: RAPIDAPI_KEY.substring(0, 8) + '...',
+      timestamp: new Date().toISOString()
+    }));
     return;
   }
 
   if (action === 'search') {
     var keyword = parsed.query.keyword || 'patch sommeil';
-    var searchUrl = 'https://www.aliexpress.com/w/wholesale-' + keyword.replace(/\s+/g, '-') + '.html?currency=EUR&shipCountry=fr&SortType=total_tranpro_desc';
-    scrapeAliExpress(searchUrl).then(function(html) {
-      var products = extractProducts(html, 'general');
+    searchProducts(keyword).then(function(products) {
       res.writeHead(200);
-      res.end(JSON.stringify({ success:true, products:products, total:products.length }));
+      res.end(JSON.stringify({ success: true, products: products, total: products.length }));
     }).catch(function(e) {
       res.writeHead(500);
       res.end(JSON.stringify({ error: e.message }));
@@ -141,11 +131,11 @@ var server = http.createServer(function(req, res) {
 
   if (action === 'gaphunter') {
     var niches = [
-      { keyword:'patch-sommeil-bien-etre', niche:'wellness' },
-      { keyword:'bouchons-oreilles-design', niche:'hearing' },
-      { keyword:'ring-light-portable-creator', niche:'creator' },
-      { keyword:'dilatateur-nasal-sport', niche:'breathing' },
-      { keyword:'organiseur-cables-bureau', niche:'home' }
+      { keyword: 'sleep patch wellness', niche: 'wellness' },
+      { keyword: 'noise cancelling earplugs', niche: 'hearing' },
+      { keyword: 'ring light portable', niche: 'creator' },
+      { keyword: 'nasal dilator breathing', niche: 'breathing' },
+      { keyword: 'cable organizer desk', niche: 'home' }
     ];
 
     var allProducts = [];
@@ -160,15 +150,14 @@ var server = http.createServer(function(req, res) {
       });
       unique.sort(function(a, b) { return b.score - a.score; });
       res.writeHead(200);
-      res.end(JSON.stringify({ success:true, winners:unique.slice(0,15), total:unique.length }));
+      res.end(JSON.stringify({ success: true, winners: unique.slice(0, 15), total: unique.length }));
     }
 
     niches.forEach(function(n) {
-      var searchUrl = 'https://www.aliexpress.com/w/wholesale-' + n.keyword + '.html?currency=EUR&shipCountry=fr&SortType=total_tranpro_desc';
-      scrapeAliExpress(searchUrl).then(function(html) {
-        var prods = extractProducts(html, n.niche);
-        console.log('[GapHunter]', n.niche, '->', prods.length, 'produits');
-        allProducts = allProducts.concat(prods);
+      searchProducts(n.keyword).then(function(products) {
+        products.forEach(function(p) { p.niche = n.niche; });
+        console.log('[GapHunter]', n.niche, '->', products.length, 'produits');
+        allProducts = allProducts.concat(products);
         done++;
         if (done === niches.length) finish();
       }).catch(function(e) {
@@ -180,22 +169,18 @@ var server = http.createServer(function(req, res) {
     return;
   }
 
-  if (action === 'rawtest') {
-    var testUrl = 'https://www.aliexpress.com/w/wholesale-patch-sommeil.html?currency=EUR&SortType=total_tranpro_desc';
-    scrapeAliExpress(testUrl).then(function(html) {
-      // Cherche des patterns clés dans le HTML
-      var hasPrice = html.indexOf('minActivityAmount') !== -1 || html.indexOf('salePrice') !== -1;
-      var hasTitle = html.indexOf('"title"') !== -1;
-      var hasPid = html.indexOf('productId') !== -1;
-      var sample = html.substring(html.indexOf('productId') - 50, html.indexOf('productId') + 200);
+  if (action === 'debug') {
+    callRapidAPI('item_search_2', {
+      q: 'patch sommeil',
+      sort: 'default',
+      page: '1',
+      countryCode: 'FR',
+      currency: 'EUR'
+    }).then(function(data) {
       res.writeHead(200);
       res.end(JSON.stringify({
-        success: true,
-        htmlLength: html.length,
-        hasPrice: hasPrice,
-        hasTitle: hasTitle,
-        hasPid: hasPid,
-        sample: sample
+        keys: Object.keys(data),
+        sample: JSON.stringify(data).substring(0, 2000)
       }));
     }).catch(function(e) {
       res.writeHead(500);
@@ -205,9 +190,9 @@ var server = http.createServer(function(req, res) {
   }
 
   res.writeHead(400);
-  res.end(JSON.stringify({ error: 'Actions: health, search, gaphunter, rawtest' }));
+  res.end(JSON.stringify({ error: 'Actions: health, search, gaphunter, debug' }));
 });
 
 server.listen(PORT, function() {
-  console.log('FOLLOW. Backend v4 actif sur port ' + PORT);
+  console.log('FOLLOW. Backend v5 RapidAPI actif sur port ' + PORT);
 });
