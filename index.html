@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -91,6 +90,10 @@ nav{background:#07070990;backdrop-filter:blur(20px);border-bottom:1px solid var(
     <span>⚡ AGENTS IA 24/7 &nbsp;&nbsp;&nbsp; 🌍 VEILLE MONDIALE &nbsp;&nbsp;&nbsp; 💳 STRIPE SÉCURISÉ &nbsp;&nbsp;&nbsp; 🎯 NICHES FR NON SATURÉES &nbsp;&nbsp;&nbsp; 💰 VIREMENT IBAN HEBDO &nbsp;&nbsp;&nbsp; </span>
     <span>⚡ AGENTS IA 24/7 &nbsp;&nbsp;&nbsp; 🌍 VEILLE MONDIALE &nbsp;&nbsp;&nbsp; 💳 STRIPE SÉCURISÉ &nbsp;&nbsp;&nbsp; 🎯 NICHES FR NON SATURÉES &nbsp;&nbsp;&nbsp; 💰 VIREMENT IBAN HEBDO &nbsp;&nbsp;&nbsp; </span>
   </div>
+</div>
+
+<div style="background:#ffd70015;border-bottom:1px solid #ffd70030;padding:8px 24px;text-align:center;font-family:'DM Sans',sans-serif;font-size:12px;color:#ffd700;font-weight:600">
+  🚧 Boutique en cours de finalisation — Les commandes seront disponibles très prochainement. Merci ! 🙏
 </div>
 
 <nav>
@@ -459,10 +462,10 @@ function renderCart(){
       <div style="display:flex;justify-content:space-between;margin-bottom:6px;color:var(--muted);font-size:13px"><span>Sous-total</span><span>${state.symbol}${total.toFixed(2)}</span></div>
       <div style="display:flex;justify-content:space-between;margin-bottom:14px;color:#00ff88;font-size:13px"><span>🚚 Livraison gratuite</span><span>${state.symbol}0.00</span></div>
       <div style="display:flex;justify-content:space-between;margin-bottom:18px;font-family:'Bebas Neue',sans-serif;font-size:22px"><span>TOTAL</span><span style="color:var(--accent)">${state.symbol}${total.toFixed(2)}</span></div>
-      <button class="btn" style="width:100%;padding:14px;font-size:14px" onclick="openStripe(${total},'Commande FOLLOW.')">
-        🔒 PAYER AVEC STRIPE — ${state.symbol}${total.toFixed(2)}
-      </button>
-      <div style="text-align:center;color:#333;font-size:10px;margin-top:10px">Stripe · SEPA · SSL 256-bit · IBAN hebdomadaire</div>
+      <div style="background:#ffd70015;border:1px solid #ffd70040;border-radius:10px;padding:16px;text-align:center">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:#ffd700;margin-bottom:8px">🚧 BIENTÔT DISPONIBLE</div>
+        <div style="color:#888;font-size:13px;line-height:1.7">Notre boutique finalise ses connexions fournisseurs.<br/>Les commandes seront disponibles très prochainement.<br/><span style="color:var(--accent);font-weight:700">Merci pour votre patience ! 🙏</span></div>
+      </div>
     </div>`;
 }
 
@@ -656,6 +659,72 @@ document.addEventListener('click',e=>{
 renderNiches();renderProducts();renderDashboard();renderAgents();renderEmails();updateWorldEvent();
 setInterval(agentTick,2800);
 setInterval(()=>{state.worldEventIdx=(state.worldEventIdx+1)%WORLD_EVENTS.length;updateWorldEvent();},15000);
+
+// ── ALIEXPRESS API ────────────────────────────────────────
+const AE = {
+  appKey: '532692',
+  baseUrl: 'https://api-sg.aliexpress.com/sync',
+  // App Secret stocké dans GitHub Secrets — jamais exposé ici
+
+  // Recherche produits par mots clés
+  async searchProducts(keyword, pageSize=10){
+    try {
+      const params = new URLSearchParams({
+        method: 'aliexpress.affiliate.product.query',
+        app_key: this.appKey,
+        keywords: keyword,
+        page_no: 1,
+        page_size: pageSize,
+        fields: 'product_id,product_title,product_main_image_url,target_sale_price,target_original_price,evaluate_rate,product_detail_url',
+        target_currency: 'EUR',
+        target_language: 'FR',
+        tracking_id: 'followtrend'
+      });
+      // En production: requête signée via backend
+      console.log('[GapHunter] Recherche AliExpress:', keyword);
+      return null; // Backend requis pour signature HMAC
+    } catch(e){ console.error('[AE Error]', e); return null; }
+  },
+
+  // Import produit winner vers catalogue FOLLOW.
+  async importProduct(productId){
+    console.log('[OrderBot] Import produit AliExpress:', productId);
+    // En production: ajoute au catalogue via backend sécurisé
+  },
+
+  // Passer commande automatiquement
+  async placeOrder(productId, quantity, shippingAddress){
+    console.log('[OrderBot] Commande AliExpress:', {productId, quantity});
+    // En production: fulfillment automatique via backend
+  }
+};
+
+// ── GAPHUNTER AGENT — Recherche winners AliExpress ───────
+async function runGapHunter(){
+  if(!state.agentOn) return;
+  const niches = ['sleep patch FR','noise cancelling earplugs','ring light portable','cable organizer desk'];
+  const niche = niches[Math.floor(Math.random()*niches.length)];
+  console.log('[GapHunter] Analyse niche:', niche);
+
+  // Simule détection winner jusqu'à connexion backend
+  const mockWinner = {
+    name: 'Nouveau Winner Détecté — ' + niche,
+    gapFR: Math.floor(Math.random()*20+75),
+    trend: Math.floor(Math.random()*15+80),
+  };
+
+  // Alerte nouveau produit
+  const newAlert = document.getElementById('new-alert');
+  document.getElementById('new-alert-name').textContent = mockWinner.name;
+  document.getElementById('new-alert-stats').textContent = `Gap FR ${mockWinner.gapFR}% · Score ${mockWinner.trend}/100`;
+  newAlert.classList.add('show');
+  setTimeout(()=>newAlert.classList.remove('show'), 6000);
+}
+
+// GapHunter tourne toutes les 45 secondes
+setInterval(runGapHunter, 45000);
+console.log('[FOLLOW.] AliExpress API prête — App Key:', AE.appKey);
+console.log('[FOLLOW.] Backend requis pour activation complète');
 </script>
 </body>
 </html>
