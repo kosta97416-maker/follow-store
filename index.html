@@ -298,6 +298,59 @@ document.getElementById('stripe-form').addEventListener('submit', async(e)=>{
   }
 });
 
+// ── BACKEND ALIEXPRESS ───────────────────────────────────────
+const BACKEND = 'https://follow-backend-o300.onrender.com';
+
+async function loadAEProducts() {
+  try {
+    const res = await fetch(BACKEND + '?action=gaphunter');
+    const data = await res.json();
+    if (data.success && data.winners && data.winners.length > 0) {
+      // Convertit les vrais produits AliExpress au format FOLLOW.
+      const aeProducts = data.winners.map(function(p, i) {
+        return {
+          id: 100 + i,
+          name: p.name,
+          img: p.image || 'https://images.unsplash.com/photo-1559181567-c3190e5a9e7f?w=400&q=80',
+          niche: p.niche || 'wellness',
+          basePrice: parseFloat(p.price || 19.99),
+          oldPrice: parseFloat(p.price || 19.99) * 1.4,
+          rating: parseFloat(p.rating || 4.5),
+          reviews: Math.floor(Math.random() * 5000 + 500),
+          supplier: 'AliExpress',
+          trend: p.score || 80,
+          competition: Math.floor(Math.random() * 20 + 5),
+          gapFR: p.score || 80,
+          isWinner: p.score >= 80,
+          badge: 'hot',
+          aeUrl: p.link || 'https://followtrend.shop'
+        };
+      });
+      // Ajoute les vrais produits AliExpress au catalogue
+      PRODUCTS.push.apply(PRODUCTS, aeProducts);
+      renderProducts();
+      console.log('[GapHunter] ' + aeProducts.length + ' vrais produits AliExpress importés !');
+      // Alerte nouveau produit
+      if (aeProducts.length > 0) {
+        var na = document.getElementById('new-alert');
+        if (na) {
+          document.getElementById('new-alert-name').textContent = aeProducts[0].name.substring(0, 40) + '...';
+          document.getElementById('new-alert-stats').textContent = 'Score ' + aeProducts[0].gapFR + '/100 · AliExpress';
+          na.classList.add('show');
+          setTimeout(function() { na.classList.remove('show'); }, 6000);
+        }
+      }
+    }
+  } catch(e) {
+    console.log('[GapHunter] Backend en veille — produits locaux utilisés');
+  }
+}
+
+// Charge les vrais produits AliExpress au démarrage
+setTimeout(loadAEProducts, 2000);
+// Recharge toutes les heures
+setInterval(loadAEProducts, 3600000);
+
 // ── DATA ─────────────────────────────────────────────────────
 const NICHES=[
   {id:'all',icon:'',label:'Tout',color:'#C8FF00',visits:''},
