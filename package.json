@@ -1,0 +1,11 @@
+{
+  "name": "follow-backend",
+  "version": "1.0.0",
+  "main": "api/aliexpress.js",
+  "scripts": {
+    "start": "node api/aliexpress.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
