@@ -543,8 +543,112 @@ var server = http.createServer(function(req, res) {
     return;
   }
 
-  res.writeHead(400);
-  res.end(JSON.stringify({ error: 'Actions: health, search, gaphunter, contentai, priceoptimizer, retirebot, harvestbot, worldwatch, alertceo, goldwatch, currencybot' }));
+  // ── LEGALGUARD ────────────────────────────────────────────
+  if (action === 'legalguard') {
+    var checkType = parsed.query.type || 'general';
+    var checkValue = parsed.query.value || '';
+    var checkAmount = parseFloat(parsed.query.amount || 0);
+    var checkCountry = parsed.query.country || 'FR';
+
+    var legalRules = {
+      currencies: {
+        'USD': { legal: true, declaration: false, note: 'Légal — devise internationale' },
+        'EUR': { legal: true, declaration: false, note: 'Légal — devise nationale' },
+        'CNY': { legal: true, declaration: true, note: 'Légal avec déclaration Banque de France si > 10 000€' },
+        'EURC': { legal: true, declaration: true, note: 'Légal — déclarer à l\'AMF' },
+        'USDC': { legal: true, declaration: true, note: 'Légal — déclarer à l\'AMF' },
+        'BTC': { legal: true, declaration: true, note: 'Légal — déclaration fiscale obligatoire' },
+        'RUB': { legal: false, declaration: false, note: '❌ BLOQUÉ — Sanctions EU contre Russie actives' },
+        'IRR': { legal: false, declaration: false, note: '❌ BLOQUÉ — Sanctions internationales Iran' },
+        'KPW': { legal: false, declaration: false, note: '❌ BLOQUÉ — Sanctions Corée du Nord' },
+      },
+      transactions: {
+        under_1000: { legal: true, declaration: false, note: 'Aucune déclaration requise' },
+        under_10000: { legal: true, declaration: false, note: 'Conservation traces recommandée' },
+        over_10000: { legal: true, declaration: true, note: 'Déclaration obligatoire — Tracfin' },
+        over_50000: { legal: true, declaration: true, note: 'Déclaration obligatoire + justificatifs source fonds' },
+      },
+      crypto_storage: {
+        rule: 'Légal en France — Déclaration compte crypto obligatoire (formulaire 3916-bis)',
+        max_anonymous: 1000,
+        declaration_threshold: 0,
+        amf_registered: ['Binance FR', 'Coinhouse', 'Kraken', 'Ledger'],
+        note: 'Utiliser uniquement PSAN enregistrés AMF pour stockage légal'
+      }
+    };
+
+    var result = {
+      success: true,
+      agent: 'LegalGuard',
+      check_type: checkType,
+      check_value: checkValue,
+      jurisdiction: 'France / La Réunion (DOM)',
+      legal: true,
+      blocked: false,
+      declaration_required: false,
+      warnings: [],
+      recommendations: [],
+      verdict: 'AUTORISÉ'
+    };
+
+    // Vérification devise
+    if (checkType === 'currency' && checkValue) {
+      var currencyRule = legalRules.currencies[checkValue.toUpperCase()];
+      if (currencyRule) {
+        result.legal = currencyRule.legal;
+        result.blocked = !currencyRule.legal;
+        result.declaration_required = currencyRule.declaration;
+        result.note = currencyRule.note;
+        result.verdict = currencyRule.legal ? 'AUTORISÉ' : 'BLOQUÉ';
+        if (!currencyRule.legal) {
+          result.warnings.push('⛔ Transaction bloquée — ' + currencyRule.note);
+          sendAlertEmail('⛔ LegalGuard — Transaction bloquée', 'Tentative transaction ' + checkValue + ' bloquée. Raison: ' + currencyRule.note);
+        }
+        if (currencyRule.declaration) {
+          result.recommendations.push('📋 Déclaration requise — Consulter un expert-comptable');
+        }
+      }
+    }
+
+    // Vérification montant
+    if (checkAmount > 0) {
+      if (checkAmount >= 10000) {
+        result.declaration_required = true;
+        result.warnings.push('⚠️ Montant > 10 000€ — Déclaration Tracfin obligatoire');
+        result.recommendations.push('📋 Conserver justificatifs source des fonds');
+      }
+      if (checkAmount >= 50000) {
+        result.warnings.push('⚠️ Montant > 50 000€ — Justificatifs source fonds requis');
+        result.recommendations.push('👨‍💼 Consulter un avocat fiscaliste avant transaction');
+        sendAlertEmail('⚠️ LegalGuard — Transaction importante', 'Transaction de ' + checkAmount + '€ détectée. Déclaration obligatoire.');
+      }
+    }
+
+    // Vérification crypto storage
+    if (checkType === 'crypto_storage') {
+      result.legal = true;
+      result.declaration_required = true;
+      result.note = legalRules.crypto_storage.rule;
+      result.recommendations = [
+        '📋 Déclarer compte crypto formulaire 3916-bis',
+        '🏛️ Utiliser PSAN enregistré AMF : ' + legalRules.crypto_storage.amf_registered.join(', '),
+        '💰 Gains crypto imposables — Flat tax 30% en France',
+        '👨‍💼 Consulter expert-comptable spécialisé crypto'
+      ];
+    }
+
+    if (result.warnings.length === 0 && result.legal) {
+      result.recommendations.push('✅ Opération conforme — Bonne continuation !');
+    }
+
+    console.log('[LegalGuard] 🔒 Vérification ' + checkType + ' ' + checkValue + ' → ' + result.verdict);
+
+    res.writeHead(200);
+    res.end(JSON.stringify(result));
+    return;
+  }
+
+
 
 });
 
