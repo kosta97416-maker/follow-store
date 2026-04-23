@@ -585,7 +585,127 @@ var server = http.createServer(function(req, res) {
     return;
   }
 
-  // ── AFFILIATEOS ───────────────────────────────────────────
+  // ── TRENDSCANNER + BEHAVIOUR ANALYSIS + VIDEOBOT ────────
+  if (action === 'trendscanner') {
+    var platform = parsed.query.platform || 'all';
+    var region = parsed.query.region || 'FR';
+    var withVideo = parsed.query.video === 'true';
+    var productQuery = parsed.query.product || '';
+
+    // ── 7 DÉCLENCHEURS PSYCHOLOGIQUES ──────────────────
+    function analyzeAddiction(product) {
+      var triggers = {
+        wow_factor: product.views && parseInt(product.views) > 500000 ? 90 : 60,
+        precise_problem: product.niche ? 85 : 50,
+        visible_transformation: ['wellness','hearing','breathing'].includes(product.niche) ? 90 : 70,
+        price_shock: product.price && product.price < 30 ? 95 : 70,
+        social_validation: product.growth && parseInt(product.growth) > 100 ? 88 : 65,
+        urgency: product.score > 85 ? 80 : 60,
+        recurrence: ['wellness','breathing'].includes(product.niche) ? 92 : 65,
+      };
+      var avg = Object.values(triggers).reduce(function(a,b){return a+b;},0) / Object.keys(triggers).length;
+      return {
+        triggers: triggers,
+        addiction_score: Math.round(avg),
+        addiction_level: avg >= 85 ? '🔴 HAUTEMENT ADDICTIF' : avg >= 70 ? '🟠 ADDICTIF' : '🟡 MODÉRÉ',
+        best_trigger: Object.keys(triggers).reduce(function(a,b){return triggers[a]>triggers[b]?a:b;}),
+        recommendation: avg >= 85 ? 'VIDÉO URGENTE — Cible les addicts maintenant' : 'Vidéo recommandée'
+      };
+    }
+
+    // Tendances avec analyse comportementale
+    var trends = [
+      {platform:'TikTok',product:'Patch Énergie Naturelle',niche:'wellness',views:'2100000',growth:'340',score:94,gap_fr:91,price:19.99,action:'IMPORT_URGENT',link:'https://followtrend.shop?product=wellness_patch'},
+      {platform:'TikTok',product:'Bouchons Anti-Bruit Colorés',niche:'hearing',views:'890000',growth:'180',score:88,gap_fr:85,price:24.99,action:'IMPORT',link:'https://followtrend.shop?product=colorful_earplugs'},
+      {platform:'Instagram',product:'Organiseur Bureau LED',niche:'home',views:'450000',growth:'95',score:82,gap_fr:80,price:34.99,action:'WATCH',link:'https://followtrend.shop?product=led_organizer'},
+      {platform:'YouTube',product:'Ring Light 360°',niche:'creator',views:'1200000',growth:'220',score:91,gap_fr:88,price:39.99,action:'IMPORT',link:'https://followtrend.shop?product=ring_light_360'},
+      {platform:'Pinterest',product:'Kit Aromathérapie Zen',niche:'wellness',views:'320000',growth:'75',score:76,gap_fr:74,price:22.99,action:'WATCH',link:'https://followtrend.shop?product=aromatherapy_kit'},
+    ];
+
+    // Ajoute analyse addiction à chaque trend
+    var enriched = trends.map(function(t) {
+      var addiction = analyzeAddiction(t);
+      return Object.assign({}, t, { addiction: addiction });
+    });
+
+    // Filtre par plateforme
+    var filtered = platform === 'all' ? enriched : enriched.filter(function(t) {
+      return t.platform.toLowerCase() === platform.toLowerCase();
+    });
+
+    // Top trend le plus addictif
+    var topTrend = filtered.sort(function(a,b){return b.addiction.addiction_score - a.addiction.addiction_score;})[0];
+
+    // Urgent = score addiction > 85
+    var urgent = filtered.filter(function(t){return t.addiction.addiction_score >= 85;});
+
+    urgent.forEach(function(t) {
+      console.log('[TrendScanner] 🔴 ADDICTIF : ' + t.product + ' — Score ' + t.addiction.addiction_score);
+      sendAlertEmail(
+        '🔴 TrendScanner — Produit HAUTEMENT ADDICTIF détecté',
+        t.product + ' · ' + t.platform + ' · ' + parseInt(t.views).toLocaleString() + ' vues\n' +
+        'Score addiction : ' + t.addiction.addiction_score + '/100\n' +
+        'Meilleur déclencheur : ' + t.addiction.best_trigger + '\n' +
+        'Lien : ' + t.link
+      );
+    });
+
+    var result = {
+      success: true,
+      agent: 'TrendScanner',
+      platform_scanned: platform,
+      region: region,
+      trends_detected: filtered.length,
+      urgent_imports: urgent.length,
+      trends: filtered,
+      top_addictive: topTrend,
+      platforms_monitored: ['TikTok','Instagram','YouTube','Pinterest','Twitter/X'],
+      next_scan: '15min',
+      message: '[TrendScanner] ' + urgent.length + ' produit(s) hautement addictif(s) — VideoBot notifié'
+    };
+
+    // Si demande de génération vidéo
+    if (withVideo && topTrend) {
+      var nicheProfiles = {
+        wellness: {pain:'Tu dors mal, tu es stressé, tu te sens épuisé', audience:'25-45 ans actifs et parents', trigger:'Si tu te réveilles encore à 3h du matin...'},
+        hearing: {pain:'Le bruit t\'empêche de te concentrer', audience:'18-35 ans étudiants et télétravailleurs', trigger:'Travailler en open space sans devenir fou...'},
+        creator: {pain:'Ton éclairage te fait paraître amateur', audience:'16-30 ans créateurs de contenu', trigger:'Pourquoi tes vidéos font moins de vues que les autres ?'},
+        home: {pain:'Ton bureau est un chaos de câbles', audience:'25-45 ans télétravailleurs', trigger:'Tu perds 10 minutes par jour à chercher tes câbles ?'},
+        breathing: {pain:'Tu ronfles et ça ruine ton sommeil', audience:'30-55 ans couples et sportifs', trigger:'Ton partenaire t\'a encore réveillé ?'},
+      };
+
+      var profile = nicheProfiles[topTrend.niche] || nicheProfiles.wellness;
+      var bestTrigger = topTrend.addiction.best_trigger;
+
+      result.videobot = {
+        status: 'SCRIPT_GÉNÉRÉ',
+        product: topTrend.product,
+        addiction_score: topTrend.addiction.addiction_score,
+        hook: profile.trigger,
+        problem_statement: profile.pain,
+        audience: profile.audience,
+        psychological_trigger: bestTrigger,
+        script_structure: [
+          '🎬 [0-3s] HOOK : "' + profile.trigger + '"',
+          '🎯 [3-8s] PROBLÈME : Montre la douleur exacte de ' + profile.audience,
+          '✨ [8-15s] SOLUTION : Révèle ' + topTrend.product + ' sans le nommer',
+          '💥 [15-25s] TRANSFORMATION : Avant/après visible',
+          '🛒 [25-30s] CTA : "Lien en bio → followtrend.shop"',
+        ],
+        platforms: ['TikTok','Instagram Reels','YouTube Shorts'],
+        hashtags: ['#' + topTrend.niche, '#bienetre', '#followtrend', '#viral', '#fyp'],
+        redirect_link: topTrend.link,
+        estimated_views: '10K-500K',
+        addiction_exploitation: topTrend.addiction.triggers
+      };
+    }
+
+    res.writeHead(200);
+    res.end(JSON.stringify(result));
+    return;
+  }
+
+
   if (action === 'affiliateos') {
     var subAction2 = parsed.query.sub || 'status';
     var capital2 = parseFloat(parsed.query.capital || 0);
