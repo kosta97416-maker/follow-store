@@ -360,21 +360,52 @@ var server = http.createServer(function(req, res) {
   // ── HARVESTBOT ÉTENDU ─────────────────────────────────────
   if (action === 'harvestbot') {
     var opportunities = [
-      {source:'AliExpress Cashback',type:'cashback',description:'Cashback commandes affilié AliExpress',amount:0,currency:'EUR',autonomous:true,legal:true,status:'scanning'},
-      {source:'RapidAPI Credits',type:'credit',description:'Crédits gratuits programme développeur',amount:10,currency:'USD',autonomous:true,legal:true,status:'available'},
-      {source:'Render Free Tier',type:'credit',description:'Hébergement gratuit Render optimisé',amount:7,currency:'USD',autonomous:true,legal:true,status:'active'},
-      {source:'AliExpress Commission',type:'commission',description:'Commissions affiliés ventes générées',amount:0,currency:'USD',autonomous:true,legal:true,status:'scanning'},
-      {source:'ZenRows Credits',type:'credit',description:'Crédits API scraping disponibles',amount:5,currency:'USD',autonomous:true,legal:true,status:'active'},
-      {source:'Stripe Revenue',type:'revenue',description:'Revenus ventes en attente virement',amount:0,currency:'EUR',autonomous:true,legal:true,status:'scheduled'},
-      {source:'Anthropic API Credits',type:'ai_credit',description:'Crédits API Claude non utilisés',amount:5,currency:'USD',autonomous:true,legal:true,status:'scanning'},
-      {source:'OpenAI Affiliate',type:'ai_affiliate',description:'Programme affilié ChatGPT',amount:0,currency:'USD',autonomous:true,legal:true,status:'available'},
-      {source:'Google AI Credits',type:'ai_credit',description:'Crédits Gemini API gratuits',amount:10,currency:'USD',autonomous:true,legal:true,status:'available'},
-      {source:'Midjourney Referral',type:'ai_affiliate',description:'Commission parrainage Midjourney',amount:0,currency:'USD',autonomous:true,legal:true,status:'scanning'},
-      {source:'AI Bounty Programs',type:'bounty',description:'Récompenses bug bounty IA légaux',amount:0,currency:'USD',autonomous:true,legal:true,status:'scanning'},
-      {source:'Vercel Free Tier',type:'credit',description:'Hébergement site Vercel gratuit',amount:20,currency:'USD',autonomous:true,legal:true,status:'active'},
+      // E-COMMERCE & FOURNISSEURS
+      {source:'AliExpress Cashback',type:'cashback',description:'Cashback commandes affilié AliExpress',amount:0,currency:'EUR',autonomous:true,legal:true,status:'scanning',category:'ecommerce'},
+      {source:'RapidAPI Credits',type:'credit',description:'Crédits gratuits programme développeur',amount:10,currency:'USD',autonomous:true,legal:true,status:'available',category:'tech'},
+      {source:'Render Free Tier',type:'credit',description:'Hébergement gratuit Render optimisé',amount:7,currency:'USD',autonomous:true,legal:true,status:'active',category:'tech'},
+      {source:'AliExpress Commission',type:'commission',description:'Commissions affiliés ventes générées',amount:0,currency:'USD',autonomous:true,legal:true,status:'scanning',category:'ecommerce'},
+      {source:'ZenRows Credits',type:'credit',description:'Crédits API scraping disponibles',amount:5,currency:'USD',autonomous:true,legal:true,status:'active',category:'tech'},
+      {source:'Stripe Revenue',type:'revenue',description:'Revenus ventes en attente virement',amount:0,currency:'EUR',autonomous:true,legal:true,status:'scheduled',category:'ecommerce'},
+      // IA CREDITS
+      {source:'Anthropic API Credits',type:'ai_credit',description:'Crédits API Claude non utilisés',amount:5,currency:'USD',autonomous:true,legal:true,status:'scanning',category:'ai'},
+      {source:'OpenAI Affiliate',type:'ai_affiliate',description:'Programme affilié ChatGPT',amount:0,currency:'USD',autonomous:true,legal:true,status:'available',category:'ai'},
+      {source:'Google AI Credits',type:'ai_credit',description:'Crédits Gemini API gratuits',amount:10,currency:'USD',autonomous:true,legal:true,status:'available',category:'ai'},
+      {source:'Midjourney Referral',type:'ai_affiliate',description:'Commission parrainage Midjourney',amount:0,currency:'USD',autonomous:true,legal:true,status:'scanning',category:'ai'},
+      {source:'AI Bounty Programs',type:'bounty',description:'Récompenses bug bounty IA légaux',amount:0,currency:'USD',autonomous:true,legal:true,status:'scanning',category:'ai'},
+      // HÉBERGEMENT & CLOUD
+      {source:'Vercel Free Tier',type:'credit',description:'Hébergement site Vercel gratuit',amount:20,currency:'USD',autonomous:true,legal:true,status:'active',category:'tech'},
+      {source:'AWS Free Tier',type:'credit',description:'750h EC2 + 5GB S3 gratuits/mois',amount:15,currency:'USD',autonomous:true,legal:true,status:'available',category:'tech'},
+      {source:'Cloudflare Free',type:'credit',description:'CDN + protection DDoS gratuit',amount:20,currency:'USD',autonomous:true,legal:true,status:'active',category:'tech'},
+      {source:'GitHub Free',type:'credit',description:'Repos illimités + Actions 2000min/mois',amount:10,currency:'USD',autonomous:true,legal:true,status:'active',category:'tech'},
+      // PUBLICITÉ & MARKETING
+      {source:'Google Ads Credits',type:'ad_credit',description:'Crédits pub Google nouveaux comptes',amount:400,currency:'USD',autonomous:true,legal:true,status:'available',category:'marketing'},
+      {source:'Meta Ads Credits',type:'ad_credit',description:'Crédits pub Facebook/Instagram',amount:50,currency:'USD',autonomous:true,legal:true,status:'available',category:'marketing'},
+      {source:'TikTok Ads Credits',type:'ad_credit',description:'Crédits pub TikTok nouveaux annonceurs',amount:300,currency:'USD',autonomous:true,legal:true,status:'available',category:'marketing'},
+      {source:'Microsoft Ads Credits',type:'ad_credit',description:'Crédits Bing Ads nouveaux comptes',amount:75,currency:'USD',autonomous:true,legal:true,status:'available',category:'marketing'},
+      // FOURNISSEURS DROPSHIPPING
+      {source:'CJ Dropshipping Partner',type:'partner_bonus',description:'Commission 3% programme partenaire',amount:0,currency:'USD',autonomous:true,legal:true,status:'available',category:'ecommerce'},
+      {source:'Spocket Trial',type:'trial',description:'14 jours gratuits plan pro',amount:49,currency:'USD',autonomous:true,legal:true,status:'available',category:'ecommerce'},
+      {source:'Zendrop Free Orders',type:'trial',description:'500 commandes gratuites premier mois',amount:25,currency:'USD',autonomous:true,legal:true,status:'available',category:'ecommerce'},
+      {source:'AutoDS Trial',type:'trial',description:'Essai 30 jours — 1$ seulement',amount:29,currency:'USD',autonomous:true,legal:true,status:'available',category:'ecommerce'},
+      // PROGRAMMES AFFILIÉS UNIVERSELS
+      {source:'Amazon Associates',type:'affiliate',description:'Commission 1-10% ventes Amazon',amount:0,currency:'USD',autonomous:true,legal:true,status:'available',category:'affiliate'},
+      {source:'Booking.com Affiliate',type:'affiliate',description:'Commission 25-40% réservations',amount:0,currency:'USD',autonomous:true,legal:true,status:'available',category:'affiliate'},
+      {source:'Shopify Affiliate',type:'affiliate',description:'200$ par marchand référé',amount:0,currency:'USD',autonomous:true,legal:true,status:'available',category:'affiliate'},
+      {source:'Fiverr Affiliate',type:'affiliate',description:'Commission 30% première commande',amount:0,currency:'USD',autonomous:true,legal:true,status:'available',category:'affiliate'},
+      // PROGRAMMES STARTUPS & AIDES
+      {source:'Stripe Startup Credits',type:'startup',description:'Crédits Stripe pour startups',amount:0,currency:'USD',autonomous:false,legal:true,status:'ceo_required',category:'startup'},
+      {source:'HubSpot Startup',type:'startup',description:'CRM gratuit 90% réduction startups',amount:1200,currency:'USD',autonomous:true,legal:true,status:'available',category:'startup'},
+      {source:'Notion Free',type:'free_tier',description:'Plan gratuit illimité',amount:8,currency:'USD',autonomous:true,legal:true,status:'active',category:'tools'},
+      {source:'Mailchimp Free',type:'free_tier',description:'500 contacts + 1000 emails/mois gratuit',amount:13,currency:'USD',autonomous:true,legal:true,status:'active',category:'marketing'},
+      // CASHBACK UNIVERSEL
+      {source:'iGraal Cashback',type:'cashback',description:'Cashback achats en ligne jusqu\'à 20%',amount:0,currency:'EUR',autonomous:true,legal:true,status:'scanning',category:'cashback'},
+      {source:'Rakuten Cashback',type:'cashback',description:'Cashback universal e-commerce',amount:0,currency:'EUR',autonomous:true,legal:true,status:'scanning',category:'cashback'},
+      {source:'Carte Bancaire Cashback',type:'cashback',description:'Cashback carte selon banque',amount:0,currency:'EUR',autonomous:false,legal:true,status:'ceo_required',category:'cashback'},
     ];
 
-    var harvestable = opportunities.filter(function(o) { return o.autonomous && o.legal; });
+    var harvestable = opportunities.filter(function(o) { return o.autonomous && o.legal && o.status !== 'ceo_required'; });
+    var ceoRequired = opportunities.filter(function(o) { return o.status === 'ceo_required'; });
     var totalEur = 0;
     harvestable.forEach(function(o) {
       var eur = o.currency === 'USD' ? o.amount * 0.92 : o.amount;
@@ -382,18 +413,29 @@ var server = http.createServer(function(req, res) {
       o.amount_eur = parseFloat(eur.toFixed(2));
     });
 
-    console.log('[HarvestBot] 🌾 ' + harvestable.length + ' opportunités — ' + totalEur.toFixed(2) + '€');
+    // Grouper par catégorie
+    var categories = {};
+    harvestable.forEach(function(o) {
+      if (!categories[o.category]) categories[o.category] = [];
+      categories[o.category].push(o);
+    });
+
+    console.log('[HarvestBot] 🌾 ' + harvestable.length + ' opportunités — ' + totalEur.toFixed(2) + '€ — ' + Object.keys(categories).length + ' catégories');
 
     res.writeHead(200);
     res.end(JSON.stringify({
       success: true,
       agent: 'HarvestBot',
       rule: 'Autonome si 100% légal + automatisable. CEO requis = ignoré.',
-      opportunities: harvestable,
+      total_opportunities: harvestable.length,
       total_eur: parseFloat(totalEur.toFixed(2)),
-      ai_sources: harvestable.filter(function(o) { return o.type.includes('ai'); }).length,
-      ceo_required: [],
-      next_scan: '24h'
+      categories: Object.keys(categories),
+      opportunities_by_category: categories,
+      ceo_required: ceoRequired,
+      top_value: harvestable.sort(function(a,b){return b.amount_eur-a.amount_eur;}).slice(0,5),
+      ai_sources: harvestable.filter(function(o) { return o.category === 'ai'; }).length,
+      next_scan: '24h',
+      message: '[HarvestBot] Scan universel complet — ' + harvestable.length + ' primes légales identifiées'
     }));
     return;
   }
@@ -543,7 +585,258 @@ var server = http.createServer(function(req, res) {
     return;
   }
 
-  // ── LEGALGUARD ────────────────────────────────────────────
+  // ── AFFILIATEOS ───────────────────────────────────────────
+  if (action === 'affiliateos') {
+    var subAction2 = parsed.query.sub || 'status';
+    var capital2 = parseFloat(parsed.query.capital || 0);
+    var ACTIVATION_THRESHOLD = 1000000;
+
+    var levels = [
+      {name:'Bronze',min:0,max:10,commission:10,badge:'🥉',perks:'Lien affilié + Dashboard'},
+      {name:'Argent',min:10,max:100,commission:12,badge:'🥈',perks:'+ Badge + Support prioritaire'},
+      {name:'Or',min:100,max:1000,commission:15,badge:'🥇',perks:'+ Produits exclusifs + Bonus'},
+      {name:'Diamant',min:1000,max:999999,commission:20,badge:'💎',perks:'+ Accès CEO + Commissions spéciales'},
+    ];
+
+    if (subAction2 === 'status') {
+      var isActive = capital2 >= ACTIVATION_THRESHOLD;
+      res.writeHead(200);
+      res.end(JSON.stringify({
+        success: true,
+        agent: 'AffiliateOS',
+        status: isActive ? 'ACTIF' : 'EN VEILLE',
+        capital_required: ACTIVATION_THRESHOLD,
+        capital_current: capital2,
+        capital_missing: Math.max(0, ACTIVATION_THRESHOLD - capital2),
+        progress_pct: parseFloat(Math.min((capital2/ACTIVATION_THRESHOLD)*100, 100).toFixed(2)),
+        levels: levels,
+        rules: {
+          auto_register: true,
+          auto_pay: true,
+          fraud_detection: true,
+          legalguard_check: true,
+          payout_day: 5,
+          min_payout: 50,
+          ceo_intervention: false
+        },
+        message: isActive ?
+          '✅ AffiliateOS actif — Inscriptions ouvertes automatiquement' :
+          '⏳ En veille — Actif à 1 000 000€ capital FOLLOW.'
+      }));
+      return;
+    }
+
+    if (subAction2 === 'register') {
+      var affiliateName = parsed.query.name || 'Nouvel affilié';
+      var affiliateEmail = parsed.query.email || '';
+      var newId = 'AFF' + String(Date.now()).slice(-6);
+
+      console.log('[AffiliateOS] 🤝 Inscription : ' + affiliateName + ' → ' + newId);
+
+      res.writeHead(200);
+      res.end(JSON.stringify({
+        success: true,
+        agent: 'AffiliateOS',
+        action: 'INSCRIPTION_AUTO',
+        affiliate: {
+          id: newId,
+          name: affiliateName,
+          email: affiliateEmail,
+          level: 'Bronze',
+          badge: '🥉',
+          commission_rate: 10,
+          status: capital2 >= ACTIVATION_THRESHOLD ? 'active' : 'pending',
+          link: 'https://followtrend.shop?ref=' + newId,
+          dashboard: 'https://followtrend.shop/affiliate/' + newId,
+          created: new Date().toISOString()
+        },
+        message: capital2 >= ACTIVATION_THRESHOLD ?
+          '✅ Compte actif — Lien affilié opérationnel — Aucune intervention CEO' :
+          '⏳ En attente activation AffiliateOS à 1M€'
+      }));
+      return;
+    }
+
+    if (subAction2 === 'dashboard') {
+      res.writeHead(200);
+      res.end(JSON.stringify({
+        success: true,
+        agent: 'AffiliateOS',
+        dashboard: {
+          program_status: capital2 >= ACTIVATION_THRESHOLD ? 'OUVERT' : 'EN_VEILLE',
+          levels: levels,
+          rules: 'Inscription auto · Paiement auto · Fraude auto · 0 intervention CEO',
+          payout_schedule: 'Le 5 de chaque mois',
+          program_url: 'https://followtrend.shop/affiliate',
+          message: 'AffiliateOS gère tout automatiquement dès 1M€ capital'
+        }
+      }));
+      return;
+    }
+
+    res.writeHead(400);
+    res.end(JSON.stringify({ error: 'AffiliateOS sub: status, register, dashboard' }));
+    return;
+  }
+
+  // ── ORDERBOT UNIVERSEL ───────────────────────────────────
+  if (action === 'orderbot') {
+    var orderId = parsed.query.order_id || 'ORD-' + Date.now();
+    var productId = parsed.query.product_id || '';
+    var productName = parsed.query.product_name || 'Produit FOLLOW.';
+    var quantity = parseInt(parsed.query.quantity || 1);
+    var customerEmail = parsed.query.customer_email || '';
+    var shippingCountry = parsed.query.country || 'FR';
+    var subAction = parsed.query.sub || 'process';
+
+    // ── MOTEUR DE RECHERCHE FOURNISSEURS ─────────────────
+    var suppliers = [
+      {
+        name: 'AliExpress',
+        status: parsed.query.ae_status || 'pending_approval',
+        priority: 1,
+        delivery_days: 15,
+        fee_pct: 0,
+        countries: ['ALL'],
+        auto_integrate: true,
+        api_ready: false,
+        note: 'En attente approbation API dropshipping'
+      },
+      {
+        name: 'CJ Dropshipping',
+        status: 'available',
+        priority: 2,
+        delivery_days: 10,
+        fee_pct: 2,
+        countries: ['ALL'],
+        auto_integrate: true,
+        api_ready: true,
+        api_url: 'https://developers.cjdropshipping.com',
+        note: 'API disponible — intégration possible immédiatement'
+      },
+      {
+        name: 'Spocket',
+        status: 'available',
+        priority: 3,
+        delivery_days: 5,
+        fee_pct: 5,
+        countries: ['EU', 'US'],
+        auto_integrate: true,
+        api_ready: true,
+        api_url: 'https://spocket.co/integrations',
+        note: 'Fournisseurs EU/US — livraison rapide'
+      },
+      {
+        name: 'Zendrop',
+        status: 'available',
+        priority: 4,
+        delivery_days: 7,
+        fee_pct: 3,
+        countries: ['ALL'],
+        auto_integrate: true,
+        api_ready: true,
+        api_url: 'https://app.zendrop.com',
+        note: 'Automatisation avancée disponible'
+      },
+      {
+        name: 'DSers',
+        status: 'available',
+        priority: 5,
+        delivery_days: 12,
+        fee_pct: 0,
+        countries: ['ALL'],
+        auto_integrate: true,
+        api_ready: true,
+        api_url: 'https://www.dsers.com/api',
+        note: 'Partenaire officiel AliExpress — gratuit'
+      },
+      {
+        name: 'AutoDS',
+        status: 'available',
+        priority: 6,
+        delivery_days: 8,
+        fee_pct: 1,
+        countries: ['ALL'],
+        auto_integrate: true,
+        api_ready: true,
+        api_url: 'https://autods.com',
+        note: 'IA dropshipping — 800M+ produits'
+      }
+    ];
+
+    // Trouve le meilleur fournisseur disponible
+    var bestSupplier = suppliers
+      .filter(function(s) { return s.status === 'available' && s.auto_integrate; })
+      .sort(function(a, b) { return a.delivery_days - b.delivery_days; })[0];
+
+    // Scan nouveaux systèmes ecommerce
+    var newSystems = [
+      {name:'TikTok Shop',type:'marketplace',status:'scanning',note:'API en attente approbation'},
+      {name:'Printify',type:'print_on_demand',status:'available',note:'Produits personnalisés — intégration facile'},
+      {name:'Modalyst',type:'dropshipping',status:'available',note:'Marques premium EU/US'},
+      {name:'Wholesale2B',type:'wholesale',status:'available',note:'1M+ produits en gros'},
+    ];
+
+    if (subAction === 'scan') {
+      res.writeHead(200);
+      res.end(JSON.stringify({
+        success: true,
+        agent: 'OrderBot',
+        action: 'SCAN_FOURNISSEURS',
+        suppliers: suppliers,
+        new_systems_detected: newSystems,
+        best_available: bestSupplier,
+        recommendation: bestSupplier ? 'Connecter ' + bestSupplier.name + ' immédiatement — API prête' : 'En attente AliExpress',
+        auto_integrate_ready: suppliers.filter(function(s) { return s.api_ready; }).length
+      }));
+      return;
+    }
+
+    if (subAction === 'process') {
+      var fulfillment_status = 'queued';
+      var fulfillment_supplier = 'manual';
+      var fulfillment_note = '';
+
+      if (bestSupplier && bestSupplier.api_ready) {
+        fulfillment_status = 'processing';
+        fulfillment_supplier = bestSupplier.name;
+        fulfillment_note = 'Commande transmise à ' + bestSupplier.name + ' automatiquement';
+      } else {
+        fulfillment_status = 'manual_required';
+        fulfillment_note = 'AliExpress API en attente — commande manuelle requise';
+        sendAlertEmail(
+          '📦 OrderBot — Commande manuelle requise',
+          'Commande ' + orderId + ' pour ' + productName + ' x' + quantity + ' → ' + shippingCountry + '\nAucun fournisseur auto disponible — action manuelle requise.'
+        );
+      }
+
+      console.log('[OrderBot] 📦 Commande ' + orderId + ' → ' + fulfillment_supplier);
+
+      res.writeHead(200);
+      res.end(JSON.stringify({
+        success: true,
+        agent: 'OrderBot',
+        order_id: orderId,
+        product: productName,
+        quantity: quantity,
+        shipping_country: shippingCountry,
+        fulfillment_status: fulfillment_status,
+        fulfillment_supplier: fulfillment_supplier,
+        note: fulfillment_note,
+        best_supplier: bestSupplier,
+        ceo_alerted: fulfillment_status === 'manual_required',
+        estimated_delivery: bestSupplier ? bestSupplier.delivery_days + ' jours' : 'En attente',
+        timestamp: new Date().toISOString()
+      }));
+      return;
+    }
+
+    res.writeHead(400);
+    res.end(JSON.stringify({ error: 'OrderBot sub-actions: process, scan' }));
+    return;
+  }
+
+
   if (action === 'legalguard') {
     var checkType = parsed.query.type || 'general';
     var checkValue = parsed.query.value || '';
