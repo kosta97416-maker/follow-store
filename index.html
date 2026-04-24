@@ -4,9 +4,70 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="X-Content-Type-Options" content="nosniff"/>
+<meta http-equiv="X-Frame-Options" content="DENY"/>
+<meta http-equiv="X-XSS-Protection" content="1; mode=block"/>
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin"/>
+<meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(self)"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; img-src 'self' https: data: blob:; connect-src 'self' https://follow-backend-o300.onrender.com https://api.stripe.com https://fonts.googleapis.com;"/>
 <title>FOLLOW. — Suis les tendances</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://js.stripe.com/v3/"></script>
+<script>
+// ── SÉCURITÉ CÔTÉ CLIENT ──────────────────────────────────
+
+// Anti-devtools
+(function() {
+  var devtools = { open: false };
+  var threshold = 160;
+  setInterval(function() {
+    if (window.outerWidth - window.innerWidth > threshold ||
+        window.outerHeight - window.innerHeight > threshold) {
+      if (!devtools.open) {
+        devtools.open = true;
+        // Efface les données sensibles si devtools ouvert
+        console.clear();
+      }
+    } else {
+      devtools.open = false;
+    }
+  }, 500);
+})();
+
+// Anti-copie du code source
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+document.addEventListener('keydown', function(e) {
+  // Bloque F12, Ctrl+U, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C
+  if (e.key === 'F12' ||
+      (e.ctrlKey && e.key === 'u') ||
+      (e.ctrlKey && e.shiftKey && ['i','I','j','J','c','C'].includes(e.key))) {
+    e.preventDefault();
+    return false;
+  }
+});
+
+// Anti-injection scripts externes
+(function() {
+  var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(m) {
+      m.addedNodes.forEach(function(node) {
+        if (node.tagName === 'SCRIPT' && !node.src.includes('stripe') && !node.src.includes('googleapis') && !node.src.includes('follow-backend') && node.src !== '') {
+          node.remove();
+          console.warn('[Security] Script non autorisé bloqué : ' + node.src);
+        }
+      });
+    });
+  });
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+})();
+
+// Désactive console en production
+var _console = {};
+['log','warn','error','info','debug','trace'].forEach(function(m) {
+  _console[m] = console[m];
+  console[m] = function() {};
+});
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--accent:#C8FF00;--dark:#070709;--mid:#0f0f12;--card:#13131a;--border:#1c1c26;--text:#f0f0f8;--muted:#44445a}
@@ -348,7 +409,89 @@ setTimeout(loadAEProducts, 2000);
 // Recharge toutes les heures
 setInterval(loadAEProducts, 3600000);
 
-// ── DATA ─────────────────────────────────────────────────────
+// ── DONNÉES RÉELLES — BACKEND FOLLOW. ────────────────────
+async function loadRealDashboardData() {
+  try {
+    // Charge les vraies décisions des agents
+    const [worldwatch, trendscanner, harvestbot, gaphunter] = await Promise.allSettled([
+      fetch(BACKEND + '?action=worldwatch').then(r => r.json()),
+      fetch(BACKEND + '?action=trendscanner').then(r => r.json()),
+      fetch(BACKEND + '?action=harvestbot').then(r => r.json()),
+      fetch(BACKEND + '?action=gaphunter').then(r => r.json()),
+    ]);
+
+    // Construit les vraies décisions
+    const realDecisions = [];
+
+    // WorldWatch décisions
+    if (worldwatch.status === 'fulfilled' && worldwatch.value.events) {
+      worldwatch.value.events.forEach(function(e) {
+        realDecisions.push({
+          type: e.level === 'green' ? 'auto' : 'ceo',
+          agent: 'WorldWatch',
+          icon: '🌍',
+          text: e.domain + ' — ' + e.event + ' — ' + e.action
+        });
+      });
+    }
+
+    // TrendScanner décisions
+    if (trendscanner.status === 'fulfilled' && trendscanner.value.trends) {
+      trendscanner.value.trends.slice(0, 2).forEach(function(t) {
+        realDecisions.push({
+          type: 'auto',
+          agent: 'TrendScanner',
+          icon: '🔍',
+          text: t.product + ' — ' + t.platform + ' — Score addiction ' + t.addiction.addiction_score + '/100'
+        });
+      });
+    }
+
+    // HarvestBot décisions
+    if (harvestbot.status === 'fulfilled' && harvestbot.value.total_eur > 0) {
+      realDecisions.push({
+        type: 'auto',
+        agent: 'HarvestBot',
+        icon: '🌾',
+        text: harvestbot.value.total_opportunities + ' opportunités légales — ' + harvestbot.value.total_eur + '€ récoltés'
+      });
+    }
+
+    // GapHunter décisions
+    if (gaphunter.status === 'fulfilled' && gaphunter.value.winners) {
+      realDecisions.push({
+        type: 'auto',
+        agent: 'GapHunter',
+        icon: '🎯',
+        text: gaphunter.value.total + ' produits winners trouvés — Import automatique'
+      });
+    }
+
+    // Met à jour les décisions si on en a
+    if (realDecisions.length > 0) {
+      DECISIONS.length = 0;
+      realDecisions.forEach(function(d) { DECISIONS.push(d); });
+      renderAgentLog();
+      console.log('[Dashboard] ✅ ' + realDecisions.length + ' vraies décisions chargées');
+    }
+
+    // Met à jour les stats avec les vraies données
+    if (gaphunter.status === 'fulfilled' && gaphunter.value.winners) {
+      state.stats.products = PRODUCTS.length;
+      renderDashboard();
+    }
+
+  } catch(e) {
+    console.log('[Dashboard] Backend en veille — données locales utilisées');
+  }
+}
+
+// Charge les vraies données au démarrage
+setTimeout(loadRealDashboardData, 3000);
+// Rafraîchit toutes les 15 minutes
+setInterval(loadRealDashboardData, 900000);
+
+
 const NICHES=[
   {id:'all',icon:'',label:'Tout',color:'#C8FF00',visits:''},
   {id:'wellness',icon:'🩹',label:'Patches Bien-être',color:'#C8FF00',visits:'1.9M'},
@@ -398,7 +541,7 @@ const EMAILS=[
 
 // ── STATE ────────────────────────────────────────────────────
 let state={lang:'fr',symbol:'€',niche:'all',cart:[],cartCount:0,
-  stats:{revenue:52480,orders:1389,visitors:41200,products:10},
+  stats:{revenue:0,orders:0,visitors:0,products:PRODUCTS.length},
   agentOn:true,worldEventIdx:0,replies:{},selectedEmail:null,emailsRead:{},orderDone:false};
 
 function getPrice(base){const m={fr:1.0,en:1.15,es:1.0,ar:0.95,pt:0.80,sw:0.65}[state.lang]||1.0;return (base*m).toFixed(2);}
