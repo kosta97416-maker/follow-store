@@ -7,6 +7,7 @@ const RAPIDAPI_HOST = 'aliexpress-datahub.p.rapidapi.com';
 const CEO_EMAIL = 'karma97416@gmail.com';
 const CJ_EMAIL = process.env.CJ_EMAIL || '';
 const CJ_PASSWORD = process.env.CJ_PASSWORD || '';
+const CJ_API_KEY = process.env.CJ_API_KEY || '';
 const PORT = process.env.PORT || 3000;
 
 // ── SÉCURITÉ FOLLOW. ─────────────────────────────────────
@@ -134,7 +135,7 @@ function getCJToken() {
     if (cjToken.access && Date.now() < cjToken.expires) {
       return resolve(cjToken.access);
     }
-    var postData = JSON.stringify({ email: CJ_EMAIL, password: CJ_PASSWORD });
+    var postData = JSON.stringify({ apiKey: CJ_API_KEY });
     var options = {
       hostname: 'developers.cjdropshipping.com',
       path: '/api2.0/v1/authentication/getAccessToken',
@@ -150,7 +151,7 @@ function getCJToken() {
           if (result.data && result.data.accessToken) {
             cjToken.access = result.data.accessToken;
             cjToken.refresh = result.data.refreshToken || '';
-            cjToken.expires = Date.now() + (14 * 24 * 60 * 60 * 1000); // 14 jours
+            cjToken.expires = Date.now() + (14 * 24 * 60 * 60 * 1000);
             console.log('[CJ] ✅ Token obtenu — valide 14 jours');
             resolve(cjToken.access);
           } else {
@@ -195,7 +196,7 @@ function callCJ(path, method, body) {
 }
 
 // Obtient le token CJ au démarrage
-if (CJ_EMAIL && CJ_PASSWORD) {
+if (CJ_API_KEY) {
   getCJToken().then(function() {
     console.log('[CJ] Token initialisé avec succès');
   }).catch(function(e) {
