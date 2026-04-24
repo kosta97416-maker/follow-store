@@ -5,7 +5,203 @@ const url = require('url');
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || '5e346a9416msh3835a2ef8542a9ap133da7jsndd267e77175e';
 const RAPIDAPI_HOST = 'aliexpress-datahub.p.rapidapi.com';
 const CEO_EMAIL = 'karma97416@gmail.com';
+const CJ_EMAIL = process.env.CJ_EMAIL || '';
+const CJ_PASSWORD = process.env.CJ_PASSWORD || '';
 const PORT = process.env.PORT || 3000;
+
+// ── SÉCURITÉ FOLLOW. ─────────────────────────────────────
+var security = {
+  ipRequests: {},        // Rate limiting par IP
+  blacklist: [],         // IPs bloquées
+  requestLog: [],        // Log des requêtes
+  blockedAttempts: 0,    // Compteur attaques bloquées
+  RATE_LIMIT: 100,       // Max requêtes par IP par heure
+  RATE_WINDOW: 3600000,  // 1 heure en ms
+};
+
+// Domaines autorisés (CORS)
+var ALLOWED_ORIGINS = [
+  'https://followtrend.shop',
+  'https://follow-store-qqbr.vercel.app',
+  'http://localhost:3000',
+  'https://follow-backend-o300.onrender.com'
+];
+
+// Nettoie les vieux logs toutes les heures
+setInterval(function() {
+  var now = Date.now();
+  Object.keys(security.ipRequests).forEach(function(ip) {
+    security.ipRequests[ip] = security.ipRequests[ip].filter(function(t) {
+      return now - t < security.RATE_WINDOW;
+    });
+    if (security.ipRequests[ip].length === 0) delete security.ipRequests[ip];
+  });
+  // Garde seulement les 1000 derniers logs
+  if (security.requestLog.length > 1000) {
+    security.requestLog = security.requestLog.slice(-500);
+  }
+}, 3600000);
+
+function checkSecurity(req, res) {
+  var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+  ip = ip.split(',')[0].trim();
+  var origin = req.headers['origin'] || '';
+  var userAgent = req.headers['user-agent'] || '';
+  var now = Date.now();
+
+  // Log de la requête
+  security.requestLog.push({ ip: ip, time: now, path: req.url, agent: userAgent });
+
+  // ── 1. IP BLACKLIST ────────────────────────────────────
+  if (security.blacklist.includes(ip)) {
+    security.blockedAttempts++;
+    res.writeHead(403);
+    res.end(JSON.stringify({ error: 'Accès refusé', code: 'IP_BLOCKED' }));
+    console.log('[Security] 🚫 IP bloquée : ' + ip);
+    return false;
+  }
+
+  // ── 2. RATE LIMITING ──────────────────────────────────
+  if (!security.ipRequests[ip]) security.ipRequests[ip] = [];
+  security.ipRequests[ip].push(now);
+  var recentRequests = security.ipRequests[ip].filter(function(t) { return now - t < security.RATE_WINDOW; });
+  security.ipRequests[ip] = recentRequests;
+
+  if (recentRequests.length > security.RATE_LIMIT) {
+    security.blockedAttempts++;
+    if (!security.blacklist.includes(ip)) {
+      security.blacklist.push(ip);
+      console.log('[Security] 🚫 IP blacklistée (rate limit) : ' + ip);
+    }
+    res.writeHead(429);
+    res.end(JSON.stringify({ error: 'Trop de requêtes', code: 'RATE_LIMITED', retry_after: '1h' }));
+    return false;
+  }
+
+  // ── 3. BOT DETECTION ──────────────────────────────────
+  var botPatterns = ['sqlmap', 'nikto', 'nmap', 'masscan', 'zgrab', 'python-requests/2.', 'curl/'];
+  var isBot = botPatterns.some(function(p) { return userAgent.toLowerCase().includes(p); });
+  if (isBot && !userAgent.includes('followtrend')) {
+    security.blockedAttempts++;
+    res.writeHead(403);
+    res.end(JSON.stringify({ error: 'Bot non autorisé', code: 'BOT_DETECTED' }));
+    console.log('[Security] 🤖 Bot bloqué : ' + userAgent.substring(0, 50));
+    return false;
+  }
+
+  // ── 4. SQL INJECTION DETECTION ────────────────────────
+  var sqlPatterns = ['select ', 'union ', 'drop ', 'insert ', 'delete ', '--', '/*', 'xp_', 'exec('];
+  var reqUrl = req.url.toLowerCase();
+  var hasSQLi = sqlPatterns.some(function(p) { return reqUrl.includes(p); });
+  if (hasSQLi) {
+    security.blockedAttempts++;
+    security.blacklist.push(ip);
+    res.writeHead(403);
+    res.end(JSON.stringify({ error: 'Tentative injection bloquée', code: 'SQL_INJECTION' }));
+    console.log('[Security] 💉 Injection SQL bloquée depuis : ' + ip);
+    return false;
+  }
+
+  // ── 5. HEADERS SÉCURITÉ ───────────────────────────────
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  res.setHeader('Content-Security-Policy', "default-src 'self'");
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('X-Powered-By', 'FOLLOW.');
+
+  // ── 6. CORS STRICT ────────────────────────────────────
+  var isAllowedOrigin = !origin || ALLOWED_ORIGINS.some(function(o) { return origin.startsWith(o); });
+  if (isAllowedOrigin) {
+    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', 'https://followtrend.shop');
+    console.log('[Security] ⚠️ Origine non autorisée : ' + origin);
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Content-Type', 'application/json');
+
+  return true;
+}
+
+// ── CJ DROPSHIPPING TOKEN ─────────────────────────────────
+var cjToken = { access: '', refresh: '', expires: 0 };
+
+function getCJToken() {
+  return new Promise(function(resolve, reject) {
+    if (cjToken.access && Date.now() < cjToken.expires) {
+      return resolve(cjToken.access);
+    }
+    var postData = JSON.stringify({ email: CJ_EMAIL, password: CJ_PASSWORD });
+    var options = {
+      hostname: 'developers.cjdropshipping.com',
+      path: '/api2.0/v1/authentication/getAccessToken',
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(postData) }
+    };
+    var req = https.request(options, function(res) {
+      var data = '';
+      res.on('data', function(c) { data += c; });
+      res.on('end', function() {
+        try {
+          var result = JSON.parse(data);
+          if (result.data && result.data.accessToken) {
+            cjToken.access = result.data.accessToken;
+            cjToken.refresh = result.data.refreshToken || '';
+            cjToken.expires = Date.now() + (14 * 24 * 60 * 60 * 1000); // 14 jours
+            console.log('[CJ] ✅ Token obtenu — valide 14 jours');
+            resolve(cjToken.access);
+          } else {
+            console.log('[CJ] ❌ Token failed:', JSON.stringify(result));
+            reject(new Error('CJ Token failed: ' + JSON.stringify(result)));
+          }
+        } catch(e) { reject(e); }
+      });
+    });
+    req.on('error', reject);
+    req.write(postData);
+    req.end();
+  });
+}
+
+function callCJ(path, method, body) {
+  return getCJToken().then(function(token) {
+    return new Promise(function(resolve, reject) {
+      var postData = body ? JSON.stringify(body) : '';
+      var options = {
+        hostname: 'developers.cjdropshipping.com',
+        path: path,
+        method: method || 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'CJ-Access-Token': token
+        }
+      };
+      if (postData) options.headers['Content-Length'] = Buffer.byteLength(postData);
+      var req = https.request(options, function(res) {
+        var data = '';
+        res.on('data', function(c) { data += c; });
+        res.on('end', function() {
+          try { resolve(JSON.parse(data)); } catch(e) { reject(e); }
+        });
+      });
+      req.on('error', reject);
+      if (postData) req.write(postData);
+      req.end();
+    });
+  });
+}
+
+// Obtient le token CJ au démarrage
+if (CJ_EMAIL && CJ_PASSWORD) {
+  getCJToken().then(function() {
+    console.log('[CJ] Token initialisé avec succès');
+  }).catch(function(e) {
+    console.log('[CJ] Erreur token initial:', e.message);
+  });
+}
 
 // ── GOLDWATCH STATE ───────────────────────────────────────
 var goldwatch = {
@@ -129,8 +325,10 @@ function searchProducts(keyword, niche) {
 }
 
 var server = http.createServer(function(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Content-Type', 'application/json');
+
+  // ── SÉCURITÉ FOLLOW. — VÉRIFICATION À CHAQUE REQUÊTE ──
+  if (!checkSecurity(req, res)) return;
+
   if (req.method === 'OPTIONS') { res.writeHead(200); res.end(); return; }
 
   var parsed = url.parse(req.url, true);
@@ -140,11 +338,45 @@ var server = http.createServer(function(req, res) {
     res.writeHead(200);
     res.end(JSON.stringify({
       status: 'ok',
-      service: 'FOLLOW. Backend v6 — RapidAPI',
+      service: 'FOLLOW. Backend v7 — Sécurisé',
+      security: {
+        rate_limiting: 'actif',
+        bot_detection: 'actif',
+        sql_injection_protection: 'actif',
+        cors_strict: 'actif',
+        security_headers: 'actif',
+        blacklisted_ips: security.blacklist.length,
+        blocked_attempts: security.blockedAttempts,
+      },
       timestamp: new Date().toISOString()
     }));
     return;
   }
+
+  if (action === 'security') {
+    res.writeHead(200);
+    res.end(JSON.stringify({
+      success: true,
+      agent: 'SecurityGuard',
+      status: 'ACTIF',
+      blacklisted_ips: security.blacklist.length,
+      blocked_attempts: security.blockedAttempts,
+      active_ips: Object.keys(security.ipRequests).length,
+      recent_logs: security.requestLog.slice(-10),
+      protections: [
+        '✅ Rate limiting — 100 req/heure/IP',
+        '✅ IP Blacklist automatique',
+        '✅ Bot detection',
+        '✅ SQL Injection protection',
+        '✅ CORS strict',
+        '✅ Security headers (XSS, CSP, HSTS)',
+        '✅ User-Agent filtering',
+      ]
+    }));
+    return;
+  }
+
+
 
   if (action === 'search') {
     var keyword = parsed.query.keyword || 'patch sommeil';
@@ -393,7 +625,13 @@ var server = http.createServer(function(req, res) {
       {source:'Booking.com Affiliate',type:'affiliate',description:'Commission 25-40% réservations',amount:0,currency:'USD',autonomous:true,legal:true,status:'available',category:'affiliate'},
       {source:'Shopify Affiliate',type:'affiliate',description:'200$ par marchand référé',amount:0,currency:'USD',autonomous:true,legal:true,status:'available',category:'affiliate'},
       {source:'Fiverr Affiliate',type:'affiliate',description:'Commission 30% première commande',amount:0,currency:'USD',autonomous:true,legal:true,status:'available',category:'affiliate'},
-      // PROGRAMMES STARTUPS & AIDES
+      // CJ DROPSHIPPING PRIMES
+      {source:'CJ Dropshipping Partner Program',type:'partner_bonus',description:'Commission 3% sur toutes les ventes via CJ',amount:0,currency:'USD',autonomous:true,legal:true,status:'scanning',category:'ecommerce'},
+      {source:'CJ Dropshipping Cashback',type:'cashback',description:'Cashback sur commandes CJ — jusqu\'à 5%',amount:0,currency:'USD',autonomous:true,legal:true,status:'scanning',category:'ecommerce'},
+      {source:'CJ Dropshipping Free Warehouse',type:'credit',description:'Stockage gratuit 90 jours premier entrepôt',amount:50,currency:'USD',autonomous:true,legal:true,status:'available',category:'ecommerce'},
+      {source:'CJ Dropshipping New User Bonus',type:'bonus',description:'Bonus nouvel utilisateur CJ',amount:10,currency:'USD',autonomous:true,legal:true,status:'available',category:'ecommerce'},
+      {source:'CJ Dropshipping Referral',type:'referral',description:'20$ par marchand référé sur CJ',amount:0,currency:'USD',autonomous:true,legal:true,status:'available',category:'ecommerce'},
+      {source:'CJ Dropshipping Free Shipping',type:'discount',description:'Livraison gratuite sur certains produits CJ',amount:5,currency:'USD',autonomous:true,legal:true,status:'active',category:'ecommerce'},
       {source:'Stripe Startup Credits',type:'startup',description:'Crédits Stripe pour startups',amount:0,currency:'USD',autonomous:false,legal:true,status:'ceo_required',category:'startup'},
       {source:'HubSpot Startup',type:'startup',description:'CRM gratuit 90% réduction startups',amount:1200,currency:'USD',autonomous:true,legal:true,status:'available',category:'startup'},
       {source:'Notion Free',type:'free_tier',description:'Plan gratuit illimité',amount:8,currency:'USD',autonomous:true,legal:true,status:'active',category:'tools'},
@@ -585,7 +823,82 @@ var server = http.createServer(function(req, res) {
     return;
   }
 
-  // ── TRENDSCANNER + BEHAVIOUR ANALYSIS + VIDEOBOT ────────
+  // ── CJ DROPSHIPPING ──────────────────────────────────────
+  if (action === 'cj') {
+    var cjAction = parsed.query.sub || 'token';
+
+    if (cjAction === 'token') {
+      getCJToken().then(function(token) {
+        res.writeHead(200);
+        res.end(JSON.stringify({
+          success: true,
+          agent: 'OrderBot → CJ Dropshipping',
+          token_active: true,
+          token_preview: token.substring(0, 20) + '...',
+          expires_in: '14 jours',
+          message: '✅ CJ Dropshipping connecté — OrderBot prêt'
+        }));
+      }).catch(function(e) {
+        res.writeHead(200);
+        res.end(JSON.stringify({
+          success: false,
+          agent: 'OrderBot → CJ Dropshipping',
+          token_active: false,
+          error: e.message,
+          message: '❌ Erreur connexion CJ — Vérifier credentials'
+        }));
+      });
+      return;
+    }
+
+    if (cjAction === 'search') {
+      var keyword = parsed.query.keyword || 'patch sommeil';
+      callCJ('/api2.0/v1/product/list?productNameEn=' + encodeURIComponent(keyword) + '&pageNum=1&pageSize=10', 'GET').then(function(data) {
+        res.writeHead(200);
+        res.end(JSON.stringify({
+          success: true,
+          agent: 'CJ Search',
+          keyword: keyword,
+          results: data
+        }));
+      }).catch(function(e) {
+        res.writeHead(500);
+        res.end(JSON.stringify({ error: e.message }));
+      });
+      return;
+    }
+
+    if (cjAction === 'order') {
+      var orderData = {
+        orderNumber: 'FOLLOW-' + Date.now(),
+        shippingCountry: parsed.query.country || 'FR',
+        products: [{
+          vid: parsed.query.vid || '',
+          quantity: parseInt(parsed.query.qty || 1)
+        }]
+      };
+      callCJ('/api2.0/v1/shopping/order/createOrder', 'POST', orderData).then(function(data) {
+        console.log('[OrderBot → CJ] Commande créée : ' + orderData.orderNumber);
+        res.writeHead(200);
+        res.end(JSON.stringify({
+          success: true,
+          agent: 'OrderBot → CJ',
+          order: orderData,
+          cj_response: data
+        }));
+      }).catch(function(e) {
+        res.writeHead(500);
+        res.end(JSON.stringify({ error: e.message }));
+      });
+      return;
+    }
+
+    res.writeHead(400);
+    res.end(JSON.stringify({ error: 'CJ sub-actions: token, search, order' }));
+    return;
+  }
+
+
   if (action === 'trendscanner') {
     var platform = parsed.query.platform || 'all';
     var region = parsed.query.region || 'FR';
@@ -824,7 +1137,7 @@ var server = http.createServer(function(req, res) {
       },
       {
         name: 'CJ Dropshipping',
-        status: 'available',
+        status: CJ_EMAIL && CJ_PASSWORD ? 'connected' : 'available',
         priority: 2,
         delivery_days: 10,
         fee_pct: 2,
@@ -832,7 +1145,7 @@ var server = http.createServer(function(req, res) {
         auto_integrate: true,
         api_ready: true,
         api_url: 'https://developers.cjdropshipping.com',
-        note: 'API disponible — intégration possible immédiatement'
+        note: CJ_EMAIL && CJ_PASSWORD ? '✅ Connecté — Token actif' : 'API disponible — credentials requis'
       },
       {
         name: 'Spocket',
