@@ -1,3 +1,4 @@
+
 const https = require('https');
 const http = require('http');
 const url = require('url');
@@ -1521,6 +1522,6 @@ var server = http.createServer(function(req, res) {
 
 });
 
-server.listen(PORT, '0.0.0.0', function() {
+server.listen(PORT, function() {
   console.log('FOLLOW. Backend v6 actif sur port ' + PORT);
 });
