@@ -8,7 +8,33 @@ const CEO_EMAIL = 'karma97416@gmail.com';
 const CJ_EMAIL = process.env.CJ_EMAIL || '';
 const CJ_PASSWORD = process.env.CJ_PASSWORD || '';
 const CJ_API_KEY = process.env.CJ_API_KEY || '';
+const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY || '';
 const PORT = process.env.PORT || 3000;
+
+// ── STRIPE API ────────────────────────────────────────────
+function callStripe(path) {
+  return new Promise(function(resolve, reject) {
+    var options = {
+      hostname: 'api.stripe.com',
+      path: path,
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + STRIPE_SECRET,
+        'Content-Type': 'application/json'
+      }
+    };
+    var req = https.request(options, function(res) {
+      var data = '';
+      res.on('data', function(c) { data += c; });
+      res.on('end', function() {
+        try { resolve(JSON.parse(data)); }
+        catch(e) { reject(e); }
+      });
+    });
+    req.on('error', reject);
+    req.end();
+  });
+}
 
 // ── SÉCURITÉ FOLLOW. ─────────────────────────────────────
 var security = {
@@ -679,7 +705,77 @@ var server = http.createServer(function(req, res) {
     return;
   }
 
-  // ── WORLDWATCH ────────────────────────────────────────────
+  // ── STRIPE BALANCE ────────────────────────────────────────
+  if (action === 'stripe') {
+    var stripeAction = parsed.query.sub || 'balance';
+
+    if (stripeAction === 'balance') {
+      callStripe('/v1/balance').then(function(data) {
+        var available = 0;
+        var pending = 0;
+        if (data.available) {
+          data.available.forEach(function(b) {
+            if (b.currency === 'eur') available = b.amount / 100;
+          });
+        }
+        if (data.pending) {
+          data.pending.forEach(function(b) {
+            if (b.currency === 'eur') pending = b.amount / 100;
+          });
+        }
+        res.writeHead(200);
+        res.end(JSON.stringify({
+          success: true,
+          agent: 'Stripe',
+          available_eur: available,
+          pending_eur: pending,
+          total_eur: available + pending,
+          currency: 'EUR',
+          timestamp: new Date().toISOString()
+        }));
+      }).catch(function(e) {
+        res.writeHead(200);
+        res.end(JSON.stringify({ success: false, error: e.message, available_eur: 0, pending_eur: 0, total_eur: 0 }));
+      });
+      return;
+    }
+
+    if (stripeAction === 'payments') {
+      callStripe('/v1/payment_intents?limit=10').then(function(data) {
+        var payments = [];
+        if (data.data) {
+          data.data.forEach(function(p) {
+            payments.push({
+              id: p.id,
+              amount: p.amount / 100,
+              currency: p.currency,
+              status: p.status,
+              created: new Date(p.created * 1000).toLocaleString('fr-FR'),
+              description: p.description || 'Commande FOLLOW.'
+            });
+          });
+        }
+        res.writeHead(200);
+        res.end(JSON.stringify({
+          success: true,
+          agent: 'Stripe',
+          payments: payments,
+          total_payments: payments.length,
+          total_revenue: payments.filter(function(p) { return p.status === 'succeeded'; }).reduce(function(s, p) { return s + p.amount; }, 0)
+        }));
+      }).catch(function(e) {
+        res.writeHead(200);
+        res.end(JSON.stringify({ success: false, error: e.message, payments: [] }));
+      });
+      return;
+    }
+
+    res.writeHead(400);
+    res.end(JSON.stringify({ error: 'Stripe sub-actions: balance, payments' }));
+    return;
+  }
+
+
   if (action === 'worldwatch') {
     var events = [
       {domain:'Économie',level:'green',event:'Marchés stables',impact:'Faible',action:'Agents continuent normalement',alert:false},
@@ -991,27 +1087,73 @@ var server = http.createServer(function(req, res) {
       var profile = nicheProfiles[topTrend.niche] || nicheProfiles.wellness;
       var bestTrigger = topTrend.addiction.best_trigger;
 
-      result.videobot = {
-        status: 'SCRIPT_GÉNÉRÉ',
-        product: topTrend.product,
-        addiction_score: topTrend.addiction.addiction_score,
+      // Scripts multilingues par pays
+    var videoScripts = {
+      fr: {
         hook: profile.trigger,
-        problem_statement: profile.pain,
-        audience: profile.audience,
-        psychological_trigger: bestTrigger,
-        script_structure: [
-          '🎬 [0-3s] HOOK : "' + profile.trigger + '"',
-          '🎯 [3-8s] PROBLÈME : Montre la douleur exacte de ' + profile.audience,
-          '✨ [8-15s] SOLUTION : Révèle ' + topTrend.product + ' sans le nommer',
-          '💥 [15-25s] TRANSFORMATION : Avant/après visible',
-          '🛒 [25-30s] CTA : "Lien en bio → followtrend.shop"',
-        ],
-        platforms: ['TikTok','Instagram Reels','YouTube Shorts'],
+        problem: profile.pain,
+        cta: 'Lien en bio → followtrend.shop',
         hashtags: ['#' + topTrend.niche, '#bienetre', '#followtrend', '#viral', '#fyp'],
-        redirect_link: topTrend.link,
-        estimated_views: '10K-500K',
-        addiction_exploitation: topTrend.addiction.triggers
-      };
+        lang: 'Français 🇫🇷'
+      },
+      en: {
+        hook: profile.trigger.replace('tu ', 'you ').replace('Tu ', 'You '),
+        problem: 'Struggling with ' + topTrend.niche + ' issues? You\'re not alone.',
+        cta: 'Link in bio → followtrend.shop',
+        hashtags: ['#' + topTrend.niche, '#wellness', '#followtrend', '#viral', '#fyp'],
+        lang: 'English 🇬🇧🇺🇸'
+      },
+      ar: {
+        hook: 'هل تعاني من ' + topTrend.niche + '؟',
+        problem: 'الحل الطبيعي الذي تبحث عنه موجود الآن',
+        cta: 'الرابط في البايو ← followtrend.shop',
+        hashtags: ['#' + topTrend.niche, '#صحة', '#followtrend', '#viral'],
+        lang: 'العربية 🇸🇦🇦🇪'
+      },
+      pt: {
+        hook: 'Você sofre com ' + topTrend.niche + '?',
+        problem: 'A solução natural que você precisava chegou',
+        cta: 'Link na bio → followtrend.shop',
+        hashtags: ['#' + topTrend.niche, '#saude', '#followtrend', '#viral', '#fyp'],
+        lang: 'Português 🇧🇷🇵🇹'
+      },
+      es: {
+        hook: '¿Sufres de ' + topTrend.niche + '?',
+        problem: 'La solución natural que necesitabas ya está aquí',
+        cta: 'Enlace en bio → followtrend.shop',
+        hashtags: ['#' + topTrend.niche, '#salud', '#followtrend', '#viral', '#fyp'],
+        lang: 'Español 🇪🇸🇲🇽'
+      },
+      sw: {
+        hook: 'Una tatizo la ' + topTrend.niche + '?',
+        problem: 'Suluhisho la asili unalohitaji liko hapa',
+        cta: 'Kiungo kwenye bio → followtrend.shop',
+        hashtags: ['#' + topTrend.niche, '#afya', '#followtrend', '#viral'],
+        lang: 'Kiswahili 🇰🇪🇹🇿'
+      }
+    };
+
+    result.videobot = {
+      status: 'SCRIPTS_GÉNÉRÉS',
+      product: topTrend.product,
+      addiction_score: topTrend.addiction.addiction_score,
+      audience: profile.audience,
+      psychological_trigger: bestTrigger,
+      script_structure: [
+        '🎬 [0-3s] HOOK — Accroche psychologique ciblée',
+        '🎯 [3-8s] PROBLÈME — Douleur exacte de l\'audience',
+        '✨ [8-15s] SOLUTION — Révèle le produit progressivement',
+        '💥 [15-25s] TRANSFORMATION — Avant/après visible',
+        '🛒 [25-30s] CTA — Lien bio followtrend.shop',
+      ],
+      multilingual_scripts: videoScripts,
+      languages: Object.keys(videoScripts).length,
+      platforms: ['TikTok','Instagram Reels','YouTube Shorts'],
+      redirect_link: topTrend.link,
+      estimated_views: '10K-500K par langue',
+      total_reach: '6 langues × 500K = 3M vues potentielles 🌍',
+      addiction_exploitation: topTrend.addiction.triggers
+    };
     }
 
     res.writeHead(200);
