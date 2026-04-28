@@ -313,11 +313,30 @@ async function loadAEProducts() {
     const res = await fetch(BACKEND + '?action=gaphunter');
     const data = await res.json();
     if (data.success && data.winners && data.winners.length > 0) {
+      // Remplace les produits locaux par les vrais produits AliExpress
       const aeProducts = data.winners.map(function(p, i) {
-        return {id:100+i,name:p.name,img:p.image||'https://images.unsplash.com/photo-1559181567-c3190e5a9e7f?w=400&q=80',niche:p.niche||'wellness',basePrice:parseFloat(p.price||19.99),oldPrice:parseFloat(p.price||19.99)*1.4,rating:parseFloat(p.rating||4.5),reviews:Math.floor(Math.random()*5000+500),supplier:'AliExpress',trend:p.score||80,competition:Math.floor(Math.random()*20+5),gapFR:p.score||80,isWinner:p.score>=80,badge:'hot'};
+        return {
+          id: 100+i,
+          name: p.name.substring(0, 60),
+          img: p.image || 'https://images.unsplash.com/photo-1559181567-c3190e5a9e7f?w=400&q=80',
+          niche: p.niche || 'wellness',
+          basePrice: parseFloat(p.price || 19.99),
+          oldPrice: parseFloat((p.price * 1.5 || 29.99).toFixed(2)),
+          rating: parseFloat(p.rating || 4.5),
+          reviews: p.sales || Math.floor(Math.random()*5000+500),
+          supplier: 'AliExpress',
+          trend: p.score || 80,
+          competition: Math.floor(Math.random()*20+5),
+          gapFR: p.score || 80,
+          isWinner: true,
+          badge: 'hot'
+        };
       });
-      PRODUCTS.push.apply(PRODUCTS, aeProducts);
+      // Vide les produits locaux et remplace par AliExpress
+      PRODUCTS.length = 0;
+      aeProducts.forEach(function(p) { PRODUCTS.push(p); });
       renderProducts();
+      document.getElementById('catalog-count').textContent = PRODUCTS.length;
     }
   } catch(e) {}
 }
