@@ -1521,6 +1521,6 @@ var server = http.createServer(function(req, res) {
 
 });
 
-server.listen(PORT, function() {
+server.listen(PORT, '0.0.0.0', function() {
   console.log('FOLLOW. Backend v6 actif sur port ' + PORT);
 });
