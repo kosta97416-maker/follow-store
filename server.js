@@ -49,10 +49,9 @@ var security = {
 // Domaines autorisés (CORS)
 var ALLOWED_ORIGINS = [
   'https://followtrend.shop',
-  'https://follow-store-qqbr.vercel.app',
-  'http://localhost:3000',
-  'https://follow-backend-o300.onrender.com'
-];
+  'https://follow-store-1.onrender.com', 
+  'http://localhost:3000'
+ ];
 
 // Nettoie les vieux logs toutes les heures
 setInterval(function() {
