@@ -790,9 +790,7 @@ function agentTick(){
   const count=document.getElementById('log-count');
   if(count)count.textContent=logBody.children.length+' décisions';
   logIdx++;
-  state.stats.revenue+=Math.floor(Math.random()*80+10);
-  state.stats.visitors+=Math.floor(Math.random()*15+3);
-  if(Math.random()>.65)state.stats.orders++;
+  if(Math.random()>.98) state.stats.orders++;
   renderDashboard();
 }
 
