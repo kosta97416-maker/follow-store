@@ -493,10 +493,10 @@ function removeFromCart(id){state.cart=state.cart.filter(i=>i.id!==id);state.car
 
 function renderDashboard(){
   document.getElementById('stats-grid').innerHTML=[
-    {l:'Revenus',v:`${state.symbol}${state.stats.revenue.toLocaleString()}`,icon:'💰',c:'#C8FF00',ch:'+18%'},
-    {l:'Commandes',v:state.stats.orders.toLocaleString(),icon:'📦',c:'#00CFFF',ch:'+26%'},
-    {l:'Produits',v:state.stats.products,icon:'🏷️',c:'#FF6B35',ch:'+3'},
-    {l:'Visiteurs',v:state.stats.visitors.toLocaleString(),icon:'👁️',c:'#FF3CAC',ch:'+31%'},
+    {l:'Revenus',v:`${state.symbol}${state.stats.revenue.toLocaleString()}`,icon:'💰',c:'#C8FF00',ch:''},
+    {l:'Commandes',v:state.stats.orders.toLocaleString(),icon:'📦',c:'#00CFFF',ch:''},
+    {l:'Produits',v:state.stats.products,icon:'🏷️',c:'#FF6B35',ch:''},
+    {l:'Visiteurs',v:state.stats.visitors.toLocaleString(),icon:'👁️',c:'#FF3CAC',ch:''},
   ].map(s=>`<div class="stat-card"><span style="background:${s.c}18;color:${s.c};font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;float:right">${s.ch}</span><div style="font-size:24px;margin-bottom:10px">${s.icon}</div><div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:${s.c}">${s.v}</div><div style="color:var(--muted);font-size:11px;margin-top:3px">${s.l}</div></div>`).join('');
   document.getElementById('top-winners').innerHTML=PRODUCTS.filter(p=>p.isWinner).slice(0,4).map((p,i)=>{const n=getNiche(p.niche);return `<div class="panel-row"><span style="color:var(--accent);font-family:'Bebas Neue',sans-serif;font-size:14px;min-width:18px">#${i+1}</span><img src="${p.img}" style="width:36px;height:36px;border-radius:7px;object-fit:cover"/><div style="flex:1"><div style="font-weight:600;font-size:12px">${p.name}</div><div style="color:${n.color};font-size:10px">${n.icon} ${n.label}</div></div><div style="text-align:right"><div style="color:var(--accent);font-weight:700;font-size:12px">Score ${p.gapFR}</div></div></div>`;}).join('');
   document.getElementById('suppliers-list').innerHTML=[{n:'AliExpress',c:'#FF6600',s:'✅'},{n:'CJ Dropshipping',c:'#00CFFF',s:'✅'},{n:'Zendrop',c:'#AA00FF',s:'✅'},{n:'Spocket',c:'#00FF88',s:'✅'},{n:'DSers',c:'#FFD700',s:'🔄'}].map(s=>`<div class="panel-row"><div style="width:7px;height:7px;border-radius:50%;background:${s.c};flex-shrink:0"></div><div style="flex:1;font-weight:600;font-size:12px">${s.n}</div><span style="font-size:12px">${s.s}</span></div>`).join('');
@@ -567,7 +567,6 @@ function agentTick(){
   const count=document.getElementById('log-count');
   if(count)count.textContent=logBody.children.length+' décisions';
   logIdx++;
-  if(Math.random()>.98) state.stats.orders++;
   renderDashboard();
 }
 
