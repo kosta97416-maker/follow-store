@@ -1,6 +1,8 @@
 const https = require('https');
 const http = require('http');
 const url = require('url');
+const fs = require('fs');
+const path = require('path');
 
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || '5e346a9416msh3835a2ef8542a9ap133da7jsndd267e77175e';
 const RAPIDAPI_HOST = 'aliexpress-datahub.p.rapidapi.com';
