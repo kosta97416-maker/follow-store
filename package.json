@@ -1,10 +1,5 @@
 {
-  "name": "followtrend-empire",
-  "version": "10.5.0",
-  "description": "Infrastructure automatisée followtrend.shop",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {}
+  "status": "ok",
+  "service": "FOLLOW. Backend v7 — Sécurisé",
+  ...
 }
