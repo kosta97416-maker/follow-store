@@ -358,8 +358,17 @@ var server = http.createServer(function(req, res) {
   if (!checkSecurity(req, res)) return;
 
   if (req.method === 'OPTIONS') { res.writeHead(200); res.end(); return; }
-
-  var parsed = url.parse(req.url, true);
+// --- GESTION DES FICHIERS STATIQUES (IMAGES) ---
+  if (req.url.startsWith('/photo-')) {
+    const filePath = path.join(__dirname, 'public', req.url);
+    if (fs.existsSync(filePath)) {
+      const ext = path.extname(filePath).toLowerCase();
+      const mimeTypes = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png' };
+      res.writeHead(200, { 'Content-Type': mimeTypes[ext] || 'application/octet-stream' });
+      fs.createReadStream(filePath).pipe(res);
+      return;
+    }
+  }  var parsed = url.parse(req.url, true);
   var action = parsed.query.action;
 
   if (action === 'health') {
