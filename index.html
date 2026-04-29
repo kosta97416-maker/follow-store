@@ -2,90 +2,53 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Follow Trend | L'Empire du Drop</title>
+    <title>FOLLOW TREND | EMPIRE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --gold: #D4AF37; --dark: #0a0a0a; }
-        body { background: var(--dark); color: white; font-family: 'Arial', sans-serif; margin: 0; padding: 20px; text-align: center; }
-        h1 { color: var(--gold); font-size: 2.5em; text-transform: uppercase; letter-spacing: 3px; }
-        
-        /* Grille de produits */
-        #products-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Carte Produit */
-        .product-card {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 10px;
-            padding: 15px;
-            transition: 0.3s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .product-card:hover { border-color: var(--gold); transform: translateY(-5px); }
-        .product-card img { width: 100%; border-radius: 5px; height: 200px; object-fit: cover; }
-        .product-card h3 { font-size: 14px; height: 40px; overflow: hidden; margin: 10px 0; color: #ccc; }
-        .product-card .price { color: var(--gold); font-size: 1.2em; font-weight: bold; margin-bottom: 15px; }
-        
-        .buy-btn {
-            background: var(--gold);
-            color: black;
-            text-decoration: none;
-            padding: 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 12px;
-        }
-
-        .loader { color: var(--gold); font-style: italic; margin-top: 50px; }
+        body { background: #000; color: #fff; font-family: sans-serif; }
+        .gold { color: #D4AF37; }
+        .gold-border { border-color: #D4AF37; }
+        .gold-bg { background-color: #D4AF37; }
     </style>
 </head>
 <body>
+    <div class="text-center py-10 border-b border-zinc-900">
+        <h1 class="text-4xl font-black gold tracking-tighter">FOLLOW TREND</h1>
+        <p class="text-zinc-500 text-xs uppercase tracking-widest mt-2">Infrastructure v10.5 | Agents Active</p>
+    </div>
 
-    <h1>Follow Trend Empire</h1>
-    <p>Sélection automatique par Intelligence Artificielle</p>
-
-    <div id="products-container">
-        <p class="loader">L'agent Hunter scanne AliExpress pour vous...</p>
+    <div id="grid" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 p-10">
+        <div id="status" class="col-span-full text-center py-20">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-gold mb-4"></div>
+            <p class="gold animate-pulse text-sm uppercase">L'agent Hunter déploie le catalogue AliExpress...</p>
+        </div>
     </div>
 
     <script>
-        async function loadEmpire() {
-            const container = document.getElementById('products-container');
+        async function init() {
             try {
-                // Appel au serveur (server.js)
-                const response = await fetch('/?action=search');
-                const data = await response.json();
-
-                if (data.success && data.products && data.products.length > 0) {
-                    container.innerHTML = data.products.map(p => `
-                        <div class="product-card">
-                            <img src="${p.image}" alt="Produit">
-                            <h3>${p.name}</h3>
-                            <p class="price">${p.price}€</p>
-                            <a href="${p.link}" target="_blank" class="buy-btn">Acheter maintenant</a>
+                const r = await fetch('/?action=search');
+                const d = await r.json();
+                const g = document.getElementById('grid');
+                if(d.products && d.products.length > 0) {
+                    g.innerHTML = d.products.map(p => `
+                        <div class="bg-zinc-900/50 border border-zinc-800 rounded-2xl overflow-hidden hover:gold-border transition-all duration-300">
+                            <img src="${p.image}" class="w-full h-56 object-cover">
+                            <div class="p-5">
+                                <h3 class="text-[12px] text-zinc-400 h-10 overflow-hidden mb-4">${p.name}</h3>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xl font-bold">${p.price}€</span>
+                                    <a href="${p.link}" target="_blank" class="gold-bg text-black px-4 py-2 rounded-lg text-[10px] font-black uppercase">Commander</a>
+                                </div>
+                            </div>
                         </div>
                     `).join('');
-                } else {
-                    container.innerHTML = "<p>Aucun produit trouvé. Vérifiez les logs de Render.</p>";
                 }
-            } catch (error) {
-                console.error("Erreur de connexion :", error);
-                container.innerHTML = "<p style='color:red;'>Erreur de connexion au Hub Central.</p>";
+            } catch(e) {
+                document.getElementById('status').innerHTML = "<p class='text-red-500'>Erreur de liaison agents.</p>";
             }
         }
-
-        // Lancement automatique au chargement de la page
-        window.onload = loadEmpire;
+        window.onload = init;
     </script>
 </body>
 </html>
