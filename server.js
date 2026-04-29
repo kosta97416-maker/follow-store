@@ -1,6 +1,10 @@
 const https = require('https');
 const http = require('http');
 const url = require('url');
+const fs = require('fs'); // <--- AJOUTE ÇA
+const path = require('path'); // <--- AJOUTE ÇAconst https = require('https');
+const http = require('http');
+const url = require('url');
 const fs = require('fs');
 const path = require('path');
 
