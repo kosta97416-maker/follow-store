@@ -360,8 +360,22 @@ var server = http.createServer(function(req, res) {
 
   // ── SÉCURITÉ FOLLOW. — VÉRIFICATION À CHAQUE REQUÊTE ──
   if (!checkSecurity(req, res)) return;
-
-  if (req.method === 'OPTIONS') { res.writeHead(200); res.end(); return; }
+// Servir les images du dossier public/assets
+if (req.url.startsWith('/assets/')) {
+    const filePath = path.join(__dirname, 'public', req.url);
+    fs.readFile(filePath, (err, data) => {
+        if (err) {
+            res.writeHead(404);
+            res.end("Image non trouvée");
+        } else {
+            const ext = path.extname(filePath).toLowerCase();
+            const contentType = ext === '.png' ? 'image/png' : 'image/jpeg';
+            res.writeHead(200, { 'Content-Type': contentType });
+            res.end(data);
+        }
+    });
+    return;
+}  if (req.method === 'OPTIONS') { res.writeHead(200); res.end(); return; }
 // --- GESTION DES FICHIERS STATIQUES (IMAGES) ---
   if (req.url.startsWith('/photo-')) {
     const filePath = path.join(__dirname, 'public', req.url);
