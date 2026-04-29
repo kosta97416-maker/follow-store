@@ -421,14 +421,25 @@ function renderNiches(){
 }
 function setNiche(id){state.niche=id;renderNiches();renderProducts();}
 
-function renderProducts(){
-  const f=state.niche==='all'?PRODUCTS:PRODUCTS.filter(p=>p.niche===state.niche);
-  const w=f.filter(p=>p.isWinner);
-  document.getElementById('catalog-count').textContent=f.length;
-  document.getElementById('winners-grid').innerHTML=w.map(p=>pCard(p,true)).join('');
-  document.getElementById('products-grid').innerHTML=f.map(p=>pCard(p,false)).join('');
-}
+async function renderProducts() {
+    try {
+        // 1. On va chercher les 432 photos sur le serveur
+        const response = await fetch('/?action=search');
+        const data = await response.json();
+        
+        if (data.success) {
+            const f = data.products; // 'f' contient maintenant tes photos
+            const w = f.filter(p => p.isWinner);
 
+            // 2. On met à jour l'affichage
+            document.getElementById('catalog-count').textContent = f.length;
+            document.getElementById('winners-grid').innerHTML = w.map(p => pCard(p, true)).join('');
+            document.getElementById('products-grid').innerHTML = f.map(p => pCard(p)).join('');
+        }
+    } catch (err) {
+        console.error("Erreur de chargement :", err);
+    }
+}
 function pCard(p,isWinner){
   const n=getNiche(p.niche);
   const price=getPrice(p.basePrice);
