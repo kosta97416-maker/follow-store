@@ -1,5 +1,13 @@
 {
-  "status": "ok",
-  "service": "FOLLOW. Backend v7 — Sécurisé",
-  ...
+  "version": 2,
+  "builds": [
+    {
+      "src": "**/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
 }
