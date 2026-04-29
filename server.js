@@ -434,17 +434,42 @@ if (req.url.startsWith('/assets/')) {
 
 
   if (action === 'search') {
-    var keyword = parsed.query.keyword || 'patch sommeil';
-    searchProducts(keyword, 'general').then(function(products) {
-      res.writeHead(200);
-      res.end(JSON.stringify({ success: true, products: products, total: products.length }));
-    }).catch(function(e) {
-      res.writeHead(500);
-      res.end(JSON.stringify({ error: e.message }));
+    const assetsPath = path.join(__dirname, 'public', 'assets');
+    
+    fs.readdir(assetsPath, (err, files) => {
+        if (err) {
+            res.writeHead(500);
+            return res.end(JSON.stringify({ error: "Dossier assets introuvable" }));
+        }
+
+        // On filtre pour ne prendre que les images .jpg ou .png
+        const imageFiles = files.filter(f => f.match(/\.(jpg|jpeg|png)$/i));
+
+        const products = imageFiles.map((filename, index) => {
+            return {
+                id: "LOCAL_" + index,
+                name: "Produit " + filename.replace(/\.[^/.]+$/, ""), // Enlève l'extension
+                image: "/assets/" + filename, // Ton nouveau chemin local
+                price: (Math.random() * (45 - 15) + 15).toFixed(2), // Prix aléatoire entre 15 et 45€
+                rating: 4.5,
+                sales: Math.floor(Math.random() * 500),
+                niche: "general",
+                score: 85,
+                isWinner: true,
+                link: "#"
+            };
+        });
+
+        res.writeHead(200);
+        res.end(JSON.stringify({ 
+            success: true, 
+            products: products, 
+            total: products.length,
+            source: "Stock local (Mode Test)" 
+        }));
     });
     return;
-  }
-
+}
   if (action === 'gaphunter') {
     var niches = [
       { keyword: 'sleep aid patch insomnia', niche: 'wellness' },
