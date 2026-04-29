@@ -447,8 +447,8 @@ function pCard(p,isWinner){
   const badge=p.badge==='hot'?'🔥 Tendance':p.badge==='new'?'✨ Nouveau':'💥 Promo';
   return `<div class="pcard">
     <div class="pcard-img-wrap">
-      <img class="pcard-img" src="${p.img}" alt="${p.name}" loading="lazy"/>
-      <div style="position:absolute;top:10px;left:10px;display:flex;gap:5px">
+<img class="pcard-img" src="${p.image}" alt="${p.name}" loading="lazy">
+<div style="position:absolute;top:10px;left:10px;display:flex;gap:5px">
         ${isWinner?`<span class="badge" style="background:#C8FF0022;color:var(--accent);border:1px solid #C8FF0040">🏆</span>`:''}
         <span class="badge" style="background:#08080888;color:#aaa;border:1px solid var(--border)">${badge}</span>
       </div>
