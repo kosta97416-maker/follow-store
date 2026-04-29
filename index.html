@@ -428,9 +428,23 @@ async function renderProducts() {
         const data = await response.json();
         
         if (data.success) {
-            const f = data.products; // 'f' contient maintenant tes photos
+            async function renderProducts() {
+    try {
+        const response = await fetch('/?action=search');
+        const data = await response.json();
+        
+        if (data.success) {
+            const f = data.products; 
             const w = f.filter(p => p.isWinner);
 
+            document.getElementById('catalog-count').textContent = f.length;
+            document.getElementById('winners-grid').innerHTML = w.map(p => pCard(p, true)).join('');
+            document.getElementById('products-grid').innerHTML = f.map(p => pCard(p)).join('');
+        }
+    } catch (e) {
+        console.log("Erreur serveur");
+    }
+}
             // 2. On met à jour l'affichage
             document.getElementById('catalog-count').textContent = f.length;
             document.getElementById('winners-grid').innerHTML = w.map(p => pCard(p, true)).join('');
