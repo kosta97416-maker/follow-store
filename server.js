@@ -1525,4 +1525,5 @@ var server = http.createServer(function(req, res) {
 
 server.listen(PORT, '0.0.0.0', function() {
   console.log('FOLLOW. Backend v7 actif sur port ' + PORT);
+  console.log('[Render] ✅ Serveur en écoute sur 0.0.0.0:' + PORT);
 });
