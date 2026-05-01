@@ -237,7 +237,7 @@ function handleStripeWebhook(payload, sigHeader) {
 // ── SÉCURITÉ ──────────────────────────────────────────────
 var security = {
   ipRequests: {}, blacklist: [], requestLog: [], blockedAttempts: 0,
-  RATE_LIMIT: 100, RATE_WINDOW: 3600000,
+  RATE_LIMIT: 500, RATE_WINDOW: 3600000,
   WHITELIST: ['::1', '127.0.0.1', '::ffff:127.0.0.1', 'localhost']
 };
 var ALLOWED_ORIGINS = ['https://followtrend.shop','https://follow-store-qqbr.vercel.app','http://localhost:3000','https://follow-backend-o300.onrender.com'];
