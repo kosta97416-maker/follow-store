@@ -27,11 +27,11 @@ function getCachedProducts() {
 
 function refreshProducts() {
   var niches = [
-    { keyword: 'sleep aid patch insomnia', niche: 'wellness' },
-    { keyword: 'noise cancelling earplugs loop', niche: 'hearing' },
-    { keyword: 'ring light portable selfie', niche: 'creator' },
-    { keyword: 'nasal dilator breathing strip', niche: 'breathing' },
-    { keyword: 'cable organizer desk magnetic', niche: 'home' }
+    { keyword: 'patch sommeil bien-etre', niche: 'wellness' },
+    { keyword: 'bouchons oreilles protection bruit', niche: 'hearing' },
+    { keyword: 'ring light anneau lumineux selfie', niche: 'creator' },
+    { keyword: 'dilatateur nasal ronflement sommeil', niche: 'breathing' },
+    { keyword: 'organiseur cables bureau magnetique', niche: 'home' }
   ];
 
   var promises = niches.map(function(n) {
