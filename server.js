@@ -314,7 +314,7 @@ function sendEmail(to, subject, html) {
       return resolve({ sent: false });
     }
     var postData = JSON.stringify({
-      from: 'FOLLOW. <onboarding@resend.dev>',
+      from: 'FOLLOW. <support@followtrend.shop>',
       to: [to],
       subject: subject,
       html: html
