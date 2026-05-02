@@ -73,8 +73,8 @@ nav{background:#07070990;backdrop-filter:blur(20px);border-bottom:1px solid var(
 
 <div class="ticker-wrap">
   <div class="ticker-inner">
-    <span>🌍 LIVRAISON MONDIALE &nbsp;&nbsp;&nbsp; 💳 PAIEMENT SÉCURISÉ &nbsp;&nbsp;&nbsp; ✨ PRODUITS SÉLECTIONNÉS &nbsp;&nbsp;&nbsp; 🚀 TENDANCES MONDIALES &nbsp;&nbsp;&nbsp; ↩️ RETOUR GRATUIT 30 JOURS &nbsp;&nbsp;&nbsp; ⭐ QUALITÉ GARANTIE &nbsp;&nbsp;&nbsp; </span>
-    <span>🌍 LIVRAISON MONDIALE &nbsp;&nbsp;&nbsp; 💳 PAIEMENT SÉCURISÉ &nbsp;&nbsp;&nbsp; ✨ PRODUITS SÉLECTIONNÉS &nbsp;&nbsp;&nbsp; 🚀 TENDANCES MONDIALES &nbsp;&nbsp;&nbsp; ↩️ RETOUR GRATUIT 30 JOURS &nbsp;&nbsp;&nbsp; ⭐ QUALITÉ GARANTIE &nbsp;&nbsp;&nbsp; </span>
+    <span><span id="ticker-text-1"></span>
+    <span id="ticker-text-2"></span>
   </div>
 </div>
 
@@ -119,16 +119,16 @@ nav{background:#07070990;backdrop-filter:blur(20px);border-bottom:1px solid var(
   <div class="hero">
     <div style="display:inline-flex;align-items:center;gap:8px;background:#C8FF0012;border:1px solid #C8FF0030;border-radius:100px;padding:5px 14px;margin-bottom:18px">
       <span style="width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 1.5s infinite;display:inline-block"></span>
-      <span style="color:var(--accent);font-size:11px;font-weight:700;letter-spacing:1px">LIVRAISON MONDIALE · PAIEMENT SÉCURISÉ · RETOUR 30 JOURS</span>
+      <span style="color:var(--accent);font-size:11px;font-weight:700;letter-spacing:1px"><span id="hero-badge-text"></span></span>
     </div>
-    <h1><span class="line1">FOLLOW</span><span class="line2">THE TREND.</span></h1>
-    <p>Des produits tendances sélectionnés dans le monde entier. Prix accessibles, qualité prouvée, livraison internationale.</p>
+    <h1><span class="line1" id="hero-title1">FOLLOW</span><span class="line2" id="hero-title2">THE TREND.</span></h1>
+    <p><span id="hero-sub">Des produits tendances sélectionnés dans le monde entier. Prix accessibles, qualité prouvée, livraison internationale.</span></p>
   </div>
   <div class="niches" id="niches-bar"></div>
   <div>
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
-      <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px">🏆 SÉLECTION PREMIUM</span>
-      <span style="background:var(--accent);color:#080808;font-size:9px;font-weight:800;padding:3px 7px;border-radius:4px">TOP VENTES</span>
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px">🏆 <span id="premium-text">SÉLECTION PREMIUM</span></span>
+      <span style="background:var(--accent);color:#080808;font-size:9px;font-weight:800;padding:3px 7px;border-radius:4px"><span id="top-sales-text">TOP VENTES</span></span>
     </div>
     <div class="grid winners-grid" id="winners-grid">
       <div class="skeleton-card"><div class="skeleton" style="height:185px"></div><div style="padding:14px"><div class="skeleton" style="height:14px;border-radius:4px;margin-bottom:8px"></div><div class="skeleton" style="height:10px;border-radius:4px;width:60%;margin-bottom:12px"></div><div class="skeleton" style="height:36px;border-radius:8px"></div></div></div>
@@ -136,17 +136,17 @@ nav{background:#07070990;backdrop-filter:blur(20px);border-bottom:1px solid var(
       <div class="skeleton-card"><div class="skeleton" style="height:185px"></div><div style="padding:14px"><div class="skeleton" style="height:14px;border-radius:4px;margin-bottom:8px"></div><div class="skeleton" style="height:10px;border-radius:4px;width:60%;margin-bottom:12px"></div><div class="skeleton" style="height:36px;border-radius:8px"></div></div></div>
     </div>
   </div>
-  <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:3px;color:var(--muted);margin-bottom:14px">CATALOGUE — <span id="catalog-count">...</span> PRODUITS</div>
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:3px;color:var(--muted);margin-bottom:14px"><span id="catalogue-text">CATALOGUE</span> — <span id="catalog-count">...</span> PRODUITS</div>
   <div class="grid" id="products-grid"></div>
   <div class="trust-grid">
-    <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">🔒</div><div style="font-weight:700;font-size:12px;margin-bottom:4px">Paiement Sécurisé</div><div style="color:var(--muted);font-size:11px">SSL 256-bit · Stripe</div></div>
-    <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">🚚</div><div style="font-weight:700;font-size:12px;margin-bottom:4px">Livraison Mondiale</div><div style="color:var(--muted);font-size:11px">150+ pays couverts</div></div>
-    <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">↩️</div><div style="font-weight:700;font-size:12px;margin-bottom:4px">Retour Gratuit</div><div style="color:var(--muted);font-size:11px">30 jours sans questions</div></div>
-    <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">⭐</div><div style="font-weight:700;font-size:12px;margin-bottom:4px">Qualité Garantie</div><div style="color:var(--muted);font-size:11px">Produits vérifiés</div></div>
-    <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">💬</div><div style="font-weight:700;font-size:12px;margin-bottom:4px">Support 24/7</div><div style="color:var(--muted);font-size:11px">Toujours disponible</div></div>
-    <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">🌍</div><div style="font-weight:700;font-size:12px;margin-bottom:4px">6 Langues</div><div style="color:var(--muted);font-size:11px">FR EN ES AR PT SW</div></div>
+    <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">🔒</div><div style="font-weight:700;font-size:12px;margin-bottom:4px" id="trust-payment">Paiement Sécurisé</div><div style="color:var(--muted);font-size:11px">SSL 256-bit · Stripe</div></div>
+    <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">🚚</div><div style="font-weight:700;font-size:12px;margin-bottom:4px" id="trust-delivery">Livraison Mondiale</div><div style="color:var(--muted);font-size:11px">150+ pays couverts</div></div>
+    <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">↩️</div><div style="font-weight:700;font-size:12px;margin-bottom:4px" id="trust-return">Retour Gratuit</div><div style="color:var(--muted);font-size:11px">30 jours sans questions</div></div>
+    <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">⭐</div><div style="font-weight:700;font-size:12px;margin-bottom:4px" id="trust-quality">Qualité Garantie</div><div style="color:var(--muted);font-size:11px">Produits vérifiés</div></div>
+    <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">💬</div><div style="font-weight:700;font-size:12px;margin-bottom:4px" id="trust-support">Support 24/7</div><div style="color:var(--muted);font-size:11px">Toujours disponible</div></div>
+    <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">🌍</div><div style="font-weight:700;font-size:12px;margin-bottom:4px" id="trust-languages">6 Langues</div><div style="color:var(--muted);font-size:11px">FR EN ES AR PT SW</div></div>
   </div>
-  <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;margin-bottom:16px;text-align:center">⭐ ILS NOUS FONT CONFIANCE</div>
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;margin-bottom:16px;text-align:center">⭐ <span id="reviews-title">ILS NOUS FONT CONFIANCE</span></div>
   <div class="reviews-grid">
     <div class="review-card"><div style="color:#ffd700;font-size:13px;margin-bottom:8px">★★★★★</div><div style="font-size:13px;line-height:1.6;margin-bottom:10px">"Livraison rapide et produit conforme. Je recommande !"</div><div style="color:var(--muted);font-size:11px">— Marie L. 🇫🇷 · Achat vérifié</div></div>
     <div class="review-card"><div style="color:#ffd700;font-size:13px;margin-bottom:8px">★★★★★</div><div style="font-size:13px;line-height:1.6;margin-bottom:10px">"Excellent rapport qualité-prix. Produit reçu en 10 jours !"</div><div style="color:var(--muted);font-size:11px">— Ahmed K. 🇸🇦 · Achat vérifié</div></div>
@@ -154,7 +154,7 @@ nav{background:#07070990;backdrop-filter:blur(20px);border-bottom:1px solid var(
     <div class="review-card"><div style="color:#ffd700;font-size:13px;margin-bottom:8px">★★★★☆</div><div style="font-size:13px;line-height:1.6;margin-bottom:10px">"Produto de qualidade. Entrega rápida para o Brasil!"</div><div style="color:var(--muted);font-size:11px">— Carlos M. 🇧🇷 · Compra verificada</div></div>
   </div>
   <div style="background:linear-gradient(135deg,#C8FF0008,transparent);border:1px solid #C8FF0020;border-radius:16px;padding:28px;text-align:center;margin-bottom:32px">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;margin-bottom:8px;color:var(--accent)">🏆 LA PROMESSE FOLLOW.</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;margin-bottom:8px;color:var(--accent)">🏆 <span id="promise-title">LA PROMESSE FOLLOW.</span></div>
     <div style="color:var(--muted);font-size:13px;line-height:1.8;max-width:560px;margin:0 auto">Chaque produit est sélectionné pour sa qualité, sa popularité mondiale et son rapport qualité-prix exceptionnel.<br/><strong style="color:var(--text)">Satisfait ou 100% remboursé — C'est notre engagement.</strong></div>
     <div style="display:flex;gap:12px;justify-content:center;margin-top:16px;flex-wrap:wrap">
       <span style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:700">✅ Stripe Secure</span>
@@ -189,7 +189,120 @@ const LANG_MAP = {
   pt:{lang:'pt',symbol:'R$',flag:'🇧🇷'},sw:{lang:'sw',symbol:'KSh',flag:'🇰🇪'}
 };
 const I18N = {
-  fr:{add:'Ajouter au panier',pay:'Payer avec Stripe',free_shipping:'Livraison gratuite',return:'Retour 30j',empty_cart:'Votre panier est vide',discover:'Découvrir nos produits',order_confirmed:'COMMANDE CONFIRMÉE !',delivery:'Livraison sous 7-15 jours.',continue_shopping:'Continuer les achats',subtotal:'Sous-total',total:'TOTAL',pay_now:'💳 Payer maintenant',processing:'Traitement...'},
+  fr:{add:'Ajouter au panier',pay:'Payer avec Stripe',free_shipping:'Livraison gratuite',return:'Retour 30j',empty_cart:'Votre panier est vide',discover:'Découvrir nos produits',order_confirmed:'COMMANDE CONFIRMÉE !',delivery:'Livraison sous 7-15 jours.',continue_shopping:'Continuer les achats',subtotal:'Sous-total',total:'TOTAL',pay_now:'💳 Payer maintenant',processing:'Traitement...',
+    hero_badge:'LIVRAISON MONDIALE · PAIEMENT SÉCURISÉ · RETOUR 30 JOURS',
+    hero_title1:'FOLLOW',hero_title2:'THE TREND.',
+    hero_sub:'Des produits tendances sélectionnés dans le monde entier. Prix accessibles, qualité prouvée, livraison internationale.',
+    premium:'SÉLECTION PREMIUM',top_sales:'TOP VENTES',catalogue:'CATALOGUE',products:'PRODUITS',
+    trust_payment:'Paiement Sécurisé',trust_delivery:'Livraison Mondiale',trust_return:'Retour Gratuit',
+    trust_quality:'Qualité Garantie',trust_support:'Support 24/7',trust_languages:'6 Langues',
+    trust_ssl:'SSL 256-bit · Stripe',trust_countries:'150+ pays couverts',trust_days:'30 jours sans questions',
+    trust_verified:'Produits vérifiés',trust_available:'Toujours disponible',trust_langs:'FR EN ES AR PT SW',
+    reviews_title:'ILS NOUS FONT CONFIANCE',
+    r1_text:'Livraison rapide et produit conforme. Je recommande !',r1_author:'Marie L. 🇫🇷 · Achat vérifié',
+    r2_text:'Excellent rapport qualité-prix. Produit reçu en 10 jours !',r2_author:'Ahmed K. 🇸🇦 · Achat vérifié',
+    r3_text:'Fast delivery and great quality. Will order again!',r3_author:'James T. 🇬🇧 · Verified purchase',
+    r4_text:'Produto de qualidade. Entrega rápida para o Brasil!',r4_author:'Carlos M. 🇧🇷 · Compra verificada',
+    promise_title:'LA PROMESSE FOLLOW.',
+    promise_text:'Chaque produit est sélectionné pour sa qualité, sa popularité mondiale et son rapport qualité-prix exceptionnel.',
+    promise_sub:'Satisfait ou 100% remboursé — C'est notre engagement.',
+    ticker:'🌍 LIVRAISON MONDIALE &nbsp;&nbsp;&nbsp; 💳 PAIEMENT SÉCURISÉ &nbsp;&nbsp;&nbsp; ✨ PRODUITS SÉLECTIONNÉS &nbsp;&nbsp;&nbsp; 🚀 TENDANCES MONDIALES &nbsp;&nbsp;&nbsp; ↩️ RETOUR GRATUIT 30 JOURS &nbsp;&nbsp;&nbsp; ⭐ QUALITÉ GARANTIE'
+  },
+  en:{add:'Add to cart',pay:'Pay with Stripe',free_shipping:'Free shipping',return:'30-day return',empty_cart:'Your cart is empty',discover:'Discover our products',order_confirmed:'ORDER CONFIRMED!',delivery:'Delivery in 7-15 days.',continue_shopping:'Continue shopping',subtotal:'Subtotal',total:'TOTAL',pay_now:'💳 Pay now',processing:'Processing...',
+    hero_badge:'WORLDWIDE DELIVERY · SECURE PAYMENT · 30-DAY RETURN',
+    hero_title1:'FOLLOW',hero_title2:'THE TREND.',
+    hero_sub:'Trending products selected from around the world. Affordable prices, proven quality, international delivery.',
+    premium:'PREMIUM SELECTION',top_sales:'TOP SALES',catalogue:'CATALOGUE',products:'PRODUCTS',
+    trust_payment:'Secure Payment',trust_delivery:'Worldwide Delivery',trust_return:'Free Returns',
+    trust_quality:'Quality Guaranteed',trust_support:'24/7 Support',trust_languages:'6 Languages',
+    trust_ssl:'SSL 256-bit · Stripe',trust_countries:'150+ countries',trust_days:'30 days no questions',
+    trust_verified:'Verified products',trust_available:'Always available',trust_langs:'FR EN ES AR PT SW',
+    reviews_title:'THEY TRUST US',
+    r1_text:'Fast delivery and product as described. Highly recommend!',r1_author:'Marie L. 🇫🇷 · Verified purchase',
+    r2_text:'Excellent value for money. Product received in 10 days!',r2_author:'Ahmed K. 🇸🇦 · Verified purchase',
+    r3_text:'Fast delivery and great quality. Will order again!',r3_author:'James T. 🇬🇧 · Verified purchase',
+    r4_text:'Great product quality. Fast delivery to Brazil!',r4_author:'Carlos M. 🇧🇷 · Verified purchase',
+    promise_title:'THE FOLLOW. PROMISE',
+    promise_text:'Every product is selected for its quality, global popularity and exceptional value for money.',
+    promise_sub:'Satisfied or 100% refunded — That is our commitment.',
+    ticker:'🌍 WORLDWIDE DELIVERY &nbsp;&nbsp;&nbsp; 💳 SECURE PAYMENT &nbsp;&nbsp;&nbsp; ✨ SELECTED PRODUCTS &nbsp;&nbsp;&nbsp; 🚀 GLOBAL TRENDS &nbsp;&nbsp;&nbsp; ↩️ FREE RETURN 30 DAYS &nbsp;&nbsp;&nbsp; ⭐ QUALITY GUARANTEED'
+  },
+  es:{add:'Añadir al carrito',pay:'Pagar con Stripe',free_shipping:'Envío gratis',return:'Devolución 30 días',empty_cart:'Tu carrito está vacío',discover:'Descubrir productos',order_confirmed:'¡PEDIDO CONFIRMADO!',delivery:'Entrega en 7-15 días.',continue_shopping:'Seguir comprando',subtotal:'Subtotal',total:'TOTAL',pay_now:'💳 Pagar ahora',processing:'Procesando...',
+    hero_badge:'ENVÍO MUNDIAL · PAGO SEGURO · DEVOLUCIÓN 30 DÍAS',
+    hero_title1:'FOLLOW',hero_title2:'THE TREND.',
+    hero_sub:'Productos de tendencia seleccionados en todo el mundo. Precios accesibles, calidad probada, entrega internacional.',
+    premium:'SELECCIÓN PREMIUM',top_sales:'MÁS VENDIDOS',catalogue:'CATÁLOGO',products:'PRODUCTOS',
+    trust_payment:'Pago Seguro',trust_delivery:'Envío Mundial',trust_return:'Devolución Gratis',
+    trust_quality:'Calidad Garantizada',trust_support:'Soporte 24/7',trust_languages:'6 Idiomas',
+    trust_ssl:'SSL 256-bit · Stripe',trust_countries:'150+ países',trust_days:'30 días sin preguntas',
+    trust_verified:'Productos verificados',trust_available:'Siempre disponible',trust_langs:'FR EN ES AR PT SW',
+    reviews_title:'ELLOS NOS CONFÍAN',
+    r1_text:'Entrega rápida y producto conforme. ¡Lo recomiendo!',r1_author:'Marie L. 🇫🇷 · Compra verificada',
+    r2_text:'Excelente relación calidad-precio. ¡Producto recibido en 10 días!',r2_author:'Ahmed K. 🇸🇦 · Compra verificada',
+    r3_text:'Entrega rápida y gran calidad. ¡Volvería a pedir!',r3_author:'James T. 🇬🇧 · Compra verificada',
+    r4_text:'Producto de calidad. Entrega rápida.',r4_author:'Carlos M. 🇧🇷 · Compra verificada',
+    promise_title:'LA PROMESA FOLLOW.',
+    promise_text:'Cada producto es seleccionado por su calidad, popularidad mundial y excepcional relación calidad-precio.',
+    promise_sub:'Satisfecho o 100% reembolsado — Es nuestro compromiso.',
+    ticker:'🌍 ENVÍO MUNDIAL &nbsp;&nbsp;&nbsp; 💳 PAGO SEGURO &nbsp;&nbsp;&nbsp; ✨ PRODUCTOS SELECCIONADOS &nbsp;&nbsp;&nbsp; 🚀 TENDENCIAS MUNDIALES &nbsp;&nbsp;&nbsp; ↩️ DEVOLUCIÓN GRATIS 30 DÍAS &nbsp;&nbsp;&nbsp; ⭐ CALIDAD GARANTIZADA'
+  },
+  ar:{add:'أضف للسلة',pay:'الدفع عبر Stripe',free_shipping:'شحن مجاني',return:'إرجاع 30 يوم',empty_cart:'سلتك فارغة',discover:'اكتشف منتجاتنا',order_confirmed:'تم تأكيد الطلب!',delivery:'التسليم خلال 7-15 يوم.',continue_shopping:'مواصلة التسوق',subtotal:'المجموع الفرعي',total:'الإجمالي',pay_now:'💳 ادفع الآن',processing:'جار المعالجة...',
+    hero_badge:'توصيل عالمي · دفع آمن · إرجاع 30 يوم',
+    hero_title1:'FOLLOW',hero_title2:'THE TREND.',
+    hero_sub:'منتجات رائجة مختارة من جميع أنحاء العالم. أسعار في متناول الجميع، جودة مثبتة، توصيل دولي.',
+    premium:'اختيار مميز',top_sales:'الأكثر مبيعاً',catalogue:'الكتالوج',products:'منتجات',
+    trust_payment:'دفع آمن',trust_delivery:'توصيل عالمي',trust_return:'إرجاع مجاني',
+    trust_quality:'جودة مضمونة',trust_support:'دعم 24/7',trust_languages:'6 لغات',
+    trust_ssl:'SSL 256-bit · Stripe',trust_countries:'+150 دولة',trust_days:'30 يوم بدون أسئلة',
+    trust_verified:'منتجات موثقة',trust_available:'متاح دائماً',trust_langs:'FR EN ES AR PT SW',
+    reviews_title:'يثقون بنا',
+    r1_text:'توصيل سريع والمنتج كما وصف. أنصح به!',r1_author:'ماري ل. 🇫🇷 · شراء موثق',
+    r2_text:'نسبة جودة/سعر ممتازة. استلمت المنتج في 10 أيام!',r2_author:'أحمد ك. 🇸🇦 · شراء موثق',
+    r3_text:'توصيل سريع وجودة رائعة.',r3_author:'جيمس ت. 🇬🇧 · شراء موثق',
+    r4_text:'منتج عالي الجودة. توصيل سريع!',r4_author:'كارلوس م. 🇧🇷 · شراء موثق',
+    promise_title:'وعد FOLLOW.',
+    promise_text:'كل منتج مختار بعناية لجودته وشعبيته العالمية ونسبة الجودة/السعر الاستثنائية.',
+    promise_sub:'راضٍ أو استرداد كامل 100% — هذا التزامنا.',
+    ticker:'🌍 توصيل عالمي &nbsp;&nbsp;&nbsp; 💳 دفع آمن &nbsp;&nbsp;&nbsp; ✨ منتجات مختارة &nbsp;&nbsp;&nbsp; 🚀 أحدث الصيحات &nbsp;&nbsp;&nbsp; ↩️ إرجاع مجاني 30 يوم &nbsp;&nbsp;&nbsp; ⭐ جودة مضمونة'
+  },
+  pt:{add:'Adicionar ao carrinho',pay:'Pagar com Stripe',free_shipping:'Frete grátis',return:'Devolução 30 dias',empty_cart:'Seu carrinho está vazio',discover:'Descobrir produtos',order_confirmed:'PEDIDO CONFIRMADO!',delivery:'Entrega em 7-15 dias.',continue_shopping:'Continuar comprando',subtotal:'Subtotal',total:'TOTAL',pay_now:'💳 Pagar agora',processing:'Processando...',
+    hero_badge:'ENTREGA MUNDIAL · PAGAMENTO SEGURO · DEVOLUÇÃO 30 DIAS',
+    hero_title1:'FOLLOW',hero_title2:'THE TREND.',
+    hero_sub:'Produtos tendência selecionados em todo o mundo. Preços acessíveis, qualidade comprovada, entrega internacional.',
+    premium:'SELEÇÃO PREMIUM',top_sales:'MAIS VENDIDOS',catalogue:'CATÁLOGO',products:'PRODUTOS',
+    trust_payment:'Pagamento Seguro',trust_delivery:'Entrega Mundial',trust_return:'Devolução Grátis',
+    trust_quality:'Qualidade Garantida',trust_support:'Suporte 24/7',trust_languages:'6 Idiomas',
+    trust_ssl:'SSL 256-bit · Stripe',trust_countries:'150+ países',trust_days:'30 dias sem perguntas',
+    trust_verified:'Produtos verificados',trust_available:'Sempre disponível',trust_langs:'FR EN ES AR PT SW',
+    reviews_title:'ELES CONFIAM EM NÓS',
+    r1_text:'Entrega rápida e produto conforme. Recomendo!',r1_author:'Marie L. 🇫🇷 · Compra verificada',
+    r2_text:'Excelente custo-benefício. Produto recebido em 10 dias!',r2_author:'Ahmed K. 🇸🇦 · Compra verificada',
+    r3_text:'Entrega rápida e ótima qualidade.',r3_author:'James T. 🇬🇧 · Compra verificada',
+    r4_text:'Produto de qualidade. Entrega rápida para o Brasil!',r4_author:'Carlos M. 🇧🇷 · Compra verificada',
+    promise_title:'A PROMESSA FOLLOW.',
+    promise_text:'Cada produto é selecionado pela sua qualidade, popularidade mundial e excepcional custo-benefício.',
+    promise_sub:'Satisfeito ou 100% reembolsado — É o nosso compromisso.',
+    ticker:'🌍 ENTREGA MUNDIAL &nbsp;&nbsp;&nbsp; 💳 PAGAMENTO SEGURO &nbsp;&nbsp;&nbsp; ✨ PRODUTOS SELECIONADOS &nbsp;&nbsp;&nbsp; 🚀 TENDÊNCIAS MUNDIAIS &nbsp;&nbsp;&nbsp; ↩️ DEVOLUÇÃO GRÁTIS 30 DIAS &nbsp;&nbsp;&nbsp; ⭐ QUALIDADE GARANTIDA'
+  },
+  sw:{add:'Ongeza kwenye kikapu',pay:'Lipa na Stripe',free_shipping:'Usafirishaji bure',return:'Rudisha siku 30',empty_cart:'Kikapu chako kiko wazi',discover:'Gundua bidhaa zetu',order_confirmed:'AGIZO LIMETHIBITISHWA!',delivery:'Uwasilishaji siku 7-15.',continue_shopping:'Endelea kununua',subtotal:'Jumla ndogo',total:'JUMLA',pay_now:'💳 Lipa sasa',processing:'Inashughulikia...',
+    hero_badge:'USAFIRISHAJI DUNIANI · MALIPO SALAMA · RUDISHA SIKU 30',
+    hero_title1:'FOLLOW',hero_title2:'THE TREND.',
+    hero_sub:'Bidhaa zinazopendwa zilizochaguliwa duniani kote. Bei nafuu, ubora uliothibitishwa, usafirishaji wa kimataifa.',
+    premium:'UCHAGUZI WA PREMIUM',top_sales:'MAUZO BORA',catalogue:'KATALOGI',products:'BIDHAA',
+    trust_payment:'Malipo Salama',trust_delivery:'Usafirishaji Duniani',trust_return:'Rudisha Bure',
+    trust_quality:'Ubora Uliohakikishwa',trust_support:'Msaada 24/7',trust_languages:'Lugha 6',
+    trust_ssl:'SSL 256-bit · Stripe',trust_countries:'Nchi 150+',trust_days:'Siku 30 bila maswali',
+    trust_verified:'Bidhaa zilizothibitishwa',trust_available:'Inapatikana daima',trust_langs:'FR EN ES AR PT SW',
+    reviews_title:'WANAAMINI FOLLOW.',
+    r1_text:'Usafirishaji wa haraka na bidhaa kama ilivyoelezwa. Napendekeza!',r1_author:'Marie L. 🇫🇷 · Ununuzi uliothibitishwa',
+    r2_text:'Thamani nzuri kwa bei. Bidhaa ilipokelewa siku 10!',r2_author:'Ahmed K. 🇸🇦 · Ununuzi uliothibitishwa',
+    r3_text:'Usafirishaji wa haraka na ubora mzuri.',r3_author:'James T. 🇬🇧 · Ununuzi uliothibitishwa',
+    r4_text:'Bidhaa bora. Usafirishaji wa haraka!',r4_author:'Carlos M. 🇧🇷 · Ununuzi uliothibitishwa',
+    promise_title:'AHADI YA FOLLOW.',
+    promise_text:'Kila bidhaa inachaguliwa kwa ubora wake, umaarufu wake duniani na thamani yake ya kipekee.',
+    promise_sub:'Umeridhika au utapata fedha zako zote — Hii ndiyo ahadi yetu.',
+    ticker:'🌍 USAFIRISHAJI DUNIANI &nbsp;&nbsp;&nbsp; 💳 MALIPO SALAMA &nbsp;&nbsp;&nbsp; ✨ BIDHAA ZILIZOCHAGULIWA &nbsp;&nbsp;&nbsp; 🚀 MITINDO YA DUNIA &nbsp;&nbsp;&nbsp; ↩️ RUDISHA BURE SIKU 30 &nbsp;&nbsp;&nbsp; ⭐ UBORA ULIOHAKIKISHWA'
+  },
   en:{add:'Add to cart',pay:'Pay with Stripe',free_shipping:'Free shipping',return:'30-day return',empty_cart:'Your cart is empty',discover:'Discover our products',order_confirmed:'ORDER CONFIRMED!',delivery:'Delivery in 7-15 days.',continue_shopping:'Continue shopping',subtotal:'Subtotal',total:'TOTAL',pay_now:'💳 Pay now',processing:'Processing...'},
   es:{add:'Añadir al carrito',pay:'Pagar con Stripe',free_shipping:'Envío gratis',return:'Devolución 30 días',empty_cart:'Tu carrito está vacío',discover:'Descubrir productos',order_confirmed:'¡PEDIDO CONFIRMADO!',delivery:'Entrega en 7-15 días.',continue_shopping:'Seguir comprando',subtotal:'Subtotal',total:'TOTAL',pay_now:'💳 Pagar ahora',processing:'Procesando...'},
   ar:{add:'أضف للسلة',pay:'الدفع عبر Stripe',free_shipping:'شحن مجاني',return:'إرجاع 30 يوم',empty_cart:'سلتك فارغة',discover:'اكتشف منتجاتنا',order_confirmed:'تم تأكيد الطلب!',delivery:'التسليم خلال 7-15 يوم.',continue_shopping:'مواصلة التسوق',subtotal:'المجموع الفرعي',total:'الإجمالي',pay_now:'💳 ادفع الآن',processing:'جار المعالجة...'},
@@ -234,7 +347,7 @@ async function loadProducts(){
         isWinner:true,vid:p.vid||''
       }));
       productsLoaded=true;
-      renderNiches();renderProducts();
+      updateUI();renderNiches();renderProducts();
       document.getElementById('catalog-count').textContent=PRODUCTS.length;
     }
   }catch(e){
@@ -353,7 +466,43 @@ function renderCart(){
 function updateQty(id,delta){const item=state.cart.find(i=>i.id===id);if(!item)return;item.qty=Math.max(1,item.qty+delta);state.cartCount=state.cart.reduce((s,i)=>s+i.qty,0);updateCartCount();renderCart();}
 function removeFromCart(id){state.cart=state.cart.filter(i=>i.id!==id);state.cartCount=state.cart.reduce((s,i)=>s+i.qty,0);updateCartCount();renderCart();}
 
-function setLang(lang,flag,symbol){state.lang=lang;state.symbol=symbol;state.flag=flag;document.getElementById('lang-flag').textContent=flag;document.getElementById('lang-menu').classList.remove('open');renderProducts();renderCart();}
+function updateUI() {
+  var l = I18N[state.lang] || I18N['fr'];
+  // Ticker
+  var ticker = l.ticker || '';
+  var t1 = document.getElementById('ticker-text-1');
+  var t2 = document.getElementById('ticker-text-2');
+  if(t1) t1.innerHTML = ticker + ' &nbsp;&nbsp;&nbsp; ';
+  if(t2) t2.innerHTML = ticker + ' &nbsp;&nbsp;&nbsp; ';
+  // Hero
+  var hb = document.getElementById('hero-badge-text');
+  if(hb) hb.textContent = l.hero_badge || '';
+  var ht1 = document.getElementById('hero-title1');
+  if(ht1) ht1.textContent = l.hero_title1 || 'FOLLOW';
+  var ht2 = document.getElementById('hero-title2');
+  if(ht2) ht2.textContent = l.hero_title2 || 'THE TREND.';
+  var hs = document.getElementById('hero-sub');
+  if(hs) hs.textContent = l.hero_sub || '';
+  // Sections
+  var pt = document.getElementById('premium-text');
+  if(pt) pt.textContent = l.premium || '';
+  var ts = document.getElementById('top-sales-text');
+  if(ts) ts.textContent = l.top_sales || '';
+  var ct = document.getElementById('catalogue-text');
+  if(ct) ct.textContent = l.catalogue || '';
+  var rt = document.getElementById('reviews-title');
+  if(rt) rt.textContent = l.reviews_title || '';
+  var prt = document.getElementById('promise-title');
+  if(prt) prt.textContent = l.promise_title || '';
+  // Trust cards
+  var trustKeys = ['payment','delivery','return','quality','support','languages'];
+  trustKeys.forEach(function(k, i) {
+    var el = document.getElementById('trust-' + k);
+    if(el) el.textContent = l['trust_' + k] || '';
+  });
+}
+
+function setLang(lang,flag,symbol){state.lang=lang;state.symbol=symbol;state.flag=flag;document.getElementById('lang-flag').textContent=flag;document.getElementById('lang-menu').classList.remove('open');updateUI();renderProducts();renderCart();}
 function toggleLang(){document.getElementById('lang-menu').classList.toggle('open');}
 
 function showView(name){
