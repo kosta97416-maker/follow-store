@@ -23,9 +23,6 @@ nav{background:#07070990;backdrop-filter:blur(20px);border-bottom:1px solid var(
 .logo{display:flex;align-items:center;cursor:pointer}
 .logo span:first-child{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:5px;color:var(--text)}
 .logo span:last-child{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--accent)}
-.nav-links{display:flex;gap:4px}
-.nav-btn{background:transparent;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;padding:8px 14px;border-radius:8px;transition:all .18s}
-.nav-btn.active{color:var(--accent);background:#C8FF0012}
 .nav-right{display:flex;align-items:center;gap:10px}
 .lang-btn{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:5px 10px;cursor:pointer;font-size:16px}
 .cart-btn{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:12px;transition:all .18s;position:relative}
@@ -57,16 +54,6 @@ nav{background:#07070990;backdrop-filter:blur(20px);border-bottom:1px solid var(
 .skeleton{background:linear-gradient(90deg,var(--card) 25%,#1c1c26 50%,var(--card) 75%);background-size:400px 100%;animation:shimmer 1.4s infinite}
 .skeleton-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
 .trust{display:flex;gap:32px;justify-content:center;margin-top:56px;flex-wrap:wrap}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
-.panel-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
-.agent-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px}
-.log-line{padding:7px 11px;border-radius:0 8px 8px 0;font-size:12px;line-height:1.4}
-.log-auto{background:#C8FF000f;border-left:2px solid var(--accent);color:#aab}
-.log-ceo{background:#ff000018;border-left:2px solid #ff4444;color:#ff8888}
-.charte-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px}
-.email-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .2s;margin-bottom:8px}
 .cart-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;gap:13px;margin-bottom:10px}
 .cart-summary{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px}
 .stripe-overlay{position:fixed;inset:0;background:#00000088;z-index:1000;display:none;align-items:center;justify-content:center}
@@ -79,7 +66,7 @@ nav{background:#07070990;backdrop-filter:blur(20px);border-bottom:1px solid var(
 .reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:40px}
 .review-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
 .img-placeholder{width:100%;height:185px;background:var(--mid);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:28px}
-@media(max-width:768px){.two-col{grid-template-columns:1fr}nav{padding:0 16px}.view{padding:0 16px 60px}.nav-links{display:none}}
+@media(max-width:768px){nav{padding:0 16px}.view{padding:0 16px 60px}}
 </style>
 </head>
 <body>
@@ -93,14 +80,6 @@ nav{background:#07070990;backdrop-filter:blur(20px);border-bottom:1px solid var(
 
 <nav>
   <div class="logo" onclick="showView('store')"><span>FOLLOW</span><span>.</span></div>
-  <div class="nav-links">
-    <button class="nav-btn active" onclick="showView('store')" id="nav-store">Boutique</button>
-    <button class="nav-btn" onclick="showView('dashboard')" id="nav-dashboard">Dashboard</button>
-    <button class="nav-btn" onclick="showView('agents')" id="nav-agents">Agents IA</button>
-    <button class="nav-btn" onclick="showView('emails')" id="nav-emails" style="position:relative">Emails CEO
-      <span id="email-badge" style="display:none;position:absolute;top:4px;right:4px;background:#ff4444;color:#fff;border-radius:50%;width:14px;height:14px;font-size:8px;align-items:center;justify-content:center;font-weight:800"></span>
-    </button>
-  </div>
   <div class="nav-right">
     <div style="position:relative">
       <button class="lang-btn" onclick="toggleLang()" id="lang-flag">🇫🇷</button>
@@ -192,63 +171,9 @@ nav{background:#07070990;backdrop-filter:blur(20px);border-bottom:1px solid var(
   </div>
 </div>
 
-<!-- DASHBOARD -->
-<div class="view" id="view-dashboard">
-  <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:3px;margin-bottom:6px">DASHBOARD</div>
-  <div style="color:var(--muted);font-size:12px;margin-bottom:28px">Temps réel · 13 agents actifs · Stripe connecté</div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:28px" id="stats-grid"></div>
-  <div style="background:#0d1a0d;border:1px solid #00ff8830;border-radius:12px;padding:20px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
-    <span id="wb-icon">🟢</span>
-    <div style="flex:1;margin-left:12px">
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px" id="wb-title">Marché stable</div>
-      <div style="color:var(--muted);font-size:12px;margin-top:2px" id="wb-desc">Conditions normales.</div>
-      <div style="background:#C8FF0008;border-radius:8px;padding:10px 14px;font-size:12px;color:var(--accent);margin-top:12px" id="wb-action">⚡ Optimisation continue.</div>
-    </div>
-  </div>
-  <div class="two-col">
-    <div class="panel"><div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;margin-bottom:14px">🏆 TOP WINNERS</div><div id="top-winners"></div></div>
-    <div class="panel"><div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;margin-bottom:14px">🔗 FOURNISSEURS</div><div id="suppliers-list"></div></div>
-  </div>
-</div>
-
-<!-- AGENTS -->
-<div class="view" id="view-agents">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px">
-    <div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:3px">AGENTS IA</div>
-      <div style="color:var(--muted);font-size:12px">13 agents · Autonomie totale</div>
-    </div>
-    <button class="btn" id="agent-toggle-btn" onclick="toggleAgents()">⏸ Pause</button>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:28px" id="agents-grid"></div>
-  <div style="background:#050508;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px">
-    <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px">
-      <div style="width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1.5s infinite"></div>
-      <span style="font-family:'Bebas Neue',sans-serif;letter-spacing:2px;font-size:13px">DÉCISIONS TEMPS RÉEL</span>
-      <span style="color:#333;font-size:10px;margin-left:auto" id="log-count">0 décisions</span>
-    </div>
-    <div style="height:280px;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:6px" id="log-body">
-      <div style="color:#222;text-align:center;padding:60px;font-size:12px">⏳ Démarrage...</div>
-    </div>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px" id="charte-grid"></div>
-</div>
-
-<!-- EMAILS -->
-<div class="view" id="view-emails">
-  <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:3px;margin-bottom:6px">📧 EMAILS CEO</div>
-  <div style="color:var(--muted);font-size:12px;margin-bottom:28px">Alertes · Vous gardez le contrôle final</div>
-  <div id="email-list"></div>
-  <div id="email-detail-wrap"></div>
-  <div style="background:#C8FF0008;border:1px solid #C8FF0020;border-radius:12px;padding:20px;margin-top:20px">
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;color:var(--accent);margin-bottom:8px">👑 VOUS ÊTES LE PDG</div>
-    <div style="color:var(--muted);font-size:12px;line-height:1.7">On ne fonce jamais dans un précipice sans vous.</div>
-  </div>
-</div>
-
 <!-- CART -->
 <div class="view" id="view-cart">
-  <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:3px;margin-bottom:24px">🛒 PANIER</div>
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:3px;margin-bottom:24px">🛒 Panier</div>
   <div id="cart-content"></div>
 </div>
 
@@ -258,106 +183,69 @@ const elements = stripe.elements();
 let cardElement = null;
 const BACKEND = 'https://follow-backend-o300.onrender.com';
 
-// ── PAS DE PRODUITS HARDCODÉS — uniquement AliExpress ─────
+const LANG_MAP = {
+  fr:{lang:'fr',symbol:'€',flag:'🇫🇷'},en:{lang:'en',symbol:'$',flag:'🇺🇸'},
+  es:{lang:'es',symbol:'€',flag:'🇪🇸'},ar:{lang:'ar',symbol:'ر.س',flag:'🇸🇦'},
+  pt:{lang:'pt',symbol:'R$',flag:'🇧🇷'},sw:{lang:'sw',symbol:'KSh',flag:'🇰🇪'}
+};
+const I18N = {
+  fr:{add:'Ajouter au panier',pay:'Payer avec Stripe',free_shipping:'Livraison gratuite',return:'Retour 30j',empty_cart:'Votre panier est vide',discover:'Découvrir nos produits',order_confirmed:'COMMANDE CONFIRMÉE !',delivery:'Livraison sous 7-15 jours.',continue_shopping:'Continuer les achats',subtotal:'Sous-total',total:'TOTAL',pay_now:'💳 Payer maintenant',processing:'Traitement...'},
+  en:{add:'Add to cart',pay:'Pay with Stripe',free_shipping:'Free shipping',return:'30-day return',empty_cart:'Your cart is empty',discover:'Discover our products',order_confirmed:'ORDER CONFIRMED!',delivery:'Delivery in 7-15 days.',continue_shopping:'Continue shopping',subtotal:'Subtotal',total:'TOTAL',pay_now:'💳 Pay now',processing:'Processing...'},
+  es:{add:'Añadir al carrito',pay:'Pagar con Stripe',free_shipping:'Envío gratis',return:'Devolución 30 días',empty_cart:'Tu carrito está vacío',discover:'Descubrir productos',order_confirmed:'¡PEDIDO CONFIRMADO!',delivery:'Entrega en 7-15 días.',continue_shopping:'Seguir comprando',subtotal:'Subtotal',total:'TOTAL',pay_now:'💳 Pagar ahora',processing:'Procesando...'},
+  ar:{add:'أضف للسلة',pay:'الدفع عبر Stripe',free_shipping:'شحن مجاني',return:'إرجاع 30 يوم',empty_cart:'سلتك فارغة',discover:'اكتشف منتجاتنا',order_confirmed:'تم تأكيد الطلب!',delivery:'التسليم خلال 7-15 يوم.',continue_shopping:'مواصلة التسوق',subtotal:'المجموع الفرعي',total:'الإجمالي',pay_now:'💳 ادفع الآن',processing:'جار المعالجة...'},
+  pt:{add:'Adicionar ao carrinho',pay:'Pagar com Stripe',free_shipping:'Frete grátis',return:'Devolução 30 dias',empty_cart:'Seu carrinho está vazio',discover:'Descobrir produtos',order_confirmed:'PEDIDO CONFIRMADO!',delivery:'Entrega em 7-15 dias.',continue_shopping:'Continuar comprando',subtotal:'Subtotal',total:'TOTAL',pay_now:'💳 Pagar agora',processing:'Processando...'},
+  sw:{add:'Ongeza kwenye kikapu',pay:'Lipa na Stripe',free_shipping:'Usafirishaji bure',return:'Rudisha siku 30',empty_cart:'Kikapu chako kiko wazi',discover:'Gundua bidhaa zetu',order_confirmed:'AGIZO LIMETHIBITISHWA!',delivery:'Uwasilishaji siku 7-15.',continue_shopping:'Endelea kununua',subtotal:'Jumla ndogo',total:'JUMLA',pay_now:'💳 Lipa sasa',processing:'Inashughulikia...'}
+};
+
+const browserLang = (navigator.language||'fr').slice(0,2).toLowerCase();
+const defaultL = LANG_MAP[browserLang]||LANG_MAP['fr'];
 let PRODUCTS = [];
 let productsLoaded = false;
 
-const NICHES = [
+const NICHES=[
   {id:'all',icon:'',label:'Tout',color:'#C8FF00',visits:''},
-  {id:'wellness',icon:'🩹',label:'Patches Bien-être',color:'#C8FF00',visits:'1.9M'},
-  {id:'breathing',icon:'🫁',label:'Santé Respiratoire',color:'#00CFFF',visits:'800K'},
-  {id:'hearing',icon:'🎧',label:'Protection Auditive',color:'#FF6B35',visits:'2.5M'},
-  {id:'creator',icon:'🎬',label:'Accessoires Créateurs',color:'#FF3CAC',visits:'∞'},
-  {id:'home',icon:'🏠',label:'Organisation Maison',color:'#7B61FF',visits:'1.3M'},
+  {id:'wellness',icon:'🩹',label:'Bien-être',color:'#C8FF00',visits:'1.9M'},
+  {id:'breathing',icon:'🫁',label:'Respiratoire',color:'#00CFFF',visits:'800K'},
+  {id:'hearing',icon:'🎧',label:'Auditive',color:'#FF6B35',visits:'2.5M'},
+  {id:'creator',icon:'🎬',label:'Créateurs',color:'#FF3CAC',visits:'∞'},
+  {id:'home',icon:'🏠',label:'Maison',color:'#7B61FF',visits:'1.3M'},
 ];
 
-const WORLD_EVENTS = [
-  {icon:'🟢',title:'Marché stable',desc:'Conditions normales.',action:'Optimisation continue des marges.'},
-  {icon:'🟡',title:'Vigilance Inflation EU',desc:'Hausse +2.3%.',action:'Produits accessibles mis en avant.'},
-  {icon:'🟠',title:'Tension Supply Chain',desc:'Délais +5 jours.',action:'Switch CJ Dropshipping déclenché.'},
-  {icon:'🔴',title:'Alerte Marché Détectée',desc:'Correction en cours.',action:'Repricing -15%. Email CEO envoyé.'},
-];
+let state={lang:defaultL.lang,symbol:defaultL.symbol,flag:defaultL.flag,niche:'all',cart:[],cartCount:0,orderDone:false};
 
-const DECISIONS = [
-  {type:'auto',agent:'GapHunter',icon:'🎯',text:'Produit winner importé (score 91) — Bien-être'},
-  {type:'auto',agent:'RetireBot',icon:'🗑️',text:'Produit retiré — 0 vente sur 14j'},
-  {type:'auto',agent:'PriceOptimizer',icon:'💰',text:'Repricing +8% sur 4 produits'},
-  {type:'ceo',agent:'AlertCEO',icon:'🚨',text:'EMAIL CEO — Tension supply chain'},
-  {type:'auto',agent:'TrendScanner',icon:'🔍',text:'Viral TikTok — 2.1M vues — Import'},
-  {type:'auto',agent:'WorldWatch',icon:'🌍',text:'Conjoncture analysée — Prix adaptés'},
-  {type:'ceo',agent:'AlertCEO',icon:'🚨',text:'EMAIL CEO — Baisse ventes 32%'},
-  {type:'auto',agent:'ContentAI',icon:'✍️',text:'SEO régénéré en 6 langues'},
-];
-
-const EMAILS = [
-  {id:1,subject:'🟠 FOLLOW. — Tension Supply Chain — Action Requise',time:'Il y a 2h',body:'Bonjour PDG,\n\nTension Supply Chain détectée.\n• Délais AliExpress +5 jours\n• Rupture partielle Spocket\n\nActions auto :\n✅ Switch CJ Dropshipping\n✅ Clients notifiés\n\nOptions :\n→ A : Continuer\n→ B : Suspendre 48h\n→ C : Me contacter\n\n— AlertCEO'},
-  {id:2,subject:'🔴 FOLLOW. — Alerte Critique — Décision Requise',time:'Il y a 5h',body:'Bonjour PDG,\n\nALERTE ROUGE.\n• Ventes -32% sur 7j\n\nActions auto :\n✅ Repricing -15%\n✅ Budget pub gelé\n\nOptions :\n→ A : Continuer\n→ B : Pause 30j\n→ C : Clôture\n\n— AlertCEO'},
-];
-
-let state = {lang:'fr',symbol:'€',niche:'all',cart:[],cartCount:0,stats:{revenue:0,orders:0,visitors:0,products:0},agentOn:true,worldEventIdx:0,replies:{},selectedEmail:null,emailsRead:{},orderDone:false};
-
-function getPrice(base){const m={fr:1.0,en:1.15,es:1.0,ar:0.95,pt:0.80,sw:0.65}[state.lang]||1.0;return(base*m).toFixed(2);}
+function t(k){return(I18N[state.lang]||I18N['fr'])[k]||k;}
+function getPrice(b){const m={fr:1.0,en:1.15,es:1.0,ar:0.95,pt:0.80,sw:0.65}[state.lang]||1.0;return(b*m).toFixed(2);}
 function getNiche(id){return NICHES.find(n=>n.id===id)||NICHES[0];}
 function disc(p){return Math.round((1-p.basePrice/p.oldPrice)*100);}
 
-// ── CHARGEMENT PRODUITS ALIEXPRESS ────────────────────────
-async function loadAEProducts() {
-  try {
-    fetch(BACKEND + '/ping').catch(()=>{});
-    const res = await fetch(BACKEND + '?action=gaphunter');
-    const data = await res.json();
-    if (data.success && data.winners && data.winners.length > 0) {
-      PRODUCTS = data.winners.map((p, i) => ({
-        id: 100 + i,
-        name: p.name.substring(0, 60),
-        img: p.image || '',
-        niche: p.niche || 'wellness',
-        basePrice: parseFloat(p.price || 19.99),
-        oldPrice: parseFloat((p.price * 1.5 || 29.99).toFixed(2)),
-        rating: parseFloat(p.rating || 4.5),
-        reviews: p.sales || Math.floor(Math.random()*5000+500),
-        supplier: 'AliExpress',
-        gapFR: p.score || 80,
-        isWinner: true,
-        badge: 'hot',
-        link: p.link || '#'
+document.getElementById('lang-flag').textContent=state.flag;
+
+async function loadProducts(){
+  try{
+    const res=await fetch(BACKEND+'?action=gaphunter');
+    const data=await res.json();
+    if(data.success&&data.winners&&data.winners.length>0){
+      PRODUCTS=data.winners.map((p,i)=>({
+        id:100+i,name:p.name.substring(0,60),img:p.image||'',
+        niche:p.niche||'wellness',basePrice:parseFloat(p.price||19.99),
+        oldPrice:parseFloat(p.oldPrice||(p.price*1.8).toFixed(2)),
+        rating:parseFloat(p.rating||4.6),reviews:p.sales||Math.floor(Math.random()*2000+200),
+        supplier:p.supplier||'CJ Dropshipping',gapFR:p.score||75,
+        isWinner:true,vid:p.vid||''
       }));
-      productsLoaded = true;
-      state.stats.products = PRODUCTS.length;
-      renderNiches();
-      renderProducts();
-      document.getElementById('catalog-count').textContent = PRODUCTS.length;
+      productsLoaded=true;
+      renderNiches();renderProducts();
+      document.getElementById('catalog-count').textContent=PRODUCTS.length;
     }
-  } catch(e) {
-    document.getElementById('winners-grid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--muted)"><div style="font-size:32px;margin-bottom:12px">⏳</div><div>Chargement des produits...</div></div>';
-    setTimeout(loadAEProducts, 5000);
+  }catch(e){
+    document.getElementById('winners-grid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted)">⏳ Chargement...</div>';
+    setTimeout(loadProducts,5000);
   }
 }
 
-async function loadRealDashboardData() {
-  try {
-    const [ww,ts,hb,gh] = await Promise.allSettled([
-      fetch(BACKEND+'?action=worldwatch').then(r=>r.json()),
-      fetch(BACKEND+'?action=trendscanner').then(r=>r.json()),
-      fetch(BACKEND+'?action=harvestbot').then(r=>r.json()),
-      fetch(BACKEND+'?action=gaphunter').then(r=>r.json()),
-    ]);
-    const d=[];
-    if(ww.status==='fulfilled'&&ww.value.events) ww.value.events.forEach(e=>d.push({type:e.level==='green'?'auto':'ceo',agent:'WorldWatch',icon:'🌍',text:e.domain+' — '+e.event}));
-    if(ts.status==='fulfilled'&&ts.value.trends) ts.value.trends.slice(0,2).forEach(t=>d.push({type:'auto',agent:'TrendScanner',icon:'🔍',text:t.product+' — '+t.platform}));
-    if(hb.status==='fulfilled'&&hb.value.total_eur>0) d.push({type:'auto',agent:'HarvestBot',icon:'🌾',text:hb.value.total_opportunities+' opportunités — '+hb.value.total_eur+'€'});
-    if(gh.status==='fulfilled'&&gh.value.winners) d.push({type:'auto',agent:'GapHunter',icon:'🎯',text:gh.value.total+' produits winners trouvés'});
-    if(d.length>0){DECISIONS.length=0;d.forEach(x=>DECISIONS.push(x));}
-    renderDashboard();
-  } catch(e){}
-}
+loadProducts();
+setInterval(loadProducts,3600000);
 
-loadAEProducts();
-setInterval(loadAEProducts, 3600000);
-setTimeout(loadRealDashboardData, 3000);
-setInterval(loadRealDashboardData, 900000);
-
-// ── STRIPE ────────────────────────────────────────────────
 function initStripeCard(){
   if(cardElement)return;
   cardElement=elements.create('card',{style:{base:{color:'#f0f0f8',fontFamily:'"DM Sans",sans-serif',fontSize:'15px','::placeholder':{color:'#44445a'}},invalid:{color:'#ff8888'}}});
@@ -368,7 +256,7 @@ function openStripe(amount,name){
   document.getElementById('stripe-product-name').textContent=name||'Commande FOLLOW.';
   document.getElementById('stripe-overlay').classList.add('show');
   document.getElementById('stripe-error').textContent='';
-  document.getElementById('stripe-submit').textContent='💳 Payer maintenant';
+  document.getElementById('stripe-submit').textContent=t('pay_now');
   document.getElementById('stripe-submit').disabled=false;
   setTimeout(initStripeCard,100);
 }
@@ -377,15 +265,14 @@ function closeStripe(){document.getElementById('stripe-overlay').classList.remov
 document.getElementById('stripe-form').addEventListener('submit',async(e)=>{
   e.preventDefault();
   const btn=document.getElementById('stripe-submit');
-  btn.textContent='⏳ Traitement...';btn.disabled=true;
+  btn.textContent=t('processing');btn.disabled=true;
   try{
     const {error}=await stripe.createPaymentMethod({type:'card',card:cardElement});
-    if(error){document.getElementById('stripe-error').textContent=error.message;btn.textContent='💳 Payer maintenant';btn.disabled=false;}
+    if(error){document.getElementById('stripe-error').textContent=error.message;btn.textContent=t('pay_now');btn.disabled=false;}
     else{closeStripe();state.orderDone=true;state.cart=[];state.cartCount=0;updateCartCount();showView('cart');}
-  }catch(err){document.getElementById('stripe-error').textContent='Erreur. Réessayez.';btn.textContent='💳 Payer maintenant';btn.disabled=false;}
+  }catch(err){document.getElementById('stripe-error').textContent='Erreur.';btn.textContent=t('pay_now');btn.disabled=false;}
 });
 
-// ── PRODUITS ──────────────────────────────────────────────
 function renderNiches(){
   document.getElementById('niches-bar').innerHTML=NICHES.map(n=>`<button class="niche-btn" onclick="setNiche('${n.id}')" style="background:${state.niche===n.id?n.color:'var(--card)'};color:${state.niche===n.id?'#080808':'var(--muted)'};border-color:${state.niche===n.id?n.color:'var(--border)'}">${n.icon} ${n.label}${n.visits?`<span style="background:#00000025;border-radius:4px;padding:1px 5px;font-size:10px">${n.visits}</span>`:''}</button>`).join('');
 }
@@ -394,47 +281,34 @@ function setNiche(id){state.niche=id;renderNiches();renderProducts();}
 function renderProducts(){
   if(!productsLoaded)return;
   const f=state.niche==='all'?PRODUCTS:PRODUCTS.filter(p=>p.niche===state.niche);
-  const w=f.filter(p=>p.isWinner);
   document.getElementById('catalog-count').textContent=f.length;
-  document.getElementById('winners-grid').innerHTML=w.length>0?w.map(p=>pCard(p,true)).join(''):'<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">Aucun produit dans cette catégorie</div>';
-  document.getElementById('products-grid').innerHTML=f.map(p=>pCard(p,false)).join('');
+  document.getElementById('winners-grid').innerHTML=f.length>0?f.map(p=>pCard(p)).join(''):'<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">Aucun produit</div>';
+  document.getElementById('products-grid').innerHTML='';
 }
 
-function pCard(p,isWinner){
+function pCard(p){
   const n=getNiche(p.niche);
   const price=getPrice(p.basePrice);
   const oldP=getPrice(p.oldPrice);
   const imgHtml=p.img?`<img class="pcard-img" src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\"img-placeholder\\">📦</div>'">`:`<div class="img-placeholder">📦</div>`;
-  return `<div class="pcard">
-    <div class="pcard-img-wrap">
-      ${imgHtml}
-      <div style="position:absolute;top:10px;left:10px;display:flex;gap:5px">
-        ${isWinner?`<span class="badge" style="background:#C8FF0022;color:var(--accent);border:1px solid #C8FF0040">🏆</span>`:''}
-        <span class="badge" style="background:#08080888;color:#aaa;border:1px solid var(--border)">🔥 Tendance</span>
-      </div>
-      <span style="position:absolute;top:10px;right:10px;background:var(--accent);color:#080808;font-size:10px;font-weight:800;padding:2px 6px;border-radius:5px">-${disc(p)}%</span>
-      <div style="position:absolute;bottom:0;left:0;right:0;background:#07070988;backdrop-filter:blur(10px);padding:6px 10px">
-        <span style="font-size:10px;font-weight:700;color:${n.color}">${n.icon} ${n.label}</span>
-      </div>
+  return `<div class="pcard"><div class="pcard-img-wrap">${imgHtml}
+    <div style="position:absolute;top:10px;left:10px"><span class="badge" style="background:#C8FF0022;color:var(--accent);border:1px solid #C8FF0040">🏆</span></div>
+    <span style="position:absolute;top:10px;right:10px;background:var(--accent);color:#080808;font-size:10px;font-weight:800;padding:2px 6px;border-radius:5px">-${disc(p)}%</span>
+    <div style="position:absolute;bottom:0;left:0;right:0;background:#07070988;backdrop-filter:blur(10px);padding:6px 10px"><span style="font-size:10px;font-weight:700;color:${n.color}">${n.icon} ${n.label}</span></div>
+    </div><div class="pcard-body">
+    <div style="font-weight:700;font-size:14px;margin-bottom:7px;line-height:1.3">${p.name}</div>
+    <div style="display:flex;align-items:center;gap:4px;margin-bottom:9px"><span style="color:#ffd700;font-size:11px">${'★'.repeat(Math.floor(p.rating))}</span><span style="color:var(--muted);font-size:10px">${p.rating} (${p.reviews.toLocaleString()})</span></div>
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px">
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent)">${state.symbol}${price}</span>
+      <span style="color:#333;font-size:12px;text-decoration:line-through">${state.symbol}${oldP}</span>
+      <span style="color:var(--muted);font-size:10px;margin-left:auto">${p.supplier}</span>
     </div>
-    <div class="pcard-body">
-      <div style="font-weight:700;font-size:14px;margin-bottom:7px;line-height:1.3">${p.name}</div>
-      <div style="display:flex;align-items:center;gap:4px;margin-bottom:9px">
-        <span style="color:#ffd700;font-size:11px">${'★'.repeat(Math.floor(p.rating))}</span>
-        <span style="color:var(--muted);font-size:10px">${p.rating} (${p.reviews.toLocaleString()} avis)</span>
-      </div>
-      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px">
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent)">${state.symbol}${price}</span>
-        <span style="color:#333;font-size:12px;text-decoration:line-through">${state.symbol}${oldP}</span>
-        <span style="color:var(--muted);font-size:10px;margin-left:auto">${p.supplier}</span>
-      </div>
-      <div style="display:flex;gap:6px;margin-bottom:12px">
-        <span style="background:#00ff8812;border:1px solid #00ff8830;color:#00ff88;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px">🚚 Livraison gratuite</span>
-        <span style="background:#C8FF0012;border:1px solid #C8FF0030;color:var(--accent);font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px">↩️ Retour 30j</span>
-      </div>
-      <button class="btn" style="width:100%;padding:11px;font-size:13px" onclick="addToCart(${p.id})">Ajouter au panier</button>
+    <div style="display:flex;gap:6px;margin-bottom:12px">
+      <span style="background:#00ff8812;border:1px solid #00ff8830;color:#00ff88;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px">🚚 ${t('free_shipping')}</span>
+      <span style="background:#C8FF0012;border:1px solid #C8FF0030;color:var(--accent);font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px">↩️ ${t('return')}</span>
     </div>
-  </div>`;
+    <button class="btn" style="width:100%;padding:11px;font-size:13px" onclick="addToCart(${p.id})">${t('add')}</button>
+    </div></div>`;
 }
 
 function addToCart(id){
@@ -452,116 +326,40 @@ function updateCartCount(){
 function renderCart(){
   const total=state.cart.reduce((s,i)=>s+(parseFloat(getPrice(i.basePrice))*i.qty),0);
   if(state.orderDone){
-    document.getElementById('cart-content').innerHTML=`<div style="max-width:460px;margin:100px auto;text-align:center;padding:0 24px"><div style="font-size:52px;margin-bottom:18px">✅</div><div style="font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:3px;margin-bottom:10px">COMMANDE CONFIRMÉE !</div><div style="color:var(--muted);line-height:1.7;margin-bottom:24px">Paiement reçu. Livraison sous 7-15 jours.</div><button class="btn" onclick="state.orderDone=false;state.cart=[];state.cartCount=0;updateCartCount();showView('store')">Continuer les achats</button></div>`;
-    return;
+    document.getElementById('cart-content').innerHTML=`<div style="max-width:460px;margin:100px auto;text-align:center;padding:0 24px"><div style="font-size:52px;margin-bottom:18px">✅</div><div style="font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:3px;margin-bottom:10px">${t('order_confirmed')}</div><div style="color:var(--muted);line-height:1.7;margin-bottom:24px">${t('delivery')}</div><button class="btn" onclick="state.orderDone=false;state.cart=[];state.cartCount=0;updateCartCount();showView('store')">${t('continue_shopping')}</button></div>`;return;
   }
   if(state.cart.length===0){
-    document.getElementById('cart-content').innerHTML=`<div style="text-align:center;padding:80px 0"><div style="font-size:40px;margin-bottom:12px">🛒</div><div style="color:var(--muted);margin-bottom:16px">Votre panier est vide</div><button class="btn" onclick="showView('store')">Découvrir nos produits</button></div>`;
-    return;
+    document.getElementById('cart-content').innerHTML=`<div style="text-align:center;padding:80px 0"><div style="font-size:40px;margin-bottom:12px">🛒</div><div style="color:var(--muted);margin-bottom:16px">${t('empty_cart')}</div><button class="btn" onclick="showView('store')">${t('discover')}</button></div>`;return;
   }
-  document.getElementById('cart-content').innerHTML=`
-    <div>${state.cart.map(item=>`<div class="cart-item">
-      ${item.img?`<img src="${item.img}" style="width:64px;height:64px;border-radius:9px;object-fit:cover" onerror="this.outerHTML='<div style=\\"width:64px;height:64px;border-radius:9px;background:var(--mid);display:flex;align-items:center;justify-content:center;font-size:24px\\">📦</div>'">`:'<div style="width:64px;height:64px;border-radius:9px;background:var(--mid);display:flex;align-items:center;justify-content:center;font-size:24px">📦</div>'}
-      <div style="flex:1"><div style="font-weight:700;font-size:14px">${item.name}</div><div style="color:var(--accent);font-family:'Bebas Neue',sans-serif;font-size:18px;margin-top:2px">${state.symbol}${getPrice(item.basePrice)}</div></div>
-      <div style="display:flex;align-items:center;gap:7px">
-        <button onclick="updateQty(${item.id},-1)" style="background:var(--mid);border:none;color:var(--text);width:26px;height:26px;border-radius:5px;cursor:pointer">−</button>
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:18px;min-width:16px;text-align:center">${item.qty}</span>
-        <button onclick="updateQty(${item.id},1)" style="background:var(--mid);border:none;color:var(--text);width:26px;height:26px;border-radius:5px;cursor:pointer">+</button>
-      </div>
-      <button onclick="removeFromCart(${item.id})" style="background:transparent;border:none;color:#333;cursor:pointer;font-size:16px">✕</button>
+  document.getElementById('cart-content').innerHTML=`<div>${state.cart.map(item=>`<div class="cart-item">
+    ${item.img?`<img src="${item.img}" style="width:64px;height:64px;border-radius:9px;object-fit:cover" onerror="this.outerHTML='<div style=\\"width:64px;height:64px;border-radius:9px;background:var(--mid);display:flex;align-items:center;justify-content:center;font-size:24px\\">📦</div>'">`:'<div style="width:64px;height:64px;border-radius:9px;background:var(--mid);display:flex;align-items:center;justify-content:center;font-size:24px">📦</div>'}
+    <div style="flex:1"><div style="font-weight:700;font-size:14px">${item.name}</div><div style="color:var(--accent);font-family:'Bebas Neue',sans-serif;font-size:18px;margin-top:2px">${state.symbol}${getPrice(item.basePrice)}</div></div>
+    <div style="display:flex;align-items:center;gap:7px">
+      <button onclick="updateQty(${item.id},-1)" style="background:var(--mid);border:none;color:var(--text);width:26px;height:26px;border-radius:5px;cursor:pointer">−</button>
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:18px;min-width:16px;text-align:center">${item.qty}</span>
+      <button onclick="updateQty(${item.id},1)" style="background:var(--mid);border:none;color:var(--text);width:26px;height:26px;border-radius:5px;cursor:pointer">+</button>
+    </div>
+    <button onclick="removeFromCart(${item.id})" style="background:transparent;border:none;color:#333;cursor:pointer;font-size:16px">✕</button>
     </div>`).join('')}</div>
     <div class="cart-summary">
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px;color:var(--muted);font-size:13px"><span>Sous-total</span><span>${state.symbol}${total.toFixed(2)}</span></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:14px;color:#00ff88;font-size:13px"><span>🚚 Livraison gratuite</span><span>${state.symbol}0.00</span></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:18px;font-family:'Bebas Neue',sans-serif;font-size:22px"><span>TOTAL</span><span style="color:var(--accent)">${state.symbol}${total.toFixed(2)}</span></div>
-      <button class="btn" style="width:100%;padding:14px;font-size:14px" onclick="openStripe(${total},'Commande FOLLOW.')">🔒 PAYER AVEC STRIPE — ${state.symbol}${total.toFixed(2)}</button>
-      <div style="text-align:center;color:#333;font-size:10px;margin-top:10px">Stripe · SSL 256-bit · Paiement sécurisé</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;color:var(--muted);font-size:13px"><span>${t('subtotal')}</span><span>${state.symbol}${total.toFixed(2)}</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:14px;color:#00ff88;font-size:13px"><span>🚚 ${t('free_shipping')}</span><span>${state.symbol}0.00</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:18px;font-family:'Bebas Neue',sans-serif;font-size:22px"><span>${t('total')}</span><span style="color:var(--accent)">${state.symbol}${total.toFixed(2)}</span></div>
+      <button class="btn" style="width:100%;padding:14px;font-size:14px" onclick="openStripe(${total},'Commande FOLLOW.')">🔒 ${t('pay')} — ${state.symbol}${total.toFixed(2)}</button>
+      <div style="text-align:center;color:#333;font-size:10px;margin-top:10px">Stripe · SSL 256-bit</div>
     </div>`;
 }
 
 function updateQty(id,delta){const item=state.cart.find(i=>i.id===id);if(!item)return;item.qty=Math.max(1,item.qty+delta);state.cartCount=state.cart.reduce((s,i)=>s+i.qty,0);updateCartCount();renderCart();}
 function removeFromCart(id){state.cart=state.cart.filter(i=>i.id!==id);state.cartCount=state.cart.reduce((s,i)=>s+i.qty,0);updateCartCount();renderCart();}
 
-function renderDashboard(){
-  document.getElementById('stats-grid').innerHTML=[
-    {l:'Revenus',v:`${state.symbol}${state.stats.revenue.toLocaleString()}`,icon:'💰',c:'#C8FF00'},
-    {l:'Commandes',v:state.stats.orders.toLocaleString(),icon:'📦',c:'#00CFFF'},
-    {l:'Produits',v:PRODUCTS.length||'...',icon:'🏷️',c:'#FF6B35'},
-    {l:'Visiteurs',v:state.stats.visitors.toLocaleString(),icon:'👁️',c:'#FF3CAC'},
-  ].map(s=>`<div class="stat-card"><div style="font-size:24px;margin-bottom:10px">${s.icon}</div><div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:${s.c}">${s.v}</div><div style="color:var(--muted);font-size:11px;margin-top:3px">${s.l}</div></div>`).join('');
-  document.getElementById('top-winners').innerHTML=PRODUCTS.filter(p=>p.isWinner).slice(0,4).map((p,i)=>{const n=getNiche(p.niche);return`<div class="panel-row"><span style="color:var(--accent);font-family:'Bebas Neue',sans-serif;font-size:14px;min-width:18px">#${i+1}</span>${p.img?`<img src="${p.img}" style="width:36px;height:36px;border-radius:7px;object-fit:cover">`:'<div style="width:36px;height:36px;border-radius:7px;background:var(--mid);display:flex;align-items:center;justify-content:center">📦</div>'}<div style="flex:1"><div style="font-weight:600;font-size:12px">${p.name}</div><div style="color:${n.color};font-size:10px">${n.icon} ${n.label}</div></div><div style="color:var(--accent);font-weight:700;font-size:12px">Score ${p.gapFR}</div></div>`;}).join('');
-  document.getElementById('suppliers-list').innerHTML=[{n:'AliExpress',c:'#FF6600',s:'✅'},{n:'CJ Dropshipping',c:'#00CFFF',s:'✅'},{n:'Zendrop',c:'#AA00FF',s:'✅'},{n:'Spocket',c:'#00FF88',s:'✅'},{n:'DSers',c:'#FFD700',s:'🔄'}].map(s=>`<div class="panel-row"><div style="width:7px;height:7px;border-radius:50%;background:${s.c};flex-shrink:0"></div><div style="flex:1;font-weight:600;font-size:12px">${s.n}</div><span>${s.s}</span></div>`).join('');
-}
-
-const AGENTS_DATA=[
-  {name:'GapHunter',role:'Détecte les produits winners mondiaux.',icon:'🎯',color:'#C8FF00'},
-  {name:'TrendScanner',role:'TikTok, Instagram, YouTube, Pinterest.',icon:'🔍',color:'#00CFFF'},
-  {name:'WorldWatch',role:'Veille conjoncturelle mondiale.',icon:'🌍',color:'#FF6B35'},
-  {name:'PriceOptimizer',role:'Prix optimisés par marché.',icon:'💰',color:'#FF3CAC'},
-  {name:'RetireBot',role:'Retire les produits perdants.',icon:'🗑️',color:'#7B61FF'},
-  {name:'ContentAI',role:'SEO + AEO en 6 langues.',icon:'✍️',color:'#00FF88'},
-  {name:'OrderBot',role:'Fulfillment automatique universel.',icon:'📦',color:'#FFD700'},
-  {name:'AlertCEO',role:'Alertes importantes au PDG.',icon:'🚨',color:'#FF4444'},
-  {name:'HarvestBot',role:'Récolte primes et crédits légaux.',icon:'🌾',color:'#C8FF00'},
-  {name:'GoldWatch',role:'Investissement (actif à 50K€).',icon:'📈',color:'#FFD700'},
-  {name:'CurrencyBot',role:'Surveille toutes les devises.',icon:'💱',color:'#00CFFF'},
-  {name:'LegalGuard',role:'Gardien légal automatique.',icon:'🔒',color:'#00FF88'},
-  {name:'AffiliateOS',role:'Programme affiliés (actif à 1M€).',icon:'🤝',color:'#FF3CAC'},
-];
-
-function renderAgents(){
-  document.getElementById('agents-grid').innerHTML=AGENTS_DATA.map(a=>`<div class="agent-card"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:9px;background:${a.color}18;border:1px solid ${a.color}30;display:flex;align-items:center;justify-content:center;font-size:18px">${a.icon}</div><span style="font-weight:700;font-size:14px">${a.name}</span></div><div style="display:flex;align-items:center;gap:5px"><div style="width:7px;height:7px;border-radius:50%;background:${state.agentOn?a.color:'#333'}"></div><span style="font-size:10px;font-weight:700;color:${state.agentOn?a.color:'#333'}">${state.agentOn?'ON':'OFF'}</span></div></div><div style="color:var(--muted);font-size:11.5px;line-height:1.5">${a.role}</div></div>`).join('');
-  document.getElementById('charte-grid').innerHTML=[{cat:'✅ Auto',color:'#C8FF00',items:['Produit score >85','Prix ±10%','Retirer perdant']},{cat:'📧 CEO informé',color:'#ffd700',items:['Nouveau fournisseur','Prix >25%','Anomalie détectée']},{cat:'🚨 CEO décide',color:'#ff8888',items:['Crise économique','Ventes -30%','Clôture boutique']}].map(c=>`<div class="charte-card"><div style="font-weight:700;font-size:13px;margin-bottom:12px;color:${c.color}">${c.cat}</div>${c.items.map(item=>`<div style="color:var(--muted);font-size:11.5px;padding:5px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px"><span style="color:${c.color};font-size:10px">→</span>${item}</div>`).join('')}</div>`).join('');
-}
-function toggleAgents(){state.agentOn=!state.agentOn;document.getElementById('agent-toggle-btn').textContent=state.agentOn?'⏸ Pause':'▶ Activer';renderAgents();}
-
-function renderEmails(){
-  const unread=EMAILS.filter(e=>!state.emailsRead[e.id]).length;
-  const badge=document.getElementById('email-badge');
-  if(unread>0){badge.textContent=unread;badge.style.display='flex';}else{badge.style.display='none';}
-  document.getElementById('email-list').innerHTML=EMAILS.map(e=>`<div class="email-item" onclick="openEmail(${e.id})" style="border-color:${state.selectedEmail===e.id?'var(--accent)':!state.emailsRead[e.id]?'#ff444440':'var(--border)'}"><div style="display:flex;align-items:flex-start;gap:10px"><div style="flex:1;font-weight:700;font-size:13px">${e.subject}</div>${!state.emailsRead[e.id]?'<span style="width:8px;height:8px;border-radius:50%;background:#ff4444;flex-shrink:0;margin-top:3px"></span>':''}</div><div style="color:var(--muted);font-size:11px;margin-top:6px">${e.time}</div>${state.replies[e.id]?`<div style="color:var(--accent);font-size:10px;font-weight:700;margin-top:4px">✅ Option ${state.replies[e.id]}</div>`:''}</div>`).join('');
-  if(state.selectedEmail){const e=EMAILS.find(x=>x.id===state.selectedEmail);if(e)document.getElementById('email-detail-wrap').innerHTML=`<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-top:16px"><div style="font-weight:700;font-size:15px;margin-bottom:16px">${e.subject}</div><pre style="font-family:'DM Sans',sans-serif;font-size:12.5px;line-height:1.8;color:#ccc;white-space:pre-wrap;border-top:1px solid var(--border);padding-top:16px;margin-bottom:20px">${e.body}</pre>${!state.replies[e.id]?`<div style="color:var(--muted);font-size:12px;font-weight:700;margin-bottom:10px">VOTRE DÉCISION :</div><div style="display:flex;gap:8px"><button class="btn" onclick="replyEmail(${e.id},'A')" style="flex:1;background:linear-gradient(135deg,var(--accent),#a8d400);color:#080808">A</button><button class="btn" onclick="replyEmail(${e.id},'B')" style="flex:1;background:linear-gradient(135deg,#ffd700,#cc9900);color:#080808">B</button><button class="btn" onclick="replyEmail(${e.id},'C')" style="flex:1;background:linear-gradient(135deg,#ff4444,#cc2222);color:#fff">C</button></div>`:`<div style="background:#C8FF0012;border:1px solid #C8FF0030;border-radius:8px;padding:14px;text-align:center"><div style="color:var(--accent);font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px">✅ OPTION ${state.replies[e.id]}</div></div>`}</div>`;}
-  else document.getElementById('email-detail-wrap').innerHTML='';
-}
-function openEmail(id){state.selectedEmail=id;state.emailsRead[id]=true;renderEmails();}
-function replyEmail(id,opt){state.replies[id]=opt;renderEmails();}
-
-function updateWorldEvent(){
-  const ev=WORLD_EVENTS[state.worldEventIdx];
-  document.getElementById('wb-icon').textContent=ev.icon;
-  document.getElementById('wb-title').textContent=ev.title;
-  document.getElementById('wb-desc').textContent=ev.desc;
-  document.getElementById('wb-action').textContent='⚡ '+ev.action;
-}
-
-let logIdx=0;
-function agentTick(){
-  if(!state.agentOn)return;
-  const d=DECISIONS[logIdx%DECISIONS.length];
-  const logBody=document.getElementById('log-body');
-  if(logBody.children[0]&&logBody.children[0].textContent.includes('Démarrage'))logBody.innerHTML='';
-  const line=document.createElement('div');
-  line.className='log-line log-'+d.type;
-  line.innerHTML=`<span style="opacity:.5;margin-right:8px;font-size:10px">${new Date().toLocaleTimeString()}</span><span style="font-size:10px;opacity:.6">[${d.agent}]</span> ${d.icon} ${d.text}`;
-  logBody.insertBefore(line,logBody.firstChild);
-  if(logBody.children.length>40)logBody.removeChild(logBody.lastChild);
-  const count=document.getElementById('log-count');
-  if(count)count.textContent=logBody.children.length+' décisions';
-  logIdx++;
-  renderDashboard();
-}
-
-function setLang(lang,flag,symbol){state.lang=lang;state.symbol=symbol;document.getElementById('lang-flag').textContent=flag;document.getElementById('lang-menu').classList.remove('open');renderProducts();renderCart();}
+function setLang(lang,flag,symbol){state.lang=lang;state.symbol=symbol;state.flag=flag;document.getElementById('lang-flag').textContent=flag;document.getElementById('lang-menu').classList.remove('open');renderProducts();renderCart();}
 function toggleLang(){document.getElementById('lang-menu').classList.toggle('open');}
 
 function showView(name){
-  ['store','dashboard','agents','emails','cart'].forEach(v=>{document.getElementById('view-'+v).classList.remove('active');const btn=document.getElementById('nav-'+v);if(btn)btn.classList.remove('active');});
+  ['store','cart'].forEach(v=>{document.getElementById('view-'+v).classList.remove('active');});
   document.getElementById('view-'+name).classList.add('active');
-  const btn=document.getElementById('nav-'+name);if(btn)btn.classList.add('active');
   if(name==='cart')renderCart();
-  if(name==='emails')renderEmails();
-  if(name==='dashboard')renderDashboard();
-  if(name==='agents'){renderAgents();logIdx=0;document.getElementById('log-body').innerHTML='<div style="color:#222;text-align:center;padding:60px;font-size:12px">⏳ Démarrage...</div>';}
   window.scrollTo(0,0);
 }
 
@@ -569,9 +367,7 @@ document.addEventListener('click',e=>{
   if(!e.target.closest('[onclick="toggleLang()"]')&&!e.target.closest('#lang-menu'))document.getElementById('lang-menu').classList.remove('open');
 });
 
-renderNiches();renderDashboard();renderAgents();renderEmails();updateWorldEvent();
-setInterval(agentTick,2800);
-setInterval(()=>{state.worldEventIdx=(state.worldEventIdx+1)%WORLD_EVENTS.length;updateWorldEvent();},15000);
+renderNiches();
 </script>
 </body>
 </html>
