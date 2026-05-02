@@ -384,17 +384,13 @@ var server = http.createServer(function(req, res) {
 
         console.log('[EmailAI] 📧 Email reçu de ' + fromEmail + ' — ' + subject);
 
-        // Appel Claude pour générer la réponse
-        var prompt = 'Tu es le service client de FOLLOW., une boutique dropshipping premium (followtrend.shop). ' +
-          'Réponds professionnellement et chaleureusement en français à cet email client. ' +
-          'Sois concis (max 150 mots). Si c'est une question sur la livraison, dis que c'est 7-15 jours. ' +
-          'Si c'est un retour, dis d'envoyer les détails. Si c'est une réclamation, excuse-toi et propose un remboursement. ' +
-          'Termine toujours par "L'équipe FOLLOW." ' +
-          '
-
-Email du client:
-Sujet: ' + subject + '
-Message: ' + messageText;
+        // Appel Claude pour genere la reponse
+        var prompt = "Tu es le service client de FOLLOW., boutique e-commerce (followtrend.shop). " +
+          "Reponds professionnellement en francais a cet email client. " +
+          "Sois concis (max 150 mots). " +
+          "Livraison: 7-15 jours. Retour gratuit 30 jours. " +
+          "Pour retour ou reclamation, proposer remboursement integral. " +
+          "Termine toujours par: L equipe FOLLOW. \n\nEmail client:\nSujet: " + subject + "\nMessage: " + messageText;
 
         var postData = JSON.stringify({
           model: 'claude-sonnet-4-20250514',
@@ -436,11 +432,7 @@ Message: ' + messageText;
               sendEmail(fromEmail, 'Re: ' + subject, replyHtml).then(function() {
                 console.log('[EmailAI] ✅ Réponse envoyée à ' + fromEmail);
                 // Alerte CEO
-                sendAlertEmail('📧 Email client traité — IA', 'De: ' + fromEmail + '
-Sujet: ' + subject + '
-
-Réponse IA:
-' + replyText);
+                sendAlertEmail("Email client traite par IA", "De: " + fromEmail + "\nSujet: " + subject + "\n\nReponse IA:\n" + replyText);
               });
             } catch(e) {
               console.log('[EmailAI] ❌ Erreur parsing Claude:', e.message);
