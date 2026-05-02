@@ -362,6 +362,102 @@ var server = http.createServer(function(req, res) {
 
   if (req.url === '/' || req.url === '/ping') { res.writeHead(200); res.end('OK'); return; }
 
+  // ── EMAIL INBOUND — IA AUTO-RÉPONSE ──────────────────
+  if (req.url === '/email-inbound' && req.method === 'POST') {
+    var emailBody = '';
+    req.on('data', function(chunk) { emailBody += chunk; });
+    req.on('end', function() {
+      res.writeHead(200);
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ received: true }));
+
+      try {
+        var emailData = JSON.parse(emailBody);
+        var fromEmail = emailData.from || emailData.sender || '';
+        var subject = emailData.subject || 'Votre message';
+        var messageText = emailData.text || emailData.html || emailData.plain_text || '';
+
+        // Nettoie le HTML si nécessaire
+        messageText = messageText.replace(/<[^>]*>/g, '').trim().substring(0, 1000);
+
+        if (!fromEmail || !messageText) return;
+
+        console.log('[EmailAI] 📧 Email reçu de ' + fromEmail + ' — ' + subject);
+
+        // Appel Claude pour générer la réponse
+        var prompt = 'Tu es le service client de FOLLOW., une boutique dropshipping premium (followtrend.shop). ' +
+          'Réponds professionnellement et chaleureusement en français à cet email client. ' +
+          'Sois concis (max 150 mots). Si c'est une question sur la livraison, dis que c'est 7-15 jours. ' +
+          'Si c'est un retour, dis d'envoyer les détails. Si c'est une réclamation, excuse-toi et propose un remboursement. ' +
+          'Termine toujours par "L'équipe FOLLOW." ' +
+          '
+
+Email du client:
+Sujet: ' + subject + '
+Message: ' + messageText;
+
+        var postData = JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 500,
+          messages: [{ role: 'user', content: prompt }]
+        });
+
+        var aiOptions = {
+          hostname: 'api.anthropic.com',
+          path: '/v1/messages',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': process.env.ANTHROPIC_API_KEY || '',
+            'anthropic-version': '2023-06-01',
+            'Content-Length': Buffer.byteLength(postData)
+          }
+        };
+
+        var aiReq = https.request(aiOptions, function(aiRes) {
+          var aiData = '';
+          aiRes.on('data', function(c) { aiData += c; });
+          aiRes.on('end', function() {
+            try {
+              var parsed = JSON.parse(aiData);
+              var replyText = parsed.content && parsed.content[0] ? parsed.content[0].text : '';
+              if (!replyText) return;
+
+              console.log('[EmailAI] ✅ Réponse générée pour ' + fromEmail);
+
+              // Envoie la réponse au client
+              var replyHtml = '<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:32px">' +
+                '<div style="background:#070709;padding:20px;border-radius:8px;margin-bottom:24px;text-align:center">' +
+                '<div style="font-size:28px;font-weight:900;letter-spacing:4px;color:#fff">FOLLOW<span style="color:#C8FF00">.</span></div></div>' +
+                '<p style="color:#333;line-height:1.8;white-space:pre-wrap">' + replyText + '</p>' +
+                '<hr style="border:none;border-top:1px solid #eee;margin:24px 0"/>' +
+                '<p style="color:#999;font-size:11px">FOLLOW. · support@followtrend.shop · followtrend.shop</p></div>';
+
+              sendEmail(fromEmail, 'Re: ' + subject, replyHtml).then(function() {
+                console.log('[EmailAI] ✅ Réponse envoyée à ' + fromEmail);
+                // Alerte CEO
+                sendAlertEmail('📧 Email client traité — IA', 'De: ' + fromEmail + '
+Sujet: ' + subject + '
+
+Réponse IA:
+' + replyText);
+              });
+            } catch(e) {
+              console.log('[EmailAI] ❌ Erreur parsing Claude:', e.message);
+            }
+          });
+        });
+        aiReq.on('error', function(e) { console.log('[EmailAI] ❌ Erreur Claude:', e.message); });
+        aiReq.write(postData);
+        aiReq.end();
+
+      } catch(e) {
+        console.log('[EmailAI] ❌ Erreur parsing email:', e.message);
+      }
+    });
+    return;
+  }
+
   if (req.url === '/webhook' && req.method === 'POST') {
     var rawBody = '';
     req.on('data', function(chunk) { rawBody += chunk; });
