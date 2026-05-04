@@ -6,7 +6,6 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data:">
 <title>FOLLOW. — Suis les tendances</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-<script src="https://js.stripe.com/v3/"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--accent:#C8FF00;--dark:#070709;--mid:#0f0f12;--card:#13131a;--border:#1c1c26;--text:#f0f0f8;--muted:#44445a}
@@ -266,9 +265,6 @@ nav{background:#07070990;backdrop-filter:blur(20px);border-bottom:1px solid var(
 </div>
 
 <script>
-const stripe = Stripe('pk_live_51TSBYnFHJr25tz8j4DOMyCcoWWD829CAX94Bz1Kei4ws4CBXj5y3LMJjB35690UzhLYue90xa17sgn9kIWZJcjg000msyYNLN4');
-const elements = stripe.elements();
-let cardElement = null;
 const BACKEND = 'https://follow-backend-o300.onrender.com';
 
 const LANG_MAP = {
@@ -412,41 +408,40 @@ async function loadProducts(){
 loadProducts();
 setInterval(loadProducts,3600000);
 
-function initStripeCard(){
-  // Détruire l'ancienne instance pour éviter que les données restent affichées
-  if(cardElement){
-    cardElement.destroy();
-    cardElement = null;
-  }
-  cardElement = elements.create('card',{style:{base:{color:'#f0f0f8',fontFamily:'"DM Sans",sans-serif',fontSize:'15px','::placeholder':{color:'#44445a'}},invalid:{color:'#ff8888'}}});
-  cardElement.mount('#stripe-card-element');
-}
+async function openStripe(amount, name){
+  var btn = document.getElementById('checkout-loading-btn');
+  if(btn){ btn.textContent = '⏳ Chargement...'; btn.disabled = true; }
 
-function openStripe(amount, name){
-  state.currentAmount = amount;
-  state.currentOrderName = name || 'Commande FOLLOW.';
-  document.getElementById('stripe-amount').textContent = state.symbol + amount.toFixed(2);
-  document.getElementById('stripe-product-name').textContent = state.currentOrderName;
-  document.getElementById('stripe-error').textContent = '';
+  // Préparer les items du panier
+  var items = state.cart.map(function(item){
+    return {
+      name: item.name,
+      image: item.img || '',
+      price: parseFloat(getPrice(item.basePrice)),
+      qty: item.qty
+    };
+  });
 
-  var btn = document.getElementById('stripe-submit');
-  btn.textContent = t('pay_now');
-  btn.disabled = false;
-
-  document.getElementById('stripe-overlay').classList.add('show');
-  // Toujours recréer le champ carte vide à chaque ouverture
-  setTimeout(initStripeCard, 100);
-}
-
-function closeStripe(){
-  document.getElementById('stripe-overlay').classList.remove('show');
-  document.getElementById('stripe-error').textContent = '';
-  // Détruire le champ carte à la fermeture — sera recréé vide à la prochaine ouverture
-  if(cardElement){
-    cardElement.destroy();
-    cardElement = null;
+  try {
+    var res = await fetch(BACKEND + '/create-checkout', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ items: items })
+    });
+    var data = await res.json();
+    if(data.success && data.url){
+      window.location.href = data.url;
+    } else {
+      alert('Erreur paiement: ' + (data.error || 'Réessayez'));
+      if(btn){ btn.textContent = t('pay_now'); btn.disabled = false; }
+    }
+  } catch(e) {
+    alert('Erreur connexion. Réessayez.');
+    if(btn){ btn.textContent = t('pay_now'); btn.disabled = false; }
   }
 }
+
+function closeStripe(){ /* plus utilisé */ }
 
 async function submitPayment(){
   var btn = document.getElementById('stripe-submit');
@@ -540,7 +535,10 @@ function pCard(p){
   const n=getNiche(p.niche);
   const price=getPrice(p.basePrice);
   const oldP=getPrice(p.oldPrice);
-  const imgHtml=p.img?`<img class="pcard-img" src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\"img-placeholder\\">📦</div>'">`:`<div class="img-placeholder">📦</div>`;
+  const safeName=(p.name||'').replace(/['"` ]/g,' ').substring(0,50);
+  const imgHtml=p.img
+    ?`<img class="pcard-img" src="${p.img}" alt="${safeName}" loading="lazy" style="cursor:zoom-in" onclick="openZoom(this.src,'${safeName}')" onerror="this.style.display='none'">`
+    :`<div class="img-placeholder">📦</div>`;
   return `<div class="pcard"><div class="pcard-img-wrap">${imgHtml}
     <div style="position:absolute;top:10px;left:10px"><span class="badge" style="background:#C8FF0022;color:var(--accent);border:1px solid #C8FF0040">🏆</span></div>
     <span style="position:absolute;top:10px;right:10px;background:var(--accent);color:#080808;font-size:10px;font-weight:800;padding:2px 6px;border-radius:5px">-${disc(p)}%</span>
@@ -602,7 +600,7 @@ function renderCart(){
       </div>
       <div id="promo-msg" style="font-size:12px;margin-bottom:10px;min-height:16px"></div>`}
       <div style="display:flex;justify-content:space-between;margin-bottom:18px;font-family:'Bebas Neue',sans-serif;font-size:22px"><span>${t('total')}</span><span style="color:var(--accent)">${state.symbol}${finalTotal.toFixed(2)}</span></div>
-      <button class="btn" style="width:100%;padding:14px;font-size:14px" onclick="openStripe(${finalTotal},'Commande FOLLOW.')">🔒 ${t('pay')} — ${state.symbol}${finalTotal.toFixed(2)}</button>
+      <button id="checkout-loading-btn" class="btn" style="width:100%;padding:14px;font-size:14px" onclick="openStripe(${finalTotal},'Commande FOLLOW.')">🔒 ${t('pay')} — ${state.symbol}${finalTotal.toFixed(2)}</button>
       <div style="text-align:center;color:#333;font-size:10px;margin-top:10px">Stripe · SSL 256-bit</div>
     </div>`;
 }
@@ -670,6 +668,23 @@ function closeZoom(){
   document.body.style.overflow = '';
 }
 document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeZoom(); });
+
+
+// Gestion retour Stripe Checkout
+var urlParams = new URLSearchParams(window.location.search);
+if(urlParams.get('order') === 'success'){
+  state.orderDone = true;
+  state.cart = [];
+  state.cartCount = 0;
+  updateCartCount();
+  showView('cart');
+  // Nettoie l'URL
+  window.history.replaceState({}, document.title, '/');
+}
+if(urlParams.get('order') === 'cancel'){
+  showView('cart');
+  window.history.replaceState({}, document.title, '/');
+}
 
 updateUI();
 renderNiches();
