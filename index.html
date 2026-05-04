@@ -384,7 +384,7 @@ document.getElementById('lang-flag').textContent=state.flag;
 
 async function loadProducts(){
   try{
-    const res=await fetch(BACKEND+'?action=gaphunter');
+    const res=await fetch(BACKEND+'?action=gaphunter&lang='+state.lang);
     const data=await res.json();
     if(data.success&&data.winners&&data.winners.length>0){
       PRODUCTS=data.winners.map((p,i)=>({
@@ -635,7 +635,12 @@ function setLang(lang,flag,symbol){
   state.lang=lang;state.symbol=symbol;state.flag=flag;
   document.getElementById('lang-flag').textContent=flag;
   document.getElementById('lang-menu').classList.remove('open');
-  updateUI();renderProducts();renderCart();
+  updateUI();renderCart();
+  // Recharge les produits dans la nouvelle langue
+  productsLoaded=false;
+  PRODUCTS=[];
+  document.getElementById('winners-grid').innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">⏳ Traduction en cours...</div>';
+  loadProducts();
 }
 function toggleLang(){document.getElementById('lang-menu').classList.toggle('open');}
 
