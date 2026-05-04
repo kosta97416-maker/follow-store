@@ -164,26 +164,26 @@ function getCachedProducts() {
 }
 
 function refreshProducts() {
-  // Mots-clés multilingues par catégorie — CJ cherche en anglais mais on adapte selon popularité mondiale
-  var KEYWORDS_BY_LANG = {
-    lifestyle: ['watch','sunglasses','backpack','wallet','necklace','bracelet','perfume','handbag'],
-    sport:     ['yoga mat','sport gloves','dumbbells','fitness band','jump rope','cycling gloves','sport bottle','knee pad'],
-    focus:     ['led desk lamp','wireless keyboard','phone stand','notebook','webcam','mouse pad','usb hub','monitor light'],
-    creator:   ['ring light','tripod','microphone','camera lens','green screen','phone gimbal','softbox','video light'],
-    home:      ['led strip','storage box','kitchen gadget','wall clock','plant pot','air purifier','humidifier','door mat']
-  };
-
-  var niches = [];
-  Object.keys(KEYWORDS_BY_LANG).forEach(function(niche) {
-    KEYWORDS_BY_LANG[niche].forEach(function(keyword) {
-      niches.push({ keyword: keyword, niche: niche });
-    });
-  });
+  var niches = [
+    { keyword: 'watch', niche: 'lifestyle' },
+    { keyword: 'gloves', niche: 'sport' },
+    { keyword: 'lamp', niche: 'focus' },
+    { keyword: 'light', niche: 'creator' },
+    { keyword: 'organizer', niche: 'home' }
+  ];
   return getCJToken().then(function() {
-    var promises = niches.map(function(n) {
-      return searchCJProducts(n.keyword, n.niche).catch(function() { return []; });
-    });
-    return Promise.all(promises).then(function(results) {
+    // Recherches séquentielles pour éviter le timeout CJ
+    function searchSequential(list, index, results) {
+      if (index >= list.length) return Promise.resolve(results);
+      var n = list[index];
+      return searchCJProducts(n.keyword, n.niche)
+        .catch(function() { return []; })
+        .then(function(r) {
+          results.push(r);
+          return searchSequential(list, index + 1, results);
+        });
+    }
+    return searchSequential(niches, 0, []).then(function(results) {
       var allProducts = [];
       results.forEach(function(r) { allProducts = allProducts.concat(r); });
       var seen = {};
