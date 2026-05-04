@@ -76,6 +76,14 @@ nav{background:#07070990;backdrop-filter:blur(20px);border-bottom:1px solid var(
 .review-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
 .img-placeholder{width:100%;height:185px;background:var(--mid);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:28px}
 @media(max-width:768px){nav{padding:0 16px}.view{padding:0 16px 60px}.form-row{grid-template-columns:1fr}}
+
+/* ZOOM IMAGE OVERLAY */
+.img-zoom-overlay{position:fixed;inset:0;background:#000000ee;z-index:2000;display:none;align-items:center;justify-content:center;cursor:zoom-out}
+.img-zoom-overlay.open{display:flex}
+.img-zoom-overlay img{max-width:92vw;max-height:88vh;object-fit:contain;border-radius:12px;box-shadow:0 0 60px #00000088}
+.img-zoom-overlay .zoom-close{position:absolute;top:20px;right:24px;background:transparent;border:1px solid #fff3;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;font-size:20px}
+.img-zoom-overlay .zoom-name{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;text-align:center;max-width:80vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard-img-wrap{cursor:zoom-in}
 </style>
 </head>
 <body>
@@ -328,7 +336,7 @@ let PRODUCTS = [];
 let productsLoaded = false;
 
 const NICHES=[
-  {id:'all',icon:'',label:'Tout',color:'#C8FF00',visits:''},
+  {id:'all',icon:'🔥',label:'Tout',color:'#C8FF00',visits:''},
   {id:'lifestyle',icon:'✨',label:'Lifestyle',color:'#C8FF00',visits:'1.9M'},
   {id:'sport',icon:'🏃',label:'Sport & Performance',color:'#00CFFF',visits:'800K'},
   {id:'focus',icon:'🎯',label:'Focus & Concentration',color:'#FF6B35',visits:'2.5M'},
@@ -650,9 +658,30 @@ document.getElementById('stripe-overlay').addEventListener('click',function(e){
   if(e.target===this)closeStripe();
 });
 
+
+function openZoom(src, name){
+  document.getElementById('img-zoom-img').src = src;
+  document.getElementById('img-zoom-name').textContent = name || '';
+  document.getElementById('img-zoom-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeZoom(){
+  document.getElementById('img-zoom-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeZoom(); });
+
 updateUI();
 renderNiches();
 </script>
+
+<!-- ZOOM IMAGE OVERLAY -->
+<div class="img-zoom-overlay" id="img-zoom-overlay" onclick="closeZoom()">
+  <button class="zoom-close" onclick="closeZoom()">✕</button>
+  <img id="img-zoom-img" src="" alt=""/>
+  <div class="zoom-name" id="img-zoom-name"></div>
+</div>
+
 <a href="/dashboard.html" style="position:fixed;bottom:10px;right:10px;opacity:0;pointer-events:none;font-size:1px">.</a>
 </body>
 </html>
