@@ -106,6 +106,10 @@ nav{background:#07070990;backdrop-filter:blur(20px);border-bottom:1px solid var(
         <button class="lang-option" onclick="setLang('ar','🇸🇦','ر.س')">🇸🇦 العربية</button>
         <button class="lang-option" onclick="setLang('pt','🇧🇷','R$')">🇧🇷 Português</button>
         <button class="lang-option" onclick="setLang('sw','🇰🇪','KSh')">🇰🇪 Kiswahili</button>
+        <button class="lang-option" onclick="setLang('ln','🇨🇩','FC')">🇨🇩 Lingala</button>
+        <button class="lang-option" onclick="setLang('wo','🇸🇳','CFA')">🇸🇳 Wolof</button>
+        <button class="lang-option" onclick="setLang('ha','🇳🇬','₦')">🇳🇬 Haoussa</button>
+        <button class="lang-option" onclick="setLang('zh','🇨🇳','¥')">🇨🇳 中文</button>
       </div>
     </div>
     <button class="cart-btn" onclick="showView('cart')">🛒 Panier
@@ -231,7 +235,7 @@ nav{background:#07070990;backdrop-filter:blur(20px);border-bottom:1px solid var(
     <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">↩️</div><div style="font-weight:700;font-size:12px;margin-bottom:4px" id="trust-return">Retour Gratuit</div><div style="color:var(--muted);font-size:11px">30 jours sans questions</div></div>
     <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">⭐</div><div style="font-weight:700;font-size:12px;margin-bottom:4px" id="trust-quality">Qualité Garantie</div><div style="color:var(--muted);font-size:11px">Produits vérifiés</div></div>
     <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">💬</div><div style="font-weight:700;font-size:12px;margin-bottom:4px" id="trust-support">Support 24/7</div><div style="color:var(--muted);font-size:11px">Toujours disponible</div></div>
-    <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">🌍</div><div style="font-weight:700;font-size:12px;margin-bottom:4px" id="trust-languages">6 Langues</div><div style="color:var(--muted);font-size:11px">FR EN ES AR PT SW</div></div>
+    <div class="trust-card"><div style="font-size:28px;margin-bottom:8px">🌍</div><div style="font-weight:700;font-size:12px;margin-bottom:4px" id="trust-languages">6 Langues</div><div style="color:var(--muted);font-size:11px">FR EN ES AR PT SW LN WO HA 中文</div></div>
   </div>
   <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;margin-bottom:16px;text-align:center">⭐ <span id="reviews-title">ILS NOUS FONT CONFIANCE</span></div>
   <div class="reviews-grid">
@@ -270,7 +274,11 @@ const BACKEND = 'https://follow-backend-o300.onrender.com';
 const LANG_MAP = {
   fr:{lang:'fr',symbol:'€',flag:'🇫🇷'},en:{lang:'en',symbol:'$',flag:'🇺🇸'},
   es:{lang:'es',symbol:'€',flag:'🇪🇸'},ar:{lang:'ar',symbol:'ر.س',flag:'🇸🇦'},
-  pt:{lang:'pt',symbol:'R$',flag:'🇧🇷'},sw:{lang:'sw',symbol:'KSh',flag:'🇰🇪'}
+  pt:{lang:'pt',symbol:'R$',flag:'🇧🇷'},sw:{lang:'sw',symbol:'KSh',flag:'🇰🇪'},
+  ln:{lang:'ln',symbol:'FC',flag:'🇨🇩'},
+  wo:{lang:'wo',symbol:'CFA',flag:'🇸🇳'},
+  ha:{lang:'ha',symbol:'₦',flag:'🇳🇬'},
+  zh:{lang:'zh',symbol:'¥',flag:'🇨🇳'}
 };
 
 const I18N = {
@@ -280,7 +288,7 @@ const I18N = {
     hero_sub:'Des produits lifestyle sélectionnés dans le monde entier. Style, confort et performance au quotidien.',
     premium:'SÉLECTION PREMIUM',top_sales:'TOP VENTES',catalogue:'CATALOGUE',
     trust_payment:'Paiement Sécurisé',trust_delivery:'Livraison Mondiale',trust_return:'Retour Gratuit',
-    trust_quality:'Qualité Garantie',trust_support:'Support 24/7',trust_languages:'6 Langues',
+    trust_quality:'Qualité Garantie',trust_support:'Support 24/7',trust_languages:'10 Langues',
     reviews_title:'ILS NOUS FONT CONFIANCE',promise_title:'LA PROMESSE FOLLOW.',
     ticker:'🌍 LIVRAISON MONDIALE &nbsp;&nbsp;&nbsp; 💳 PAIEMENT SÉCURISÉ &nbsp;&nbsp;&nbsp; ✨ PRODUITS SÉLECTIONNÉS &nbsp;&nbsp;&nbsp; 🚀 TENDANCES MONDIALES &nbsp;&nbsp;&nbsp; ↩️ RETOUR GRATUIT 30 JOURS &nbsp;&nbsp;&nbsp; ⭐ QUALITÉ GARANTIE',
     label_firstname:'Prénom',label_lastname:'Nom',label_email:'Email',label_phone:'Téléphone',label_address:'Adresse',label_city:'Ville',label_zip:'Code postal',label_country:'Pays',label_card:'Carte bancaire',fill_required:'Veuillez remplir tous les champs obligatoires.'
@@ -291,38 +299,66 @@ const I18N = {
     hero_sub:'Lifestyle products selected from around the world. Style, comfort and performance every day.',
     premium:'PREMIUM SELECTION',top_sales:'TOP SALES',catalogue:'CATALOGUE',
     trust_payment:'Secure Payment',trust_delivery:'Worldwide Delivery',trust_return:'Free Returns',
-    trust_quality:'Quality Guaranteed',trust_support:'24/7 Support',trust_languages:'6 Languages',
+    trust_quality:'Quality Guaranteed',trust_support:'24/7 Support',trust_languages:'10 Languages',
     reviews_title:'THEY TRUST US',promise_title:'THE FOLLOW. PROMISE',
     ticker:'🌍 WORLDWIDE DELIVERY &nbsp;&nbsp;&nbsp; 💳 SECURE PAYMENT &nbsp;&nbsp;&nbsp; ✨ SELECTED PRODUCTS &nbsp;&nbsp;&nbsp; 🚀 GLOBAL TRENDS &nbsp;&nbsp;&nbsp; ↩️ FREE RETURN 30 DAYS &nbsp;&nbsp;&nbsp; ⭐ QUALITY GUARANTEED',
     label_firstname:'First name',label_lastname:'Last name',label_email:'Email',label_phone:'Phone',label_address:'Address',label_city:'City',label_zip:'Postal code',label_country:'Country',label_card:'Card details',fill_required:'Please fill in all required fields.'
   },
   es:{add:'Añadir al carrito',pay:'Pagar con Stripe',free_shipping:'Envío gratis',return:'Devolución 30 días',empty_cart:'Tu carrito está vacío',discover:'Descubrir productos',order_confirmed:'¡PEDIDO CONFIRMADO!',delivery:'Entrega en 7-15 días.',continue_shopping:'Seguir comprando',subtotal:'Subtotal',total:'TOTAL',pay_now:'💳 Pagar ahora',processing:'Procesando...',
     hero_badge:'ENVÍO MUNDIAL · PAGO SEGURO · DEVOLUCIÓN 30 DÍAS',hero_title1:'FOLLOW',hero_title2:'THE TREND.',hero_sub:'Productos lifestyle de todo el mundo.',premium:'SELECCIÓN PREMIUM',top_sales:'MÁS VENDIDOS',catalogue:'CATÁLOGO',
-    trust_payment:'Pago Seguro',trust_delivery:'Envío Mundial',trust_return:'Devolución Gratis',trust_quality:'Calidad Garantizada',trust_support:'Soporte 24/7',trust_languages:'6 Idiomas',
+    trust_payment:'Pago Seguro',trust_delivery:'Envío Mundial',trust_return:'Devolución Gratis',trust_quality:'Calidad Garantizada',trust_support:'Soporte 24/7',trust_languages:'10 Idiomas',
     reviews_title:'ELLOS NOS CONFÍAN',promise_title:'LA PROMESA FOLLOW.',
     ticker:'🌍 ENVÍO MUNDIAL &nbsp;&nbsp;&nbsp; 💳 PAGO SEGURO &nbsp;&nbsp;&nbsp; ✨ PRODUCTOS SELECCIONADOS &nbsp;&nbsp;&nbsp; 🚀 TENDENCIAS MUNDIALES &nbsp;&nbsp;&nbsp; ↩️ DEVOLUCIÓN GRATIS 30 DÍAS &nbsp;&nbsp;&nbsp; ⭐ CALIDAD GARANTIZADA',
     label_firstname:'Nombre',label_lastname:'Apellido',label_email:'Email',label_phone:'Teléfono',label_address:'Dirección',label_city:'Ciudad',label_zip:'Código postal',label_country:'País',label_card:'Tarjeta',fill_required:'Por favor rellena todos los campos obligatorios.'
   },
   ar:{add:'أضف للسلة',pay:'الدفع عبر Stripe',free_shipping:'شحن مجاني',return:'إرجاع 30 يوم',empty_cart:'سلتك فارغة',discover:'اكتشف منتجاتنا',order_confirmed:'تم تأكيد الطلب!',delivery:'التسليم خلال 7-15 يوم.',continue_shopping:'مواصلة التسوق',subtotal:'المجموع الفرعي',total:'الإجمالي',pay_now:'💳 ادفع الآن',processing:'جار المعالجة...',
     hero_badge:'توصيل عالمي · دفع آمن · إرجاع 30 يوم',hero_title1:'FOLLOW',hero_title2:'THE TREND.',hero_sub:'منتجات لايف ستايل من جميع أنحاء العالم.',premium:'اختيار مميز',top_sales:'الأكثر مبيعاً',catalogue:'الكتالوج',
-    trust_payment:'دفع آمن',trust_delivery:'توصيل عالمي',trust_return:'إرجاع مجاني',trust_quality:'جودة مضمونة',trust_support:'دعم 24/7',trust_languages:'6 لغات',
+    trust_payment:'دفع آمن',trust_delivery:'توصيل عالمي',trust_return:'إرجاع مجاني',trust_quality:'جودة مضمونة',trust_support:'دعم 24/7',trust_languages:'10 لغات',
     reviews_title:'يثقون بنا',promise_title:'وعد FOLLOW.',
     ticker:'🌍 توصيل عالمي &nbsp;&nbsp;&nbsp; 💳 دفع آمن &nbsp;&nbsp;&nbsp; ✨ منتجات مختارة &nbsp;&nbsp;&nbsp; 🚀 أحدث الصيحات &nbsp;&nbsp;&nbsp; ↩️ إرجاع مجاني 30 يوم &nbsp;&nbsp;&nbsp; ⭐ جودة مضمونة',
     label_firstname:'الاسم',label_lastname:'اللقب',label_email:'البريد',label_phone:'الهاتف',label_address:'العنوان',label_city:'المدينة',label_zip:'الرمز البريدي',label_country:'البلد',label_card:'بطاقة البنك',fill_required:'يرجى ملء جميع الحقول المطلوبة.'
   },
   pt:{add:'Adicionar ao carrinho',pay:'Pagar com Stripe',free_shipping:'Frete grátis',return:'Devolução 30 dias',empty_cart:'Seu carrinho está vazio',discover:'Descobrir produtos',order_confirmed:'PEDIDO CONFIRMADO!',delivery:'Entrega em 7-15 dias.',continue_shopping:'Continuar comprando',subtotal:'Subtotal',total:'TOTAL',pay_now:'💳 Pagar agora',processing:'Processando...',
     hero_badge:'ENTREGA MUNDIAL · PAGAMENTO SEGURO · DEVOLUÇÃO 30 DIAS',hero_title1:'FOLLOW',hero_title2:'THE TREND.',hero_sub:'Produtos lifestyle do mundo todo.',premium:'SELEÇÃO PREMIUM',top_sales:'MAIS VENDIDOS',catalogue:'CATÁLOGO',
-    trust_payment:'Pagamento Seguro',trust_delivery:'Entrega Mundial',trust_return:'Devolução Grátis',trust_quality:'Qualidade Garantida',trust_support:'Suporte 24/7',trust_languages:'6 Idiomas',
+    trust_payment:'Pagamento Seguro',trust_delivery:'Entrega Mundial',trust_return:'Devolução Grátis',trust_quality:'Qualidade Garantida',trust_support:'Suporte 24/7',trust_languages:'10 Idiomas',
     reviews_title:'ELES CONFIAM EM NÓS',promise_title:'A PROMESSA FOLLOW.',
     ticker:'🌍 ENTREGA MUNDIAL &nbsp;&nbsp;&nbsp; 💳 PAGAMENTO SEGURO &nbsp;&nbsp;&nbsp; ✨ PRODUTOS SELECIONADOS &nbsp;&nbsp;&nbsp; 🚀 TENDÊNCIAS MUNDIAIS &nbsp;&nbsp;&nbsp; ↩️ DEVOLUÇÃO GRÁTIS 30 DIAS &nbsp;&nbsp;&nbsp; ⭐ QUALIDADE GARANTIDA',
     label_firstname:'Nome',label_lastname:'Sobrenome',label_email:'Email',label_phone:'Telefone',label_address:'Endereço',label_city:'Cidade',label_zip:'CEP',label_country:'País',label_card:'Cartão',fill_required:'Por favor preencha todos os campos obrigatórios.'
   },
   sw:{add:'Ongeza kwenye kikapu',pay:'Lipa na Stripe',free_shipping:'Usafirishaji bure',return:'Rudisha siku 30',empty_cart:'Kikapu chako kiko wazi',discover:'Gundua bidhaa zetu',order_confirmed:'AGIZO LIMETHIBITISHWA!',delivery:'Uwasilishaji siku 7-15.',continue_shopping:'Endelea kununua',subtotal:'Jumla ndogo',total:'JUMLA',pay_now:'💳 Lipa sasa',processing:'Inashughulikia...',
     hero_badge:'USAFIRISHAJI DUNIANI · MALIPO SALAMA · RUDISHA SIKU 30',hero_title1:'FOLLOW',hero_title2:'THE TREND.',hero_sub:'Bidhaa za maisha bora kutoka duniani kote.',premium:'UCHAGUZI WA PREMIUM',top_sales:'MAUZO BORA',catalogue:'KATALOGI',
-    trust_payment:'Malipo Salama',trust_delivery:'Usafirishaji Duniani',trust_return:'Rudisha Bure',trust_quality:'Ubora Uliohakikishwa',trust_support:'Msaada 24/7',trust_languages:'Lugha 6',
+    trust_payment:'Malipo Salama',trust_delivery:'Usafirishaji Duniani',trust_return:'Rudisha Bure',trust_quality:'Ubora Uliohakikishwa',trust_support:'Msaada 24/7',trust_languages:'Lugha 10',
     reviews_title:'WANAAMINI FOLLOW.',promise_title:'AHADI YA FOLLOW.',
     ticker:'🌍 USAFIRISHAJI DUNIANI &nbsp;&nbsp;&nbsp; 💳 MALIPO SALAMA &nbsp;&nbsp;&nbsp; ✨ BIDHAA ZILIZOCHAGULIWA &nbsp;&nbsp;&nbsp; 🚀 MITINDO YA DUNIA &nbsp;&nbsp;&nbsp; ↩️ RUDISHA BURE SIKU 30 &nbsp;&nbsp;&nbsp; ⭐ UBORA ULIOHAKIKISHWA',
     label_firstname:'Jina',label_lastname:'Ukoo',label_email:'Barua pepe',label_phone:'Simu',label_address:'Anwani',label_city:'Mji',label_zip:'Nambari ya posta',label_country:'Nchi',label_card:'Kadi ya benki',fill_required:'Tafadhali jaza sehemu zote zinazohitajika.'
+  },
+  ln:{add:'Kotia na panier',pay:'Kosala mbongo na Stripe',free_shipping:'Kotinda ofele',return:'Kozonga mikolo 30',empty_cart:'Panier na yo ezali mpamba',discover:'Koyeba biloko na biso',order_confirmed:'COMMANDE ESILISI!',delivery:'Kotinda mikolo 7-15.',continue_shopping:'Kozonga kosomba',subtotal:'Motano moke',total:'MOTANO',pay_now:'💳 Kosala mbongo',processing:'Kozela...',
+    hero_badge:'KOTINDA MOKILI MOBIMBA · MBONGO EKANZAMI · KOZONGA MIKOLO 30',hero_title1:'FOLLOW',hero_title2:'THE TREND.',hero_sub:'Biloko ya style eponami na mokili mobimba. Style, nzela mpe nguya mokolo na mokolo.',premium:'PONA YA MALAMU',top_sales:'BILOKO EBIMISI MINGI',catalogue:'KATALOGO',
+    trust_payment:'Mbongo Ekanzami',trust_delivery:'Kotinda Mokili',trust_return:'Kozonga Ofele',trust_quality:'Bolamu Ekanzami',trust_support:'Lisungi 24/7',trust_languages:'Minoko 10',
+    reviews_title:'BAZALI KONDIMA BISO',promise_title:'ELAKA YA FOLLOW.',
+    ticker:'🌍 KOTINDA MOKILI &nbsp;&nbsp;&nbsp; 💳 MBONGO EKANZAMI &nbsp;&nbsp;&nbsp; ✨ BILOKO EPONAMI &nbsp;&nbsp;&nbsp; 🚀 BIKELAMU YA MOKILI &nbsp;&nbsp;&nbsp; ↩️ KOZONGA OFELE 30 MIKOLO &nbsp;&nbsp;&nbsp; ⭐ BOLAMU EKANZAMI',
+    label_firstname:'Nkombo ya liboso',label_lastname:'Nkombo ya libota',label_email:'Email',label_phone:'Telefone',label_address:'Adresse',label_city:'Engumba',label_zip:'Code postal',label_country:'Mboka',label_card:'Carte ya banki',fill_required:'Tondisa bisika nyonso oyo esengeli.'
+  },
+  wo:{add:'Yokk ci panier bi',pay:'Fey ak Stripe',free_shipping:'Yoñ du dëkk',return:'Delloo ci 30 fan',empty_cart:'Panier bi dafa sore',discover:'Xool nit ñi',order_confirmed:'COMMANDE BI DAFAY DEF!',delivery:'Yoñ ci 7-15 fan.',continue_shopping:'Delloo jënd',subtotal:'Jëf bu ndaw',total:'JËFANDIKUKAAY',pay_now:'💳 Fey leegi',processing:'Yegël...',
+    hero_badge:'YOÑ CI ADUÑA BI · FEY YI DAÑU TEKKI · DELLOO CI 30 FAN',hero_title1:'FOLLOW',hero_title2:'THE TREND.',hero_sub:'Xam-xam yi ci aduña bi. Style, jàmm ak dëkk bu baax.',premium:'TANNEEL BU BAAX',top_sales:'JËND YI TOLLU NDAW',catalogue:'KATALOG',
+    trust_payment:'Fey yi Dañu Tekki',trust_delivery:'Yoñ ci Aduña',trust_return:'Delloo Ofele',trust_quality:'Baax bi Dañu Garandir',trust_support:'Ligeey 24/7',trust_languages:'Làmmiñ 10',
+    reviews_title:'DAÑU SOXOR CI BËGG',promise_title:'LAAJ YA FOLLOW.',
+    ticker:'🌍 YOÑ CI ADUÑA &nbsp;&nbsp;&nbsp; 💳 FEY YI TEKKI &nbsp;&nbsp;&nbsp; ✨ XAM-XAM TANNEEL &nbsp;&nbsp;&nbsp; 🚀 BIIR ADUÑA &nbsp;&nbsp;&nbsp; ↩️ DELLOO OFELE 30 FAN &nbsp;&nbsp;&nbsp; ⭐ BAAX BI GARANDIR',
+    label_firstname:'Tur bi',label_lastname:'Turr bi',label_email:'Email',label_phone:'Telefon',label_address:'Adarees',label_city:'Dëkk bi',label_zip:'Code postal',label_country:'Réew mi',label_card:'Kaart banke',fill_required:'Tëral yëpp foofu yëgël.'
+  },
+  ha:{add:'Saka cikin kwando',pay:'Biya da Stripe',free_shipping:'Jigilar kyauta',return:'Dawo cikin kwanaki 30',empty_cart:'Kwandon ka a fanko',discover:'Gano kayayyakinmu',order_confirmed:'AN TABBATAR DA ODAR!',delivery:'Jigilar kwanaki 7-15.',continue_shopping:'Ci gaba da siye-siye',subtotal:'Jimlar karami',total:'JIMLA',pay_now:'💳 Biya yanzu',processing:'Ana aiki...',
+    hero_badge:'JIGILAR DUNIYA · BIYAN AMINCI · DAWO KWANAKI 30',hero_title1:'FOLLOW',hero_title2:'THE TREND.',hero_sub:'Kayayyakin rayuwa daga duniya baki daya. Salon, kwanciyar hankali da aiki kullum.',premium:'ZABIN INGANCI',top_sales:'KAYAYYAKI MAFI SIYARWA',catalogue:'JERIN KAYA',
+    trust_payment:'Biyan Aminci',trust_delivery:'Jigilar Duniya',trust_return:'Dawo Kyauta',trust_quality:'Inganci Tabbatacce',trust_support:'Taimako 24/7',trust_languages:'Harsuna 10',
+    reviews_title:'SUNA AMINCEWA DA MU',promise_title:'ALKAWARIN FOLLOW.',
+    ticker:'🌍 JIGILAR DUNIYA &nbsp;&nbsp;&nbsp; 💳 BIYAN AMINCI &nbsp;&nbsp;&nbsp; ✨ KAYAN ZAƁAƁƁU &nbsp;&nbsp;&nbsp; 🚀 SALON DUNIYA &nbsp;&nbsp;&nbsp; ↩️ DAWO KYAUTA KWANAKI 30 &nbsp;&nbsp;&nbsp; ⭐ INGANCI TABBATACCE',
+    label_firstname:'Suna na farko',label_lastname:'Sunan dangi',label_email:'Email',label_phone:'Wayar hannu',label_address:'Adireshi',label_city:'Gari',label_zip:'Lambar gida',label_country:'Kasa',label_card:'Katin banki',fill_required:'Don Allah cika dukkan filayen da ake bukata.'
+  },
+  zh:{add:'加入购物车',pay:'用Stripe支付',free_shipping:'免费配送',return:'30天退货',empty_cart:'您的购物车是空的',discover:'发现我们的产品',order_confirmed:'订单已确认！',delivery:'7-15天送达。',continue_shopping:'继续购物',subtotal:'小计',total:'总计',pay_now:'💳 立即付款',processing:'处理中...',
+    hero_badge:'全球配送 · 安全支付 · 30天退货',hero_title1:'FOLLOW',hero_title2:'THE TREND.',hero_sub:'精选全球生活方式产品。风格、舒适与日常表现。',premium:'精选优质',top_sales:'热销产品',catalogue:'产品目录',
+    trust_payment:'安全支付',trust_delivery:'全球配送',trust_return:'免费退货',trust_quality:'品质保证',trust_support:'24/7客服',trust_languages:'10种语言',
+    reviews_title:'他们信任我们',promise_title:'FOLLOW. 承诺',
+    ticker:'🌍 全球配送 &nbsp;&nbsp;&nbsp; 💳 安全支付 &nbsp;&nbsp;&nbsp; ✨ 精选产品 &nbsp;&nbsp;&nbsp; 🚀 全球趋势 &nbsp;&nbsp;&nbsp; ↩️ 免费退货30天 &nbsp;&nbsp;&nbsp; ⭐ 品质保证',
+    label_firstname:'名字',label_lastname:'姓氏',label_email:'电子邮件',label_phone:'电话',label_address:'地址',label_city:'城市',label_zip:'邮政编码',label_country:'国家',label_card:'银行卡',fill_required:'请填写所有必填字段。'
   }
 };
 
