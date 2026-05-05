@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FOLLOW. — BUREAU CEO (SÉCURISÉ)</title>
+    <title>FOLLOW. — BUREAU CEO (INVENTAIRE & SÉCURITÉ)</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -27,32 +27,35 @@
         /* CONTENU PRINCIPAL */
         header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; background: var(--surface); border-bottom: 1px solid var(--border); }
         .logo-ceo { font-family: 'Bebas Neue', sans-serif; font-size: 24px; }
-        main { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+        main { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
 
-        /* STATS & FINANCES */
+        /* CASHFLOW */
         .hero-cash { background: linear-gradient(45deg, var(--card), #050510); border: 1px solid var(--border); border-radius: 20px; padding: 40px; text-align: center; margin-bottom: 30px; }
         .total-amount { font-family: 'Bebas Neue', sans-serif; font-size: 70px; color: var(--accent); margin: 10px 0; }
         
-        .grid-main { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 20px; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 20px; margin-bottom: 20px; }
         .card-title { font-size: 10px; letter-spacing: 2px; color: var(--muted); font-weight: bold; margin-bottom: 15px; text-transform: uppercase; }
         
-        /* GESTION DES PRIX (AGENT AUTO) */
-        .price-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #141428; }
-        .price-row input { background: #000; border: 1px solid #333; color: var(--accent); width: 60px; padding: 5px; text-align: center; border-radius: 4px; }
+        /* INVENTAIRE */
+        .sync-box { display: flex; gap: 10px; margin-bottom: 20px; }
+        #shop-url { flex: 1; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 8px; outline: none; }
+        .btn-sync { background: var(--gold); color: #000; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th { color: var(--muted); font-size: 10px; text-transform: uppercase; padding: 10px; text-align: left; border-bottom: 1px solid var(--border); }
+        td { padding: 12px 10px; border-bottom: 1px solid #111; font-size: 13px; }
+        .cat-tag { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; background: rgba(200, 255, 0, 0.1); color: var(--accent); }
 
-        .btn-action { background: var(--accent); color: #000; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 12px; }
-        .btn-withdraw { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 12px; border-radius: 8px; width: 100%; cursor: pointer; margin-top: 20px; font-weight: bold; }
-
-        #transfer-alert { display: none; margin-top: 20px; padding: 15px; border: 1px dashed var(--gold); border-radius: 10px; font-size: 12px; color: var(--gold); }
+        .btn-action { background: var(--accent); color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .blocked { color: var(--red); font-family: 'Bebas Neue'; font-size: 40px; text-align: center; padding: 50px; }
     </style>
 </head>
 <body>
 
 <div id="lock">
     <div class="lock-logo">FOLLOW<span>.</span></div>
-    <input type="password" id="lock-input" class="lock-input" placeholder="0000" maxlength="4">
-    <button class="btn-entry" onclick="unlock()">S'IDENTIFIER</button>
+    <input type="password" id="lock-input" class="lock-input" placeholder="CODE" maxlength="4">
+    <button class="btn-entry" onclick="unlock()">ACCÉDER AU SYSTÈME</button>
 </div>
 
 <div id="app" style="display:none;">
@@ -68,41 +71,46 @@
 
     <main>
         <div class="hero-cash">
-            <div class="card-title">SOLDE GLOBAL DISPONIBLE</div>
+            <div class="card-title">CHIFFRE D'AFFAIRES GLOBAL RÉEL</div>
             <div class="total-amount" id="display-total">0,00 €</div>
-            <div id="transfer-alert">💸 VIREMENT DE <span id="withdraw-val">0</span>€ EN COURS VERS STRIPE...</div>
-            <button class="btn-withdraw" onclick="makeWithdrawal()">📤 EFFECTUER UN RETRAIT VERS MON COMPTE</button>
+            <button class="btn-action" onclick="addGains()">+ SAISIR DES VENTES</button>
         </div>
 
-        <div class="grid-main">
-            <div class="card">
-                <div class="card-title">SOURCES DE REVENUS</div>
-                <div class="price-row"><span>Shopify / Stripe</span> <strong id="res-shopify">0 €</strong></div>
-                <div class="price-row"><span>Amazon Affilié</span> <strong id="res-amazon">0 €</strong></div>
-                <div class="price-row"><span>Affiliation IA</span> <strong id="res-ia">0 €</strong></div>
-                <button class="btn-action" onclick="addGains()">➕ AJOUTER DES GAINS RÉELS</button>
+        <div class="card">
+            <div class="card-title">🤖 AGENT DE CLASSEMENT POLYGLOTTE (SCANNER SHOPIFY)</div>
+            <div class="sync-box">
+                <input type="text" id="shop-url" placeholder="nom-de-ton-shop.myshopify.com">
+                <button class="btn-sync" onclick="syncShopify()">SCANNER MON SHOP</button>
             </div>
-
-            <div class="card">
-                <div class="card-title">🔧 AGENT DE PRIX (AUTO)</div>
-                <div id="price-controls">
-                    </div>
-                <button class="btn-action" style="background:var(--gold)" onclick="savePrices()">ACTUALISER LES PRIX LIVE</button>
+            
+            <div style="max-height: 500px; overflow-y: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>NOM DU PRODUIT</th>
+                            <th>CATÉGORIE (AUTO)</th>
+                            <th>PRIX</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-body">
+                        </tbody>
+                </table>
             </div>
         </div>
     </main>
 </div>
 
 <script>
-    // --- CONFIGURATION SÉCURITÉ ---
-    const MASTER_PIN = "9741"; // CHANGE TON CODE ICI
+    const MASTER_PIN = "9741"; // Ton code secret
     let attempts = 0;
-    let balance = { shopify: 0, amazon: 0, ia: 0 };
-    let prices = JSON.parse(localStorage.getItem('agencyPrices')) || {
-        eau: {p: 49.90, old: 89},
-        energie: {p: 129, old: 199},
-        soin: {p: 34.50, old: 55},
-        survie: {p: 89, old: 145}
+
+    // LE CERVEAU MULTILINGUE DE L'AGENT
+    const rules = {
+        eau: ["filtre", "gourde", "purifier", "paille", "filter", "water", "straw", "bottle", "purificateur"],
+        energie: ["solaire", "lampe", "torche", "batterie", "panneau", "solar", "flashlight", "power", "panel", "lantern", "led", "generator"],
+        soin: ["trousse", "secours", "bandage", "couverture", "kit", "medical", "first aid", "blanket", "emergency", "hygiene"],
+        survie: ["feu", "hachette", "couteau", "corde", "gadget", "multi", "fire", "axe", "knife", "paracord", "gear", "tool", "tactical", "survival"]
     };
 
     function unlock() {
@@ -110,78 +118,70 @@
         if (pin === MASTER_PIN) {
             document.getElementById('lock').style.display = 'none';
             document.getElementById('app').style.display = 'block';
-            renderPrices();
-            updateUI();
         } else {
             attempts++;
-            alert("Accès refusé. Tentative " + attempts + "/3");
             if (attempts >= 3) {
-                document.getElementById('lock').innerHTML = "<h1>SYSTÈME BLOQUÉ</h1><p>Trop d'échecs. Contactez l'administrateur.</p>";
+                document.getElementById('lock').innerHTML = "<div class='blocked'>SYSTÈME VÉRROUILLÉ</div>";
+            } else {
+                alert("CODE INCORRECT (" + attempts + "/3)");
             }
         }
     }
 
-    // --- LOGIQUE FINANCIÈRE ---
+    function classifyProduct(title) {
+        title = title.toLowerCase();
+        for (let cat in rules) {
+            if (rules[cat].some(keyword => title.includes(keyword))) return cat;
+        }
+        return "À VÉRIFIER ⚠️";
+    }
+
+    async function syncShopify() {
+        let shopUrl = document.getElementById('shop-url').value;
+        if(!shopUrl) return alert("Mets l'URL de ton Shopify !");
+        
+        // Formate l'URL si nécessaire
+        if(!shopUrl.startsWith('http')) shopUrl = 'https://' + shopUrl;
+        if(!shopUrl.endsWith('/products.json')) shopUrl = shopUrl.replace(/\/$/, "") + '/products.json';
+
+        try {
+            const response = await fetch(shopUrl);
+            const data = await response.json();
+            let html = "";
+
+            data.products.forEach(prod => {
+                let category = classifyProduct(prod.title);
+                html += `
+                <tr>
+                    <td><strong>${prod.title}</strong></td>
+                    <td><span class="cat-tag">${category.toUpperCase()}</span></td>
+                    <td>${prod.variants[0].price} €</td>
+                    <td><button onclick="moveItem('${prod.id}')" style="background:none; border:1px solid #333; color:var(--muted); cursor:pointer; font-size:10px; padding:5px; border-radius:4px;">CORRIGER</button></td>
+                </tr>`;
+            });
+            document.getElementById('inventory-body').innerHTML = html;
+            alert("✅ Synchro terminée : " + data.products.length + " produits analysés.");
+        } catch (e) {
+            alert("ERREUR : Impossible de lire ton shop. Vérifie qu'il est public.");
+        }
+    }
+
+    function moveItem(id) {
+        let newCat = prompt("Nouvelle catégorie ? (eau, energie, soin, survie)");
+        if(newCat) alert("Produit " + id + " réassigné à " + newCat);
+    }
+
     function addGains() {
-        const type = prompt("Source ? (1: Shopify, 2: Amazon, 3: IA)");
-        const amount = parseFloat(prompt("Montant à ajouter (€) :"));
-        if (!isNaN(amount)) {
-            if (type === "1") balance.shopify += amount;
-            if (type === "2") balance.amazon += amount;
-            if (type === "3") balance.ia += amount;
-            updateUI();
+        let val = prompt("Montant de la vente (€) :");
+        if(val) {
+            let current = parseFloat(document.getElementById('display-total').innerText.replace(',', '.'));
+            document.getElementById('display-total').innerText = (current + parseFloat(val)).toFixed(2).replace('.', ',') + " €";
         }
     }
 
-    function makeWithdrawal() {
-        const total = balance.shopify + balance.amazon + balance.ia;
-        const amount = parseFloat(prompt("Montant du retrait (Max " + total + "€) :"));
-        if (amount <= total) {
-            balance.shopify = 0; balance.amazon = 0; balance.ia = 0; // On vide pour le test
-            document.getElementById('withdraw-val').innerText = amount;
-            document.getElementById('transfer-alert').style.display = 'block';
-            updateUI();
-        }
-    }
-
-    function updateUI() {
-        const total = balance.shopify + balance.amazon + balance.ia;
-        document.getElementById('display-total').innerText = total.toLocaleString() + " €";
-        document.getElementById('res-shopify').innerText = balance.shopify + " €";
-        document.getElementById('res-amazon').innerText = balance.amazon + " €";
-        document.getElementById('res-ia').innerText = balance.ia + " €";
-    }
-
-    // --- GESTION DES PRIX ---
-    function renderPrices() {
-        const container = document.getElementById('price-controls');
-        container.innerHTML = Object.keys(prices).map(n => `
-            <div class="price-row">
-                <span style="font-size:11px">${n.toUpperCase()}</span>
-                <div>
-                    <input type="number" id="p-${n}" value="${prices[n].p}" step="0.01">
-                    <input type="number" id="old-${n}" value="${prices[n].old}" step="0.01" style="opacity:0.5">
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function savePrices() {
-        Object.keys(prices).forEach(n => {
-            prices[n].p = document.getElementById(`p-${n}`).value;
-            prices[n].old = document.getElementById(`old-${n}`).value;
-        });
-        localStorage.setItem('agencyPrices', JSON.stringify(prices));
-        alert("💸 AGENT : 'Prix synchronisés sur le réseau !'");
-    }
-
-    // Horloge live
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleString(); }, 1000);
-    // Sécurité anti-clic droit
     document.addEventListener('contextmenu', e => e.preventDefault());
 </script>
 
 </body>
 </html>
-
-
