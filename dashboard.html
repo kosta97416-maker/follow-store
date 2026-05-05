@@ -3,98 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FOLLOW. — BUREAU CEO (INVENTAIRE & SÉCURITÉ)</title>
+    <title>FOLLOW. CEO — MULTI-EMPIRE</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #03030a; --surface: #08080f; --card: #0d0d18; --border: #141428;
-            --accent: #C8FF00; --gold: #FFD700; --text: #eeeef8; --muted: #3a3a5a; --red: #ff4444;
+            --accent: #C8FF00; --amazon: #FF9900; --ai: #00F0FF; --text: #eeeef8; --muted: #3a3a5a;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
-
-        /* ÉCRAN DE VERROUILLAGE */
+        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; }
+        
+        /* LOCK SCREEN (Identique au précédent) */
         #lock { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
-        .lock-logo { font-family: 'Bebas Neue', sans-serif; font-size: 60px; letter-spacing: 10px; }
-        .lock-logo span { color: var(--accent); }
         .lock-input { background: var(--card); border: 1px solid var(--border); border-radius: 12px; color: var(--accent); padding: 15px; font-family: 'DM Mono', monospace; font-size: 24px; text-align: center; width: 200px; outline: none; }
-        .btn-entry { background: var(--accent); color: #000; border: none; padding: 12px 40px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
-        /* NAVIGATION */
-        .nav-admin { background: #000; padding: 10px 20px; display: flex; gap: 10px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-        .nav-admin a { color: var(--accent); font-size: 10px; text-decoration: none; border: 1px solid var(--accent); padding: 5px 10px; border-radius: 5px; font-weight: bold; }
-
-        /* CONTENU PRINCIPAL */
-        header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; background: var(--surface); border-bottom: 1px solid var(--border); }
-        .logo-ceo { font-family: 'Bebas Neue', sans-serif; font-size: 24px; }
-        main { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
-
-        /* CASHFLOW */
-        .hero-cash { background: linear-gradient(45deg, var(--card), #050510); border: 1px solid var(--border); border-radius: 20px; padding: 40px; text-align: center; margin-bottom: 30px; }
-        .total-amount { font-family: 'Bebas Neue', sans-serif; font-size: 70px; color: var(--accent); margin: 10px 0; }
         
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 20px; margin-bottom: 20px; }
-        .card-title { font-size: 10px; letter-spacing: 2px; color: var(--muted); font-weight: bold; margin-bottom: 15px; text-transform: uppercase; }
-        
-        /* INVENTAIRE */
-        .sync-box { display: flex; gap: 10px; margin-bottom: 20px; }
-        #shop-url { flex: 1; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 8px; outline: none; }
-        .btn-sync { background: var(--gold); color: #000; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        
-        table { width: 100%; border-collapse: collapse; }
-        th { color: var(--muted); font-size: 10px; text-transform: uppercase; padding: 10px; text-align: left; border-bottom: 1px solid var(--border); }
-        td { padding: 12px 10px; border-bottom: 1px solid #111; font-size: 13px; }
-        .cat-tag { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; background: rgba(200, 255, 0, 0.1); color: var(--accent); }
+        /* LAYOUT */
+        header { padding: 20px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+        main { max-width: 1200px; margin: 0 auto; padding: 20px; }
 
-        .btn-action { background: var(--accent); color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; }
-        .blocked { color: var(--red); font-family: 'Bebas Neue'; font-size: 40px; text-align: center; padding: 50px; }
+        /* LES 3 BARRES DE REVENUS */
+        .source-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .source-card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 15px; }
+        .source-label { font-size: 10px; font-weight: bold; color: var(--muted); margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .progress-bg { background: #000; height: 8px; border-radius: 4px; overflow: hidden; margin: 10px 0; }
+        .progress-fill { height: 100%; width: 0%; transition: width 1s ease; }
+
+        /* INVENTAIRE (Le scanner que tu as aimé) */
+        .inventory-card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { text-align: left; font-size: 10px; color: var(--muted); padding: 10px; border-bottom: 1px solid var(--border); }
+        td { padding: 10px; font-size: 12px; border-bottom: 1px solid #111; }
+        
+        .btn-sync { background: var(--accent); color: #000; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 10px; }
+        #shop-url { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 10px; border-radius: 5px; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <div id="lock">
-    <div class="lock-logo">FOLLOW<span>.</span></div>
-    <input type="password" id="lock-input" class="lock-input" placeholder="CODE" maxlength="4">
-    <button class="btn-entry" onclick="unlock()">ACCÉDER AU SYSTÈME</button>
+    <div style="font-family: 'Bebas Neue'; font-size: 40px;">FOLLOW<span>.</span></div>
+    <input type="password" id="lock-input" class="lock-input" placeholder="CODE">
+    <button onclick="unlock()" style="background:var(--accent); border:none; padding:10px 30px; border-radius:5px; font-weight:bold; cursor:pointer;">UNITÉ CENTRALE</button>
 </div>
 
 <div id="app" style="display:none;">
-    <div class="nav-admin">
-        <a href="index.html">🚀 QG AGENTS</a>
-        <a href="target.html" target="_blank">👁️ VOIR LE SHOP</a>
-    </div>
-
     <header>
-        <div class="logo-ceo">FOLLOW. <span>SYSTEM CEO</span></div>
-        <div id="clock" style="font-family: 'DM Mono'; font-size: 12px; color: var(--muted);"></div>
+        <div style="font-family:'Bebas Neue'; font-size:20px;">FOLLOW SYSTEM <span style="color:var(--accent)">CEO</span></div>
+        <div id="clock" style="font-family:'DM Mono'; font-size:12px;"></div>
     </header>
 
     <main>
-        <div class="hero-cash">
-            <div class="card-title">CHIFFRE D'AFFAIRES GLOBAL RÉEL</div>
-            <div class="total-amount" id="display-total">0,00 €</div>
-            <button class="btn-action" onclick="addGains()">+ SAISIR DES VENTES</button>
+        <div class="source-grid">
+            <div class="source-card">
+                <div class="source-label"><span>🛍️ SHOPIFY EMPIRE</span> <span id="val-shop">0 €</span></div>
+                <div class="progress-bg"><div id="bar-shop" class="progress-fill" style="background:var(--accent)"></div></div>
+                <button onclick="updateCash('shop')" style="background:none; border:1px solid var(--muted); color:#fff; font-size:10px; padding:5px; cursor:pointer;">+ AJOUTER VENTE</button>
+            </div>
+            <div class="source-card">
+                <div class="source-label"><span>📦 AMAZON AFFILIATE</span> <span id="val-ama">0 €</span></div>
+                <div class="progress-bg"><div id="bar-ama" class="progress-fill" style="background:var(--amazon)"></div></div>
+                <button onclick="updateCash('ama')" style="background:none; border:1px solid var(--muted); color:#fff; font-size:10px; padding:5px; cursor:pointer;">+ AJOUTER COMM.</button>
+            </div>
+            <div class="source-card">
+                <div class="source-label"><span>🤖 IA ADs & SERVICES</span> <span id="val-ia">0 €</span></div>
+                <div class="progress-bg"><div id="bar-ia" class="progress-fill" style="background:var(--ai)"></div></div>
+                <button onclick="updateCash('ia')" style="background:none; border:1px solid var(--muted); color:#fff; font-size:10px; padding:5px; cursor:pointer;">+ AJOUTER REVENU</button>
+            </div>
         </div>
 
-        <div class="card">
-            <div class="card-title">🤖 AGENT DE CLASSEMENT POLYGLOTTE (SCANNER SHOPIFY)</div>
-            <div class="sync-box">
-                <input type="text" id="shop-url" placeholder="nom-de-ton-shop.myshopify.com">
-                <button class="btn-sync" onclick="syncShopify()">SCANNER MON SHOP</button>
-            </div>
+        <div class="inventory-card">
+            <div style="font-size:10px; font-weight:bold; color:var(--muted); margin-bottom:15px; letter-spacing:2px;">📦 INVENTAIRE GLOBAL & CLASSEMENT IA</div>
+            <input type="text" id="shop-url" placeholder="ton-shop.myshopify.com">
+            <button class="btn-sync" onclick="syncShopify()">SCANNER ET RÉORGANISER</button>
             
-            <div style="max-height: 500px; overflow-y: auto;">
+            <div style="max-height: 400px; overflow-y: auto;">
                 <table>
                     <thead>
                         <tr>
-                            <th>NOM DU PRODUIT</th>
-                            <th>CATÉGORIE (AUTO)</th>
+                            <th>PRODUIT (FR/EN)</th>
+                            <th>CATÉGORIE</th>
                             <th>PRIX</th>
-                            <th>ACTION</th>
                         </tr>
                     </thead>
-                    <tbody id="inventory-body">
-                        </tbody>
+                    <tbody id="inventory-body"></tbody>
                 </table>
             </div>
         </div>
@@ -102,86 +93,53 @@
 </div>
 
 <script>
-    const MASTER_PIN = "9741"; // Ton code secret
-    let attempts = 0;
-
-    // LE CERVEAU MULTILINGUE DE L'AGENT
-    const rules = {
-        eau: ["filtre", "gourde", "purifier", "paille", "filter", "water", "straw", "bottle", "purificateur"],
-        energie: ["solaire", "lampe", "torche", "batterie", "panneau", "solar", "flashlight", "power", "panel", "lantern", "led", "generator"],
-        soin: ["trousse", "secours", "bandage", "couverture", "kit", "medical", "first aid", "blanket", "emergency", "hygiene"],
-        survie: ["feu", "hachette", "couteau", "corde", "gadget", "multi", "fire", "axe", "knife", "paracord", "gear", "tool", "tactical", "survival"]
-    };
+    const MASTER_PIN = "7890";
+    let finances = { shop: 0, ama: 0, ia: 0, goal: 10000 };
 
     function unlock() {
-        const pin = document.getElementById('lock-input').value;
-        if (pin === MASTER_PIN) {
+        if(document.getElementById('lock-input').value === MASTER_PIN) {
             document.getElementById('lock').style.display = 'none';
             document.getElementById('app').style.display = 'block';
-        } else {
-            attempts++;
-            if (attempts >= 3) {
-                document.getElementById('lock').innerHTML = "<div class='blocked'>SYSTÈME VÉRROUILLÉ</div>";
-            } else {
-                alert("CODE INCORRECT (" + attempts + "/3)");
-            }
         }
     }
 
-    function classifyProduct(title) {
-        title = title.toLowerCase();
-        for (let cat in rules) {
-            if (rules[cat].some(keyword => title.includes(keyword))) return cat;
+    function updateCash(source) {
+        let amt = prompt("Montant du gain (€) :");
+        if(amt) {
+            finances[source] += parseFloat(amt);
+            document.getElementById(`val-${source}`).innerText = finances[source] + " €";
+            // Mise à jour de la barre (basée sur un objectif de 10k pour le visuel)
+            let percent = Math.min((finances[source] / finances.goal) * 100, 100);
+            document.getElementById(`bar-${source}`).style.width = percent + "%";
         }
-        return "À VÉRIFIER ⚠️";
     }
+
+    const rules = {
+        eau: ["filtre", "gourde", "purifier", "filter", "water"],
+        energie: ["solaire", "lampe", "solar", "flashlight", "battery"],
+        soin: ["trousse", "secours", "kit", "medical", "first aid"],
+        survie: ["feu", "couteau", "knife", "fire", "tool", "survival"]
+    };
 
     async function syncShopify() {
-        let shopUrl = document.getElementById('shop-url').value;
-        if(!shopUrl) return alert("Mets l'URL de ton Shopify !");
-        
-        // Formate l'URL si nécessaire
-        if(!shopUrl.startsWith('http')) shopUrl = 'https://' + shopUrl;
-        if(!shopUrl.endsWith('/products.json')) shopUrl = shopUrl.replace(/\/$/, "") + '/products.json';
-
+        let url = document.getElementById('shop-url').value;
+        if(!url) return;
         try {
-            const response = await fetch(shopUrl);
-            const data = await response.json();
+            const res = await fetch(`https://${url}/products.json`);
+            const data = await res.json();
             let html = "";
-
-            data.products.forEach(prod => {
-                let category = classifyProduct(prod.title);
-                html += `
-                <tr>
-                    <td><strong>${prod.title}</strong></td>
-                    <td><span class="cat-tag">${category.toUpperCase()}</span></td>
-                    <td>${prod.variants[0].price} €</td>
-                    <td><button onclick="moveItem('${prod.id}')" style="background:none; border:1px solid #333; color:var(--muted); cursor:pointer; font-size:10px; padding:5px; border-radius:4px;">CORRIGER</button></td>
-                </tr>`;
+            data.products.forEach(p => {
+                let cat = "À CLASSER";
+                for(let c in rules) {
+                    if(rules[c].some(k => p.title.toLowerCase().includes(k))) cat = c.toUpperCase();
+                }
+                html += `<tr><td>${p.title}</td><td style="color:var(--accent)">${cat}</td><td>${p.variants[0].price} €</td></tr>`;
             });
             document.getElementById('inventory-body').innerHTML = html;
-            alert("✅ Synchro terminée : " + data.products.length + " produits analysés.");
-        } catch (e) {
-            alert("ERREUR : Impossible de lire ton shop. Vérifie qu'il est public.");
-        }
-    }
-
-    function moveItem(id) {
-        let newCat = prompt("Nouvelle catégorie ? (eau, energie, soin, survie)");
-        if(newCat) alert("Produit " + id + " réassigné à " + newCat);
-    }
-
-    function addGains() {
-        let val = prompt("Montant de la vente (€) :");
-        if(val) {
-            let current = parseFloat(document.getElementById('display-total').innerText.replace(',', '.'));
-            document.getElementById('display-total').innerText = (current + parseFloat(val)).toFixed(2).replace('.', ',') + " €";
-        }
+        } catch(e) { alert("Vérifie l'URL du shop."); }
     }
 
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleString(); }, 1000);
-    document.addEventListener('contextmenu', e => e.preventDefault());
 </script>
-
 </body>
 </html>
