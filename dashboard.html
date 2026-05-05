@@ -2,168 +2,154 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FOLLOW. CEO — BUREAU DE COMMANDEMENT</title>
+    <title>FOLLOW. CEO — DASHBOARD & LIVE OPS</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #03030a; --surface: #08080f; --card: #0d0d18; --border: #141428;
-            --accent: #C8FF00; --amazon: #FF9900; --ai: #00F0FF; --soin: #FF4444; 
-            --text: #eeeef8; --muted: #3a3a5a;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; }
-
-        #lock { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
-        .lock-input { background: var(--card); border: 1px solid var(--border); border-radius: 12px; color: var(--accent); padding: 15px; font-family: 'DM Mono', monospace; font-size: 24px; text-align: center; width: 200px; outline: none; border: 2px solid var(--border); }
-        .btn-entry { background: var(--accent); color: #000; border: none; padding: 12px 40px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
-        header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; background: var(--surface); border-bottom: 1px solid var(--border); }
-        .logo { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; }
-        .logo span { color: var(--accent); }
-
-        main { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
-
-        .source-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 30px; }
-        .source-card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 15px; }
-        .source-label { font-size: 10px; font-weight: bold; color: var(--muted); margin-bottom: 10px; display: flex; justify-content: space-between; text-transform: uppercase; }
-        .progress-bg { background: #000; height: 10px; border-radius: 5px; overflow: hidden; margin: 10px 0; border: 1px solid #111; }
-        .progress-fill { height: 100%; width: 0%; transition: width 1s ease; }
-
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 20px; }
-        .card-title { font-size: 12px; letter-spacing: 2px; color: var(--accent); font-weight: bold; margin-bottom: 20px; text-transform: uppercase; }
+        :root { --bg: #03030a; --card: #0d0d18; --accent: #C8FF00; --amazon: #FF9900; --ai: #00F0FF; --text: #fff; --border: #141428; }
+        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; padding: 20px; }
         
-        #shop-url { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-family: 'DM Mono'; outline: none; }
-        #shop-url:focus { border-color: var(--accent); }
-        .btn-sync { background: var(--accent); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 20px; }
+        /* HEADER */
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 30px; }
+        .logo { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 2px; }
 
-        table { width: 100%; border-collapse: collapse; }
-        th { color: var(--muted); font-size: 10px; text-transform: uppercase; padding: 10px; border-bottom: 1px solid var(--border); text-align: left; }
-        td { padding: 12px 10px; border-bottom: 1px solid #111; font-size: 13px; }
+        /* FINANCE SECTION */
+        .grid-cash { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 50px; }
+        .cash-card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid var(--border); text-align: center; }
+        .bar-bg { background: #000; height: 10px; border-radius: 5px; margin: 15px 0; border: 1px solid #1a1a2e; }
+        .bar-fill { height: 100%; border-radius: 5px; width: 0%; transition: 1.5s ease-out; }
+        .btn-add { background: none; border: 1px solid #333; color: #555; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 10px; }
+
+        /* EXTENSION LIVE OPS (SURVEILLANCE AGENTS) */
+        .extension-container { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 30px; }
+        .ext-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--accent); margin-bottom: 20px; display: flex; justify-content: space-between; }
         
-        .tag { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
-        .tag-eau { background: rgba(0, 240, 255, 0.1); color: #00F0FF; }
-        .tag-energie { background: rgba(255, 215, 0, 0.1); color: #FFD700; }
-        .tag-survie { background: rgba(200, 255, 0, 0.1); color: var(--accent); }
-        .tag-soin { background: rgba(255, 68, 68, 0.1); color: var(--soin); }
+        .niche-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .niche-column { background: #000; padding: 15px; border-radius: 12px; border: 1px solid #111; min-height: 200px; }
+        .niche-header { font-size: 12px; font-weight: bold; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #222; text-align: center; }
+        
+        .agent-pick { display: flex; align-items: center; gap: 10px; background: #0d0d18; padding: 8px; border-radius: 8px; margin-bottom: 10px; font-size: 11px; border: 1px solid #1a1a2e; }
+        .agent-pick img { width: 35px; height: 35px; border-radius: 4px; object-fit: cover; }
+        .tag-live { color: var(--accent); font-size: 9px; animation: blink 1s infinite; }
 
-        .btn-edit { background: none; border: 1px solid #333; color: var(--muted); padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 10px; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<div id="lock">
-    <div class="logo">FOLLOW<span>.</span> SYSTEM</div>
-    <input type="password" id="lock-input" class="lock-input" placeholder="CODE CEO">
-    <button class="btn-entry" onclick="unlock()">S'IDENTIFIER</button>
-</div>
+    <div class="header">
+        <div class="logo">FOLLOW. <span style="color:var(--accent)">CEO</span></div>
+        <div style="font-family:'DM Mono'; font-size:12px; color:#333;">CONTROL_PANEL_V4.2</div>
+    </div>
 
-<div id="app" style="display:none;">
-    <header>
-        <div class="logo">FOLLOW<span>.</span> CEO</div>
-        <div id="clock" style="font-family: 'DM Mono'; font-size: 12px; color: var(--muted);"></div>
-    </header>
+    <div class="grid-cash">
+        <div class="cash-card">
+            <div style="font-size:10px; letter-spacing:2px; color:#555;">SHOPIFY</div>
+            <div id="val-shop" style="font-size:32px; font-weight:bold; margin:10px 0;">0 €</div>
+            <div class="bar-bg"><div id="bar-shop" class="bar-fill" style="background:var(--accent)"></div></div>
+            <button class="btn-add" onclick="updateCash('shop')">ACTUALISER</button>
+        </div>
+        <div class="cash-card">
+            <div style="font-size:10px; letter-spacing:2px; color:#555;">AMAZON</div>
+            <div id="val-ama" style="font-size:32px; font-weight:bold; margin:10px 0;">0 €</div>
+            <div class="bar-bg"><div id="bar-ama" class="bar-fill" style="background:var(--amazon)"></div></div>
+            <button class="btn-add" onclick="updateCash('ama')">ACTUALISER</button>
+        </div>
+        <div class="cash-card">
+            <div style="font-size:10px; letter-spacing:2px; color:#555;">IA SERVICES</div>
+            <div id="val-ia" style="font-size:32px; font-weight:bold; margin:10px 0;">0 €</div>
+            <div class="bar-bg"><div id="bar-ia" class="bar-fill" style="background:var(--ai)"></div></div>
+            <button class="btn-add" onclick="updateCash('ia')">ACTUALISER</button>
+        </div>
+    </div>
 
-    <main>
-        <div class="source-grid">
-            <div class="source-card">
-                <div class="source-label"><span>🛍️ Shopify</span> <span id="val-shop">0 €</span></div>
-                <div class="progress-bg"><div id="bar-shop" class="progress-fill" style="background:var(--accent)"></div></div>
-                <button class="btn-edit" onclick="addCash('shop')">+ Gain</button>
-            </div>
-            <div class="source-card">
-                <div class="source-label"><span>📦 Amazon</span> <span id="val-ama">0 €</span></div>
-                <div class="progress-bg"><div id="bar-ama" class="progress-fill" style="background:var(--amazon)"></div></div>
-                <button class="btn-edit" onclick="addCash('ama')">+ Gain</button>
-            </div>
-            <div class="source-card">
-                <div class="source-label"><span>🤖 IA Services</span> <span id="val-ia">0 €</span></div>
-                <div class="progress-bg"><div id="bar-ia" class="progress-fill" style="background:var(--ai)"></div></div>
-                <button class="btn-edit" onclick="addCash('ia')">+ Gain</button>
-            </div>
-            <div class="source-card">
-                <div class="source-label"><span>💊 Soin</span> <span id="val-soin">0 €</span></div>
-                <div class="progress-bg"><div id="bar-soin" class="progress-fill" style="background:var(--soin)"></div></div>
-                <button class="btn-edit" onclick="addCash('soin')">+ Gain</button>
-            </div>
+    <div class="extension-container">
+        <div class="ext-title">
+            <span>📡 EXTENSION : SURVEILLANCE PROSPECTION AGENTS</span>
+            <span class="tag-live">● LIVE FEED</span>
         </div>
 
-        <div class="card">
-            <div class="card-title">📦 Inventaire & Classement Automatique (EAU / ÉNERGIE / SURVIE / SOIN)</div>
-            <input type="text" id="shop-url" placeholder="ton-shop.myshopify.com">
-            <button class="btn-sync" onclick="syncShopify()">LANCER LE SCAN (MÉMORISÉ)</button>
-            <div style="max-height: 450px; overflow-y: auto;">
-                <table>
-                    <thead>
-                        <tr><th>Produit</th><th>Catégorie IA</th><th>Prix</th><th>Action</th></tr>
-                    </thead>
-                    <tbody id="inventory-body"></tbody>
-                </table>
+        <div class="niche-grid">
+            <div class="niche-column">
+                <div class="niche-header" style="color:#00F0FF">💧 EAU</div>
+                <div id="feed-eau">
+                    <div class="agent-pick">
+                        <img src="https://via.placeholder.com/50" id="img-eau">
+                        <div><b id="title-eau">En attente...</b><br><span style="color:#555">Dernier scan</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="niche-column">
+                <div class="niche-header" style="color:#FFD700">⚡ ÉNERGIE</div>
+                <div id="feed-energie">
+                    <div class="agent-pick">
+                        <img src="https://via.placeholder.com/50" id="img-energie">
+                        <div><b id="title-energie">En attente...</b><br><span style="color:#555">Dernier scan</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="niche-column">
+                <div class="niche-header" style="color:#ff4444">💊 SOIN</div>
+                <div id="feed-soin">
+                    <div class="agent-pick">
+                        <img src="https://via.placeholder.com/50" id="img-soin">
+                        <div><b id="title-soin">En attente...</b><br><span style="color:#555">Dernier scan</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="niche-column">
+                <div class="niche-header" style="color:var(--accent)">🎒 SURVIE</div>
+                <div id="feed-survie">
+                    <div class="agent-pick">
+                        <img src="https://via.placeholder.com/50" id="img-survie">
+                        <div><b id="title-survie">En attente...</b><br><span style="color:#555">Dernier scan</span></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </main>
-</div>
-
-<script>
-    const MASTER_PIN = "9741";
-    let finances = { shop: 0, ama: 0, ia: 0, soin: 0, goal: 5000 };
-
-    const rules = {
-        eau: ["filtre", "gourde", "purifier", "water", "straw", "bottle", "paille"],
-        energie: ["solaire", "lampe", "torche", "batterie", "solar", "flashlight", "power", "panel", "led"],
-        soin: ["trousse", "secours", "bandage", "medical", "first aid", "hygiene", "soin", "pansement", "couverture"],
-        survie: ["feu", "couteau", "knife", "fire", "axe", "tool", "survival", "tactical", "corde", "hachette"]
-    };
-
-    // --- FONCTION MÉMOIRE ---
-    window.onload = function() {
-        const savedUrl = localStorage.getItem('ceo_shop_url');
-        if(savedUrl) {
-            document.getElementById('shop-url').value = savedUrl;
-        }
-    };
-
-    function unlock() {
-        if(document.getElementById('lock-input').value === MASTER_PIN) {
-            document.getElementById('lock').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
-        }
-    }
-
-    function addCash(source) {
-        let amt = prompt("Montant (€) :");
-        if(amt) {
-            finances[source] += parseFloat(amt);
-            document.getElementById(`val-${source}`).innerText = finances[source].toLocaleString() + " €";
-            let percent = Math.min((finances[source] / finances.goal) * 100, 100);
-            document.getElementById(`bar-${source}`).style.width = percent + "%";
-        }
-    }
-
-    async function syncShopify() {
-        let url = document.getElementById('shop-url').value;
-        if(!url) return;
         
-        // On enregistre l'URL dans la mémoire du navigateur
-        localStorage.setItem('ceo_shop_url', url);
+        <button class="btn-add" style="width:100%; margin-top:20px; padding:10px;" onclick="fetchLivePicks()">RAFRAÎCHIR LA SURVEILLANCE</button>
+    </div>
 
-        try {
-            const res = await fetch(`https://${url}/products.json`);
-            const data = await res.json();
-            let html = "";
-            data.products.forEach(p => {
-                let title = p.title.toLowerCase();
-                let catFound = "survie";
-                for(let cat in rules) {
-                    if(rules[cat].some(k => title.includes(k))) catFound = cat;
-                }
-                html += `<tr><td><strong>${p.title}</strong></td><td><span class="tag tag-${catFound}">${catFound.toUpperCase()}</span></td><td>${p.variants[0].price} €</td><td><button class="btn-edit" onclick="alert('ID: ${p.id}')">RECADRER</button></td></tr>`;
-            });
-            document.getElementById('inventory-body').innerHTML = html;
-        } catch(e) { alert("Erreur. Vérifie l'URL."); }
-    }
+    <script>
+        let finances = { shop: 0, ama: 0, ia: 0, goal: 10000 };
+        const SHOP_URL = localStorage.getItem('ceo_shop_url') || "ton-shop.myshopify.com";
 
-    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleString(); }, 1000);
-</script>
+        function updateCash(key) {
+            let val = prompt("Nouveau gain (€) :");
+            if(val) {
+                finances[key] += parseFloat(val);
+                document.getElementById('val-'+key).innerText = finances[key].toLocaleString() + " €";
+                document.getElementById('bar-'+key).style.width = Math.min((finances[key]/finances.goal)*100, 100) + "%";
+            }
+        }
+
+        async function fetchLivePicks() {
+            try {
+                const res = await fetch(`https://${SHOP_URL}/products.json`);
+                const data = await res.json();
+                
+                const findAndSet = (keywords, elementId, imgId) => {
+                    const found = data.products.find(p => keywords.some(k => p.title.toLowerCase().includes(k)));
+                    if(found) {
+                        document.getElementById(elementId).innerText = found.title.substring(0, 20) + "...";
+                        document.getElementById(imgId).src = found.images[0].src;
+                    }
+                };
+
+                findAndSet(["filtre", "gourde", "water"], "title-eau", "img-eau");
+                findAndSet(["solaire", "panneau", "solar", "flashlight"], "title-energie", "img-energie");
+                findAndSet(["trousse", "medical", "bandage", "soin"], "title-soin", "img-soin");
+                findAndSet(["couteau", "survival", "hache"], "title-survie", "img-survie");
+
+            } catch(e) { console.log("Erreur de synchro"); }
+        }
+
+        // Auto-refresh toutes les 30 sec
+        setInterval(fetchLivePicks, 30000);
+        window.onload = fetchLivePicks;
+    </script>
 </body>
 </html>
