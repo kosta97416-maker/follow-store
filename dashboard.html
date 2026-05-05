@@ -12,32 +12,29 @@
             --text: #eeeef8; --muted: #3a3a5a;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; }
 
-        /* ÉCRAN DE VERROUILLAGE */
         #lock { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
         .lock-input { background: var(--card); border: 1px solid var(--border); border-radius: 12px; color: var(--accent); padding: 15px; font-family: 'DM Mono', monospace; font-size: 24px; text-align: center; width: 200px; outline: none; border: 2px solid var(--border); }
         .btn-entry { background: var(--accent); color: #000; border: none; padding: 12px 40px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        /* NAVIGATION & HEADER */
         header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; background: var(--surface); border-bottom: 1px solid var(--border); }
         .logo { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; }
         .logo span { color: var(--accent); }
 
         main { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
 
-        /* LES 4 BARRES DE REVENUS */
         .source-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 30px; }
         .source-card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 15px; }
         .source-label { font-size: 10px; font-weight: bold; color: var(--muted); margin-bottom: 10px; display: flex; justify-content: space-between; text-transform: uppercase; }
         .progress-bg { background: #000; height: 10px; border-radius: 5px; overflow: hidden; margin: 10px 0; border: 1px solid #111; }
         .progress-fill { height: 100%; width: 0%; transition: width 1s ease; }
 
-        /* SECTION INVENTAIRE */
         .card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 20px; }
-        .card-title { font-size: 12px; letter-spacing: 2px; color: var(--accent); font-weight: bold; margin-bottom: 20px; text-transform: uppercase; display: flex; justify-content: space-between; }
+        .card-title { font-size: 12px; letter-spacing: 2px; color: var(--accent); font-weight: bold; margin-bottom: 20px; text-transform: uppercase; }
         
-        #shop-url { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-family: 'DM Mono'; }
+        #shop-url { width: 100%; background: #000; border: 1px solid var(--border); color: #fff; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-family: 'DM Mono'; outline: none; }
+        #shop-url:focus { border-color: var(--accent); }
         .btn-sync { background: var(--accent); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 20px; }
 
         table { width: 100%; border-collapse: collapse; }
@@ -51,7 +48,6 @@
         .tag-soin { background: rgba(255, 68, 68, 0.1); color: var(--soin); }
 
         .btn-edit { background: none; border: 1px solid #333; color: var(--muted); padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 10px; }
-        .btn-edit:hover { border-color: var(--accent); color: var(--accent); }
     </style>
 </head>
 <body>
@@ -71,48 +67,37 @@
     <main>
         <div class="source-grid">
             <div class="source-card">
-                <div class="source-label"><span>🛍️ Shopify (Ventes)</span> <span id="val-shop">0 €</span></div>
+                <div class="source-label"><span>🛍️ Shopify</span> <span id="val-shop">0 €</span></div>
                 <div class="progress-bg"><div id="bar-shop" class="progress-fill" style="background:var(--accent)"></div></div>
-                <button class="btn-edit" onclick="addCash('shop')">+ Ajouter Gain</button>
+                <button class="btn-edit" onclick="addCash('shop')">+ Gain</button>
             </div>
             <div class="source-card">
-                <div class="source-label"><span>📦 Amazon (Affil)</span> <span id="val-ama">0 €</span></div>
+                <div class="source-label"><span>📦 Amazon</span> <span id="val-ama">0 €</span></div>
                 <div class="progress-bg"><div id="bar-ama" class="progress-fill" style="background:var(--amazon)"></div></div>
-                <button class="btn-edit" onclick="addCash('ama')">+ Ajouter Gain</button>
+                <button class="btn-edit" onclick="addCash('ama')">+ Gain</button>
             </div>
             <div class="source-card">
                 <div class="source-label"><span>🤖 IA Services</span> <span id="val-ia">0 €</span></div>
                 <div class="progress-bg"><div id="bar-ia" class="progress-fill" style="background:var(--ai)"></div></div>
-                <button class="btn-edit" onclick="addCash('ia')">+ Ajouter Gain</button>
+                <button class="btn-edit" onclick="addCash('ia')">+ Gain</button>
             </div>
             <div class="source-card">
-                <div class="source-label"><span>💊 Soin / Kits</span> <span id="val-soin">0 €</span></div>
+                <div class="source-label"><span>💊 Soin</span> <span id="val-soin">0 €</span></div>
                 <div class="progress-bg"><div id="bar-soin" class="progress-fill" style="background:var(--soin)"></div></div>
-                <button class="btn-edit" onclick="addCash('soin')">+ Ajouter Gain</button>
+                <button class="btn-edit" onclick="addCash('soin')">+ Gain</button>
             </div>
         </div>
 
         <div class="card">
-            <div class="card-title">
-                <span>📦 Inventaire & Classement Automatique (150+ Produits)</span>
-                <span style="color:var(--muted)">Agent Polyglotte v4.0</span>
-            </div>
-            
+            <div class="card-title">📦 Inventaire & Classement Automatique (EAU / ÉNERGIE / SURVIE / SOIN)</div>
             <input type="text" id="shop-url" placeholder="ton-shop.myshopify.com">
-            <button class="btn-sync" onclick="syncShopify()">LANCER LE SCAN DES PRODUITS</button>
-
-            <div style="max-height: 500px; overflow-y: auto;">
+            <button class="btn-sync" onclick="syncShopify()">LANCER LE SCAN (MÉMORISÉ)</button>
+            <div style="max-height: 450px; overflow-y: auto;">
                 <table>
                     <thead>
-                        <tr>
-                            <th>Produit</th>
-                            <th>Catégorie IA</th>
-                            <th>Prix</th>
-                            <th>Action CEO</th>
-                        </tr>
+                        <tr><th>Produit</th><th>Catégorie IA</th><th>Prix</th><th>Action</th></tr>
                     </thead>
-                    <tbody id="inventory-body">
-                        </tbody>
+                    <tbody id="inventory-body"></tbody>
                 </table>
             </div>
         </div>
@@ -123,7 +108,6 @@
     const MASTER_PIN = "7890";
     let finances = { shop: 0, ama: 0, ia: 0, soin: 0, goal: 5000 };
 
-    // RÈGLES DU CERVEAU DE L'AGENT
     const rules = {
         eau: ["filtre", "gourde", "purifier", "water", "straw", "bottle", "paille"],
         energie: ["solaire", "lampe", "torche", "batterie", "solar", "flashlight", "power", "panel", "led"],
@@ -131,17 +115,23 @@
         survie: ["feu", "couteau", "knife", "fire", "axe", "tool", "survival", "tactical", "corde", "hachette"]
     };
 
+    // --- FONCTION MÉMOIRE ---
+    window.onload = function() {
+        const savedUrl = localStorage.getItem('ceo_shop_url');
+        if(savedUrl) {
+            document.getElementById('shop-url').value = savedUrl;
+        }
+    };
+
     function unlock() {
         if(document.getElementById('lock-input').value === MASTER_PIN) {
             document.getElementById('lock').style.display = 'none';
             document.getElementById('app').style.display = 'block';
-        } else {
-            alert("Accès refusé.");
         }
     }
 
     function addCash(source) {
-        let amt = prompt("Montant du gain (€) :");
+        let amt = prompt("Montant (€) :");
         if(amt) {
             finances[source] += parseFloat(amt);
             document.getElementById(`val-${source}`).innerText = finances[source].toLocaleString() + " €";
@@ -152,42 +142,28 @@
 
     async function syncShopify() {
         let url = document.getElementById('shop-url').value;
-        if(!url) return alert("Mets l'URL de ton shop Shopify");
+        if(!url) return;
         
+        // On enregistre l'URL dans la mémoire du navigateur
+        localStorage.setItem('ceo_shop_url', url);
+
         try {
             const res = await fetch(`https://${url}/products.json`);
             const data = await res.json();
             let html = "";
-
             data.products.forEach(p => {
                 let title = p.title.toLowerCase();
-                let catFound = "survie"; // Catégorie par défaut
-                
+                let catFound = "survie";
                 for(let cat in rules) {
                     if(rules[cat].some(k => title.includes(k))) catFound = cat;
                 }
-
-                html += `
-                <tr>
-                    <td><strong>${p.title}</strong></td>
-                    <td><span class="tag tag-${catFound}">${catFound.toUpperCase()}</span></td>
-                    <td>${p.variants[0].price} €</td>
-                    <td><button class="btn-edit" onclick="recadrer('${p.id}')">RECADRER</button></td>
-                </tr>`;
+                html += `<tr><td><strong>${p.title}</strong></td><td><span class="tag tag-${catFound}">${catFound.toUpperCase()}</span></td><td>${p.variants[0].price} €</td><td><button class="btn-edit" onclick="alert('ID: ${p.id}')">RECADRER</button></td></tr>`;
             });
             document.getElementById('inventory-body').innerHTML = html;
-        } catch(e) {
-            alert("Erreur de synchro. Vérifie l'URL.");
-        }
-    }
-
-    function recadrer(id) {
-        let newCat = prompt("Nouvelle catégorie ? (eau, energie, survie, soin)");
-        if(newCat) alert("Produit ID:" + id + " réassigné à " + newCat.toUpperCase());
+        } catch(e) { alert("Erreur. Vérifie l'URL."); }
     }
 
     setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleString(); }, 1000);
 </script>
-
 </body>
 </html>
