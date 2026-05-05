@@ -6,19 +6,18 @@
 <title>FOLLOW. — Capital CEO</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-/* Style conservé pour l'identité visuelle forte */
-*{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#03030a;--surface:#08080f;--card:#0d0d18;--border:#141428;
   --accent:#C8FF00;--gold:#FFD700;--red:#FF4444;--blue:#00D4FF;--green:#00FF88;
   --text:#eeeef8;--muted:#3a3a5a;--dim:#22223a;
 }
+*{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
-::-webkit-scrollbar{width:2px}::-webkit-scrollbar-thumb{background:var(--accent)}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
-@keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
+/* BARRE DE NAVIGATION RAPIDE */
+.nav-admin { background:#111; padding:10px 24px; display:flex; gap:12px; border-bottom:1px solid #222; position: sticky; top:0; z-index: 2000; }
+.nav-admin a { color:var(--accent); font-size:11px; text-decoration:none; border:1px solid var(--accent); padding:6px 12px; border-radius:6px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+.nav-admin a:hover { background: var(--accent); color: #000; }
 
 .lock{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
 .lock-logo{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:8px;text-align:center}
@@ -26,45 +25,36 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .lock-input{background:var(--card);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:14px 20px;font-family:'DM Mono',monospace;font-size:18px;text-align:center;letter-spacing:8px;width:220px;outline:none}
 .lock-btn{background:var(--accent);color:#080808;border:none;border-radius:10px;padding:13px 40px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;cursor:pointer;width:220px;letter-spacing:1px}
 
-header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px;}
 .header-logo-text{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px}
 .header-logo-text span{color:var(--accent)}
 
 main{max-width:1400px;margin:0 auto;padding:32px 24px 80px}
-
-.hero-balance{background:linear-gradient(135deg,var(--card),#080812);border:1px solid var(--border);border-radius:20px;padding:36px;margin-bottom:24px;position:relative;overflow:hidden;animation:fadeUp .5s ease}
+.hero-balance{background:linear-gradient(135deg,var(--card),#080812);border:1px solid var(--border);border-radius:20px;padding:36px;margin-bottom:24px;position:relative;overflow:hidden;}
 .balance-amount{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,8vw,96px);letter-spacing:2px;color:var(--accent);line-height:1}
-
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:24px}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
-.stat-val{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px}
-
 .security{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:24px}
 .security-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;margin-bottom:14px;color:var(--accent)}
-
 .tx-item{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--border)}
 .tx-amount{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;text-align:right}
-
-.btn-ghost{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);padding:6px 14px;cursor:pointer}
 </style>
 </head>
 <body>
 
+<div class="nav-admin">
+    <a href="index.html">🚀 ACCÈS AGENTS</a>
+    <a href="target.html?p=eau" target="_blank">👁️ VOIR PAGE VENTE</a>
+</div>
+
 <div class="lock" id="lock">
   <div class="lock-logo">FOLLOW<span>.</span></div>
-  <div class="lock-sub" style="color:var(--muted);font-size:12px;letter-spacing:3px">ACCÈS CEO — UNITÉ FINANCIÈRE</div>
+  <div style="color:var(--muted);font-size:12px;letter-spacing:3px">ACCÈS CEO — UNITÉ FINANCIÈRE</div>
   <input class="lock-input" id="lock-input" type="password" placeholder="••••" maxlength="4"/>
   <button class="lock-btn" onclick="unlock()">DÉVERROUILLER</button>
 </div>
 
 <header id="app" style="display:none">
-  <div class="header-logo">
-    <div class="header-logo-text">FOLLOW<span>.</span> CAPITAL</div>
-  </div>
-  <div style="display:flex;align-items:center;gap:16px">
-    <span id="live-date" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)"></span>
-    <button class="btn-ghost" onclick="location.reload()">🔒 LOCK</button>
-  </div>
+  <div class="header-logo-text">FOLLOW<span>.</span> CAPITAL</div>
+  <div id="live-date" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)"></div>
 </header>
 
 <main id="main-app" style="display:none">
@@ -85,18 +75,7 @@ main{max-width:1400px;margin:0 auto;padding:32px 24px 80px}
 
   <div class="security">
     <div class="security-title">🤖 ÉTAT DU COMMANDO IA</div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px" id="agents-status">
-        </div>
-  </div>
-
-  <div class="security" style="border-color:var(--red)40">
-    <div class="security-title" style="color:var(--red)">🚨 ALERTES CEO — ACTION REQUISE</div>
-    <div id="ceo-alerts">
-        <div style="background:var(--bg);padding:15px;border-radius:10px;border-left:4px solid var(--red);margin-bottom:10px">
-            <div style="font-weight:700;font-size:13px">Secteur SOIN : Hook viral détecté</div>
-            <div style="color:var(--muted);font-size:11px;margin-top:5px">Agent 03 attend validation munition TikTok.</div>
-        </div>
-    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px" id="agents-status"></div>
   </div>
 
   <div class="security">
@@ -129,7 +108,7 @@ function init() {
     renderBalance();
     renderAgents();
     renderTransactions();
-    setInterval(updateDate, 1000);
+    setInterval(() => { document.getElementById('live-date').textContent = new Date().toLocaleString('fr-FR'); }, 1000);
 }
 
 function renderBalance() {
@@ -151,22 +130,13 @@ function renderAgents() {
 }
 
 function renderTransactions() {
-    const tx = [
-        {name: 'Commission Affiliation EAU', amt: 45.20, type:'pos'},
-        {name: 'Munition IA Soin (API)', amt: -2.10, type:'neg'}
-    ];
+    const tx = [{name: 'Comm. EAU', amt: 45.20, type:'pos'}, {name: 'Munition IA Soin', amt: -2.10, type:'neg'}];
     document.getElementById('tx-list').innerHTML = tx.map(t => `
-        <div class="tx-item">
-            <div style="flex:1;font-size:13px">${t.name}</div>
-            <div class="tx-amount" style="color:${t.type==='pos'?'var(--green)':'var(--red)'}">${t.amt > 0 ? '+' : ''}${t.amt} €</div>
-        </div>
+        <div class="tx-item"><div style="flex:1;font-size:13px">${t.name}</div><div class="tx-amount" style="color:${t.type==='pos'?'var(--green)':'var(--red)'}">${t.amt > 0 ? '+' : ''}${t.amt} €</div></div>
     `).join('');
 }
-
-function updateDate() {
-    document.getElementById('live-date').textContent = new Date().toLocaleString('fr-FR');
-}
 </script>
+
 </body>
 </html>
 
