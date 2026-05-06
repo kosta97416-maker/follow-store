@@ -8,7 +8,7 @@
     <style>
         :root { --accent: #C8FF00; --bg: #050505; --card: #111; --text: #eee; }
         body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; margin: 0; }
-        
+       
         /* BARRE DE NAVIGATION CEO */
         .nav-ceo { background: #000; padding: 10px; display: flex; justify-content: flex-end; border-bottom: 1px solid #222; }
         .nav-ceo a { color: #555; font-size: 10px; text-decoration: none; border: 1px solid #333; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
@@ -51,18 +51,37 @@
     </div>
 
     <script>
+        // --- CONFIGURATION LIAISON CUISINE (RENDER STARTER) ---
+        const RENDER_API = "https://ton-service-render.onrender.com"; // <-- REMPLACE PAR TON LIEN RENDER
+        
         let currentLink = "";
+
+        // Nouvelle fonction pour envoyer l'info à Render sans bloquer l'interface
+        async function syncCuisine(nicheId) {
+            try {
+                await fetch(`${RENDER_API}/api/log-niche`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ niche: nicheId, timestamp: new Date() })
+                });
+            } catch (e) {
+                console.log("Cuisine en préparation...");
+            }
+        }
+
         function selectNiche(id, name) {
             const output = document.getElementById('output');
             const script = document.getElementById('script-text');
             const linkDisplay = document.getElementById('link-text');
-            
+           
             output.style.display = "block";
             script.innerHTML = "<strong>Cible :</strong> " + name + "<br><strong>Stratégie :</strong> Infiltration via contenu viral. <br><br><em>Utilisez le lien ci-dessous pour diriger le trafic vers la page de capture.</em>";
-            
-            // Génère le lien automatiquement vers ta page target
+           
             currentLink = window.location.href.replace('index.html', '') + "target.html?p=" + id;
             linkDisplay.innerText = currentLink;
+
+            // Appel de la liaison Render
+            syncCuisine(id);
         }
 
         function copyLink() {
@@ -72,3 +91,4 @@
     </script>
 </body>
 </html>
+
