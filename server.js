@@ -6,113 +6,87 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// --- CONFIGURATION ---
 const SHOPIFY_URL = "https://6bbgv0-f4.myshopify.com";
 
-// Mémoire vive du Dashboard
-let currentOrder = `<div style="text-align:center; padding:20px; color:#555;"><h3>SYSTÈME EN VEILLE</h3><p>Prêt pour analyse...</p></div>`;
+let currentOrder = `<div style="text-align:center; padding:20px; color:#555;"><h3>IA EN ATTENTE</h3></div>`;
 let currentStats = { shopify: "0.00", amazon: "0.00", ai: "0.00" };
 
-// --- 🧠 AGENT LOGISTIQUE (RECHERCHE INTELLIGENTE) ---
-async function findProductOnShopify(keyword) {
+// --- 🧠 LE CERVEAU "GOOGLE SURVIE" (Base de connaissances) ---
+// On définit des "familles" de produits pour que l'IA comprenne les concepts
+const SEMANTIC_BRAIN = {
+    "eau": ["filter", "purifier", "paille", "lifestraw", "straw", "gourde", "aquatabs", "hydratation"],
+    "feu": ["magnesium", "starter", "allume", "briquet", "lighter", "flame", "étincelle", "flint"],
+    "abri": ["tarp", "tent", "tente", "couverture", "survival blanket", "bivouac", "hamac"],
+    "lumiere": ["lampe", "flashlight", "torch", "led", "solaire", "panneau"],
+    "soin": ["medical", "first aid", "pansement", "secours", "bandage", "désinfectant"],
+    "outil": ["couteau", "knife", "hache", "multitool", "pince", "scie", "saw"]
+};
+
+async function getShopifyProducts() {
     try {
-        // Le paramètre ?v= force Shopify à nous donner les derniers noms modifiés
-        const response = await fetch(`${SHOPIFY_URL}/products.json?v=${Date.now()}`, {
-            headers: { 'User-Agent': 'Mozilla/5.0' }
-        });
+        const response = await fetch(`${SHOPIFY_URL}/products.json?v=${Date.now()}`);
         const data = await response.json();
-        const products = data.products || [];
-
-        const search = keyword.toLowerCase().trim();
-        console.log(`[IA] Recherche de : "${search}" parmi ${products.length} produits`);
-
-        // STRATÉGIE DE RECHERCHE PAR PRIORITÉ :
-        
-        // 1. Priorité au TITRE (Évite les erreurs comme la lampe torche)
-        let match = products.find(p => p.title.toLowerCase().includes(search));
-
-        // 2. Si rien dans le titre, on cherche dans les TAGS
-        if (!match) {
-            match = products.find(p => (p.tags || "").toLowerCase().includes(search));
-        }
-
-        // 3. En dernier recours, dans la DESCRIPTION (mais de façon stricte)
-        if (!match) {
-            match = products.find(p => {
-                const body = (p.body_html || "").toLowerCase();
-                // On cherche le mot avec des espaces autour pour éviter "Water" dans "Waterproof"
-                return body.includes(" " + search + " ");
-            });
-        }
-
-        return match;
-    } catch (error) {
-        console.error("Erreur Scan Shopify:", error);
-        return null;
+        return data.products || [];
+    } catch (e) {
+        return [];
     }
 }
 
-// --- 📡 ROUTE ALERTE (Bouton Tester l'IA) ---
 app.post('/api/agent-alert', async (req, res) => {
-    const { keyword, user_issue, auth } = req.body;
+    const { keyword, auth } = req.body;
+    if (auth !== "CEO_FOLLOW") return res.sendStatus(403);
 
-    if (auth !== "CEO_FOLLOW") {
-        return res.status(403).json({ error: "Accès refusé" });
+    const userInput = keyword.toLowerCase().trim();
+    const products = await getShopifyProducts();
+
+    // --- ANALYSE SÉMANTIQUE ---
+    // On crée une liste de mots-clés "élargie"
+    let extendedKeywords = [userInput];
+    
+    for (let concept in SEMANTIC_BRAIN) {
+        // Si l'utilisateur tape "eau", on ajoute "filter", "purifier", etc.
+        if (userInput.includes(concept)) {
+            extendedKeywords = [...extendedKeywords, ...SEMANTIC_BRAIN[concept]];
+        }
     }
 
-    // On utilise le mot-clé tapé par le CEO
-    const product = await findProductOnShopify(keyword);
+    console.log("🧠 IA pense à :", extendedKeywords);
 
-    if (product) {
+    // --- RECHERCHE INTELLIGENTE ---
+    let match = products.find(p => {
+        const title = p.title.toLowerCase();
+        const tags = (p.tags || "").toLowerCase();
+        const description = (p.body_html || "").toLowerCase();
+        const allText = title + " " + tags + " " + description;
+
+        // On vérifie si UN des mots de notre cerveau sémantique est dans le produit
+        return extendedKeywords.some(word => allText.includes(word));
+    });
+
+    if (match) {
         currentOrder = `
             <div style="background:#000; color:#00ff00; border:2px solid #00ff00; padding:15px; border-radius:10px; font-family:sans-serif;">
-                <div style="font-size:0.7em; margin-bottom:5px; opacity:0.6;">RÉSULTAT ANALYSE ✅</div>
-                <h3 style="margin:0; text-transform:uppercase;">${product.title}</h3>
-                <div style="display:flex; gap:15px; margin-top:10px; background:#111; padding:10px; border-radius:5px;">
-                    <img src="${product.images[0]?.src || ''}" style="width:70px; height:70px; object-fit:cover; border:1px solid #333;">
+                <div style="font-size:0.7em; opacity:0.6;">INTELLIGENCE SÉMANTIQUE : MATCH ✅</div>
+                <h3 style="margin:5px 0;">${match.title}</h3>
+                <div style="display:flex; gap:10px; background:#111; padding:10px; border-radius:5px;">
+                    <img src="${match.images[0]?.src}" style="width:60px; height:60px; object-fit:cover;">
                     <div>
-                        <span style="display:block; color:white; font-size:1.1em; font-weight:bold;">${product.variants[0]?.price}€</span>
-                        <span style="color:#888; font-size:0.8em;">Stock : OK</span>
-                        <a href="${SHOPIFY_URL}/products/${product.handle}" target="_blank" style="display:block; margin-top:5px; color:#00ff00; text-decoration:none; font-size:0.8em;">🔗 VOIR SUR SHOP</a>
+                        <b style="color:#fff;">${match.variants[0].price}€</b><br>
+                        <a href="${SHOPIFY_URL}/products/${match.handle}" target="_blank" style="color:#00ff00; font-size:0.8em;">VOIR SUR SHOP</a>
                     </div>
                 </div>
             </div>
         `;
-        res.json({ status: "SUCCESS" });
+        res.json({ status: "OK" });
     } else {
-        currentOrder = `
-            <div style="border: 1px solid #ff4444; padding: 15px; background: #111; color: #ff4444; border-radius:10px;">
-                <h3 style="margin:0;">⚠️ AUCUN MATCH</h3>
-                <p>Le mot "${keyword}" n'existe pas dans le catalogue.</p>
-            </div>
-        `;
+        currentOrder = `<div style="color:#ff4444; border:1px solid #ff4444; padding:15px;">⚠️ IA : Aucun concept correspondant à "${userInput}" trouvé.</div>`;
         res.json({ status: "NOT_FOUND" });
     }
 });
 
-// --- ROUTES DASHBOARD ---
 app.get('/api/get-order', (req, res) => res.send(currentOrder));
-
 app.get('/api/stats', (req, res) => res.json(currentStats));
-
-app.post('/api/update-stats', (req, res) => {
-    if (req.body.auth === "CEO_FOLLOW") {
-        currentStats = { ...currentStats, ...req.body.stats };
-        res.sendStatus(200);
-    } else {
-        res.sendStatus(403);
-    }
-});
-
 app.use(express.static(__dirname));
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-// LANCEMENT
-const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
-    console.log(`=========================================`);
-    console.log(` SERVEUR CEO FOLLOW ACTIF SUR PORT ${PORT}`);
-    console.log(`=========================================`);
-});
+app.listen(process.env.PORT || 10000, () => console.log("CERVEAU SÉMANTIQUE EN LIGNE"));
