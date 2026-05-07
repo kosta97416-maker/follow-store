@@ -1,85 +1,117 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 
-// --- CONFIGURATION SOURCES ---
+// --- CONFIGURATION DES SOURCES ---
+// Ton Shopify technique pour le scan JSON
 const SHOPIFY_URL = "https://6bbgv0-f4.myshopify.com";
 const SHOPIFY_CATALOG = `${SHOPIFY_URL}/products.json`;
 
-// --- MÉMOIRE VIVE DU SYSTÈME ---
-let currentOrder = "<h1>MODE VEILLE : ÉCOUTE DES RÉSEAUX ACTIVE</h1>";
-let lastAlert = { agent: "SYSTEM", message: "Initialisation terminée..." };
+// --- MÉMOIRE VIVE DU SYSTÈME (ÉTAT ACTUEL) ---
+let currentOrder = `
+    <div style="text-align:center; padding:20px; color:#555;">
+        <h2>MODE VEILLE ACTIVE</h2>
+        <p>L'Éclaireur scrute les réseaux... En attente de signal.</p>
+    </div>
+`;
 let currentStats = { shopify: "0.00", amazon: "0.00", ai: "0.00" };
 
-// --- 📦 AGENT LOGISTIQUE : SCANNER SHOPIFY ---
+// --- 📦 AGENT LOGISTIQUE : RECHERCHE PRODUIT SHOPIFY ---
+/**
+ * Cet agent reçoit un mot-clé et parcourt ton catalogue Shopify
+ * pour extraire le produit le plus pertinent.
+ */
 async function findProductOnShopify(keyword) {
     try {
         const response = await fetch(SHOPIFY_CATALOG);
-        const data = await response.json();
+        if (!response.ok) throw new Error("Impossible de joindre Shopify");
         
-        // Recherche intelligente par mot-clé dans les titres ou descriptions
+        const data = await response.json();
+        const searchWord = keyword.toLowerCase();
+        
+        // Recherche dans le titre, les tags ou la description
         const product = data.products.find(p => 
-            p.title.toLowerCase().includes(keyword.toLowerCase()) || 
-            p.body_html.toLowerCase().includes(keyword.toLowerCase())
+            p.title.toLowerCase().includes(searchWord) || 
+            (p.body_html && p.body_html.toLowerCase().includes(searchWord)) ||
+            (p.tags && p.tags.toLowerCase().includes(searchWord))
         );
 
         if (product) {
             return {
                 title: product.title,
                 link: `${SHOPIFY_URL}/products/${product.handle}`,
-                price: product.variants[0]?.price || "N/A",
+                price: product.variants[0]?.price || "0.00",
                 image: product.images[0]?.src || ""
             };
         }
         return null;
     } catch (error) {
-        console.error("[LOGISTIQUE] Erreur scan Shopify:", error);
+        console.error("[AGENT LOGISTIQUE] Erreur :", error.message);
         return null;
     }
 }
 
-// --- 📡 ROUTE POUR L'AGENT "ÉCLAIREUR" (Point d'entrée des alertes réseaux) ---
+// --- 📡 ROUTE POUR L'AGENT "ÉCLAIREUR" (ENTRÉE DES ALERTES) ---
+/**
+ * Route utilisée par l'agent externe (Make.com/Python) 
+ * quand il détecte un besoin client sur les réseaux.
+ */
 app.post('/api/agent-alert', async (req, res) => {
     const { keyword, platform, user_issue, auth } = req.body;
 
-    // Sécurité : Seuls tes agents peuvent poster ici
-    if (auth !== "CEO_FOLLOW") return res.sendStatus(403);
+    // Protection par mot de passe (à envoyer dans le body)
+    if (auth !== "CEO_FOLLOW") {
+        return res.status(403).json({ error: "Accès non autorisé" });
+    }
 
-    console.log(`[ÉCLAIREUR] Alerte reçue de ${platform}: ${user_issue}`);
-    lastAlert = { agent: "ÉCLAIREUR", message: `Besoin détecté sur ${platform}: ${keyword}` };
+    console.log(`[ALERTE] Besoin détecté sur ${platform} : ${keyword}`);
 
     // APPEL AUTOMATIQUE À L'AGENT LOGISTIQUE
     const productFound = await findProductOnShopify(keyword);
 
     if (productFound) {
-        // Préparation de la page de vente pour l'agent CLOSER
+        // Construction de la "Munition de Vente" pour le Dashboard
         currentOrder = `
-            <div style="border: 2px solid #00ff00; padding: 15px; background: #111; color: #00ff00;">
-                <h3 style="margin:0;">🎯 CIBLE IDENTIFIÉE (${platform})</h3>
-                <p style="color:white; font-size:0.8em;">Problème client : "${user_issue}"</p>
-                <hr style="border:0.5px solid #333;">
-                <p><b>Munition suggérée :</b> ${productFound.title}</p>
-                <p><b>Prix :</b> ${productFound.price}€</p>
-                <div style="display:flex; gap:10px; margin-top:10px;">
-                    <a href="${productFound.link}" target="_blank" style="background:#00ff00; color:black; padding:8px; text-decoration:none; font-weight:bold; flex:1; text-align:center;">VOIR PRODUIT</a>
-                    <button style="background:white; color:black; padding:8px; border:none; flex:1; cursor:pointer; font-weight:bold;">ENVOYER AU CLOSER</button>
+            <div style="border: 2px dashed #00ff00; padding: 15px; background: #0a0a0a; color: #00ff00; border-radius: 8px;">
+                <h3 style="margin-top:0;">🎯 CIBLE DÉTECTÉE SUR ${platform.toUpperCase()}</h3>
+                <p style="color:#aaa; font-size:0.85em; font-style:italic;">"${user_issue}"</p>
+                <div style="display:flex; align-items:center; gap:15px; margin-top:10px; background:#1a1a1a; padding:10px; border-radius:5px;">
+                    <img src="${productFound.image}" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">
+                    <div>
+                        <b style="color:white; display:block;">${productFound.title}</b>
+                        <span style="color:#00ff00;">Prix : ${productFound.price}€</span>
+                    </div>
+                </div>
+                <div style="margin-top:15px;">
+                    <a href="${productFound.link}" target="_blank" style="display:block; text-align:center; background:#00ff00; color:black; padding:10px; text-decoration:none; font-weight:bold; border-radius:4px;">DÉPLOYER LA VENTE</a>
                 </div>
             </div>
         `;
+        res.status(200).json({ status: "SUCCESS", message: "Produit identifié et poussé sur le Dashboard" });
     } else {
-        currentOrder = `<h3>⚠️ BESOIN DÉTECTÉ MAIS PRODUIT MANQUANT</h3><p>Mots-clés: ${keyword}</p>`;
+        currentOrder = `
+            <div style="border: 2px solid #ff4444; padding: 15px; background: #111; color: #ff4444;">
+                <h3>⚠️ ALERTE : PRODUIT NON TROUVÉ</h3>
+                <p>Un besoin pour "${keyword}" a été détecté mais n'existe pas en stock.</p>
+            </div>
+        `;
+        res.status(200).json({ status: "WARNING", message: "Aucun produit correspondant dans le Shopify" });
     }
-
-    res.status(200).json({ status: "DISPATCHED" });
 });
 
-// --- ROUTES STANDARDS ---
+// --- ROUTES STANDARDS DU DASHBOARD ---
 
-// Pour mettre à jour les chiffres (Shopify/Amazon)
+// Récupérer les données pour l'affichage (index.html)
+app.get('/api/get-order', (req, res) => res.status(200).send(currentOrder));
+app.get('/api/stats', (req, res) => res.json(currentStats));
+
+// Mise à jour des stats (Shopify/Amazon)
 app.post('/api/update-stats', (req, res) => {
     if (req.body.auth === "CEO_FOLLOW") {
         currentStats = { ...currentStats, ...req.body.stats };
@@ -89,23 +121,18 @@ app.post('/api/update-stats', (req, res) => {
     }
 });
 
-app.get('/api/get-order', (req, res) => res.status(200).send(currentOrder));
-app.get('/api/stats', (req, res) => res.json(currentStats));
-
-// SERVIR LE DASHBOARD
+// Servir l'interface utilisateur
 app.use(express.static(__dirname));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// LANCEMENT DU SERVEUR
+// DÉMARRAGE DU POSTE DE COMMANDE
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-    console.log(`
-    =========================================
-    FOLLOW_HQ MULTI-AGENT HUB READY
-    PORT: ${PORT}
-    SHOPIFY: ${SHOPIFY_URL}
-    =========================================
-    `);
+    console.log(`=========================================`);
+    console.log(` FOLLOW_HQ COMMAND CENTER ONLINE `);
+    console.log(` PORT : ${PORT} `);
+    console.log(` SOURCE : ${SHOPIFY_URL} `);
+    console.log(`=========================================`);
 });
