@@ -9,7 +9,7 @@ app.use(express.json());
 // ============================================================
 // CONFIG
 // ============================================================
-const SHOPIFY_URL = "https://follow.life"; // Ton vrai shop
+const SHOPIFY_URL = "https://6bbgv0-f4.myshopify.com"; // URL technique Shopify (nom affiché: follow.life)
 const AMAZON_TAG = "followtrend-21"; // Ton tag affilié Amazon (à remplacer)
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || "";
 
