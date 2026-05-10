@@ -176,8 +176,8 @@ async function scannerProspects() {
             resume: analyse.resume,
             urgence: analyse.urgence,
             liens: {
-                shopify: `${SHOPIFY_URL}/products/${produitMatch.shopifyHandle}`,
-                amazon: `https://www.amazon.fr/s?k=${produitMatch.amazonSearch}&tag=${AMAZON_TAG}`
+                shopify: `${SHOPIFY_URL}/products/${produitMatch.shopifyHandle}`
+                // Amazon désactivé temporairement - sera réactivé avec compte affilié
             },
             timestamp: new Date().toLocaleTimeString('fr-FR'),
             converti: false
@@ -277,8 +277,8 @@ app.post('/api/agent-alert', async (req, res) => {
         res.json({
             status: "OK",
             produit: produitMatch.nom,
-            shopify: `${SHOPIFY_URL}/products/${produitMatch.shopifyHandle}`,
-            amazon: `https://www.amazon.fr/s?k=${produitMatch.amazonSearch}&tag=${AMAZON_TAG}`
+            shopify: `${SHOPIFY_URL}/products/${produitMatch.shopifyHandle}`
+            // Amazon désactivé - sera réactivé avec compte affilié validé
         });
     } else {
         res.json({ status: "NOT_FOUND" });
@@ -326,6 +326,6 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ FOLLOW.LIFE opérationnel sur port ${PORT}`);
     console.log(`🤖 Agent IA: actif - scan toutes les 45s`);
-    console.log(`🛒 Shopify: ${SHOPIFY_URL}`);
-    console.log(`📦 Amazon Affilié: tag=${AMAZON_TAG}`);
+    console.log(`🛒 Shopify: ${SHOPIFY_URL} (100% du CA)`);
+    console.log(`📦 Amazon Affilié: désactivé (à activer plus tard)`);
 });
