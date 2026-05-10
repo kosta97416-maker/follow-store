@@ -381,8 +381,7 @@ function renderProduits() {
       <h3 class="produit-nom">${p.nom}</h3>
       <p class="produit-desc">${p.desc}</p>
       <div class="produit-liens">
-        <a href="${SHOPIFY}/products/${p.handle}" target="_blank" class="lien-shop" onclick="trackClick('shopify','${p.nom}')">🛒 BOUTIQUE</a>
-        <a href="https://www.amazon.fr/s?k=${p.amazon}&tag=${AMAZON_TAG}" target="_blank" class="lien-amazon" onclick="trackClick('amazon','${p.nom}')">📦 AMAZON</a>
+        <a href="${SHOPIFY}/products/${p.handle}" target="_blank" class="lien-shop" style="flex:1;text-align:center;padding:.7rem 1rem;font-size:.7rem" onclick="trackClick('shopify','${p.nom}')">🛒 ACHETER MAINTENANT →</a>
       </div>
     </div>
   `).join('');
