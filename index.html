@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FOLLOW.LIFE — Équipez-vous. Survivez. Résistez.</title>
+<title>FOLLOW.LIFE — Survie & Résilience</title>
 <meta name="description" content="Matériel de survie et résilience sélectionné. Kits, filtres, rations, équipements d'urgence.">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
@@ -22,7 +22,6 @@
 body { background:var(--noir); color:var(--beige); font-family:'Barlow Condensed',sans-serif; overflow-x:hidden; }
 a { text-decoration:none; }
 
-/* NAV */
 nav {
   position:fixed; top:0; left:0; right:0; z-index:100;
   padding:1.2rem 6vw; display:flex; justify-content:space-between; align-items:center;
@@ -31,13 +30,31 @@ nav {
 }
 .nav-logo { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; color:var(--blanc); letter-spacing:.1em; }
 .nav-logo span { color:var(--rouge-vif); }
-.nav-links { display:flex; gap:2rem; list-style:none; align-items:center; }
-.nav-links a { font-family:'Space Mono',monospace; font-size:.65rem; color:var(--gris); letter-spacing:.15em; transition:color .2s; }
+.nav-right { display:flex; gap:1.5rem; align-items:center; }
+.nav-links { display:flex; gap:1.5rem; list-style:none; align-items:center; }
+.nav-links a { font-family:'Space Mono',monospace; font-size:.6rem; color:var(--gris); letter-spacing:.15em; transition:color .2s; }
 .nav-links a:hover { color:var(--blanc); }
-.nav-cta { background:var(--rouge) !important; color:var(--blanc) !important; padding:.45rem 1rem !important; }
-@media(max-width:600px){ .nav-links { display:none; } }
 
-/* HERO */
+.lang-selector {
+  display:flex; gap:.3rem; background:rgba(255,255,255,.04);
+  padding:.3rem; border:1px solid rgba(255,255,255,.08);
+}
+.lang-btn {
+  font-family:'Space Mono',monospace; font-size:.55rem;
+  background:transparent; border:none; color:var(--gris);
+  padding:.3rem .55rem; cursor:pointer; letter-spacing:.1em;
+  transition:all .2s; font-weight:700;
+}
+.lang-btn:hover { color:var(--beige); }
+.lang-btn.active { background:var(--rouge); color:var(--blanc); }
+
+@media(max-width:700px){
+  .nav-links { display:none; }
+  nav { padding:.8rem 4vw; }
+  .nav-logo { font-size:1.2rem; }
+  .lang-btn { font-size:.5rem; padding:.25rem .4rem; }
+}
+
 .hero {
   min-height:100vh; position:relative;
   display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
@@ -58,23 +75,21 @@ nav {
 .hero-tag {
   font-family:'Space Mono',monospace; font-size:.7rem; letter-spacing:.3em;
   color:var(--rouge-vif); text-transform:uppercase; margin-bottom:1.5rem;
-  animation:fadeUp .8s ease both;
 }
 .hero-tag::before { content:'> '; color:var(--or); }
 .hero h1 {
   font-family:'Bebas Neue',sans-serif;
   font-size:clamp(3.5rem,11vw,9rem); line-height:.92;
-  color:var(--blanc); animation:fadeUp .8s ease .1s both;
+  color:var(--blanc);
 }
 .hero h1 .accent { color:var(--rouge-vif); }
 .hero h1 .stroke { -webkit-text-stroke:2px var(--beige); color:transparent; }
 .hero-sub {
   font-size:clamp(1rem,2.2vw,1.4rem); font-weight:300; color:var(--gris);
   max-width:560px; margin-top:1.8rem; line-height:1.5;
-  animation:fadeUp .8s ease .2s both;
 }
 .hero-sub strong { color:var(--beige); font-weight:700; }
-.hero-ctas { display:flex; gap:1rem; margin-top:2.5rem; flex-wrap:wrap; animation:fadeUp .8s ease .3s both; }
+.hero-ctas { display:flex; gap:1rem; margin-top:2.5rem; flex-wrap:wrap; }
 .btn-primary {
   background:var(--rouge); color:var(--blanc);
   font-family:'Bebas Neue',sans-serif; font-size:1.15rem; letter-spacing:.1em;
@@ -82,7 +97,7 @@ nav {
   transition:all .2s;
   clip-path:polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
 }
-.btn-primary:hover { background:var(--rouge-vif); transform:translateY(-2px); box-shadow:0 10px 40px rgba(192,57,43,.4); }
+.btn-primary:hover { background:var(--rouge-vif); transform:translateY(-2px); }
 .btn-secondary {
   background:transparent; color:var(--beige);
   font-family:'Bebas Neue',sans-serif; font-size:1.15rem; letter-spacing:.1em;
@@ -101,7 +116,6 @@ nav {
   letter-spacing:.2em; animation:bounce 2s infinite;
 }
 
-/* TICKER */
 .ticker { background:var(--rouge); padding:.6rem 0; overflow:hidden; white-space:nowrap; }
 .ticker-inner {
   display:inline-flex; animation:ticker 30s linear infinite;
@@ -110,7 +124,6 @@ nav {
 .ticker-item { padding:0 2.5rem; }
 .ticker-item::after { content:'✦'; margin-left:2.5rem; color:var(--or); }
 
-/* SECTIONS */
 .section { padding:5rem 6vw; }
 .section-label {
   font-family:'Space Mono',monospace; font-size:.65rem;
@@ -121,14 +134,13 @@ nav {
   line-height:1; color:var(--blanc); margin-bottom:3rem;
 }
 
-/* PRODUITS */
 .produits-grid {
   display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
   gap:1.5px; background:rgba(255,255,255,.04);
 }
 .produit-card {
   background:var(--noir); padding:1.8rem; position:relative;
-  overflow:hidden; transition:all .3s; display:block; color:inherit;
+  overflow:hidden; transition:all .3s;
 }
 .produit-card::before {
   content:''; position:absolute; top:0; left:0;
@@ -137,41 +149,55 @@ nav {
 .produit-card:hover::before { height:100%; }
 .produit-card:hover { background:rgba(192,57,43,.07); }
 .produit-emoji { font-size:2.2rem; margin-bottom:.8rem; }
-.produit-nom {
-  font-family:'Bebas Neue',sans-serif; font-size:1.5rem;
-  color:var(--blanc); margin-bottom:.4rem; letter-spacing:.04em;
-}
+.produit-nom { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; color:var(--blanc); margin-bottom:.4rem; letter-spacing:.04em; }
 .produit-desc { font-size:.85rem; color:var(--gris); line-height:1.5; margin-bottom:1.2rem; font-weight:300; }
-.produit-liens { display:flex; gap:.6rem; flex-wrap:wrap; }
 .lien-shop {
-  background:var(--vert); color:var(--blanc);
-  font-family:'Space Mono',monospace; font-size:.6rem;
-  padding:.4rem .9rem; letter-spacing:.08em; transition:background .2s;
+  display:block; text-align:center; background:var(--vert); color:var(--blanc);
+  font-family:'Space Mono',monospace; font-size:.7rem;
+  padding:.7rem 1rem; letter-spacing:.08em; transition:background .2s;
 }
 .lien-shop:hover { background:var(--vert-clair); }
-.lien-amazon {
-  background:rgba(212,160,23,.12); border:1px solid var(--or);
-  color:var(--or); font-family:'Space Mono',monospace; font-size:.6rem;
-  padding:.4rem .9rem; letter-spacing:.08em; transition:all .2s;
-}
-.lien-amazon:hover { background:var(--or); color:var(--noir); }
 .produit-score {
   position:absolute; top:.8rem; right:.8rem;
   font-family:'Space Mono',monospace; font-size:.55rem; color:var(--vert-clair);
 }
 
-/* WHY */
 .why { background:rgba(255,255,255,.02); border-top:1px solid rgba(255,255,255,.05); border-bottom:1px solid rgba(255,255,255,.05); }
 .why-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:2.5rem; }
 .why-num { font-family:'Bebas Neue',sans-serif; font-size:3.5rem; color:rgba(192,57,43,.2); line-height:1; margin-bottom:.4rem; }
 .why-titre { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; color:var(--blanc); letter-spacing:.04em; margin-bottom:.6rem; }
 .why-texte { font-size:.85rem; color:var(--gris); line-height:1.6; font-weight:300; }
 
-/* VIDÉO IA */
+.outils-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
+.outil-card {
+  background:#0a0a0a; border:1px solid rgba(255,255,255,.08);
+  padding:2rem; position:relative; overflow:hidden; transition:all .3s;
+}
+.outil-card.dispo:hover { border-color:var(--or); transform:translateY(-3px); }
+.outil-card.bientot { opacity:.4; border-style:dashed; }
+.outil-badge {
+  position:absolute; top:0; right:0; background:var(--or); color:var(--noir);
+  font-family:'Space Mono',monospace; font-size:.55rem;
+  padding:.3rem .8rem; letter-spacing:.15em; font-weight:700;
+}
+.outil-emoji { font-size:2.5rem; margin-bottom:1rem; }
+.outil-nom { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; color:var(--blanc); letter-spacing:.05em; margin-bottom:.5rem; }
+.outil-cat { font-family:'Space Mono',monospace; font-size:.6rem; color:var(--or); letter-spacing:.2em; margin-bottom:1rem; }
+.outil-cat.gris { color:var(--gris); }
+.outil-desc { color:var(--gris); font-size:.9rem; line-height:1.6; font-weight:300; margin-bottom:1.5rem; }
+.outil-bullets { font-family:'Space Mono',monospace; font-size:.65rem; color:var(--gris); margin-bottom:1.2rem; padding:.8rem; background:rgba(0,0,0,.4); border-left:2px solid var(--or); line-height:1.8; }
+.btn-outil {
+  display:block; background:var(--or); color:var(--noir);
+  font-family:'Bebas Neue',sans-serif; font-size:1rem; letter-spacing:.1em;
+  padding:.9rem; text-align:center; transition:all .2s; font-weight:700;
+}
+.btn-outil:hover { background:var(--blanc); }
+.outil-attente { font-family:'Space Mono',monospace; font-size:.6rem; color:#333; letter-spacing:.1em; margin-top:1.5rem; }
+
 .video-section { background:#050505; }
 .video-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
 @media(max-width:700px){ .video-grid { grid-template-columns:1fr; } }
-.video-card { border:1px solid rgba(255,255,255,.07); padding:1.8rem; position:relative; }
+.video-card { border:1px solid rgba(255,255,255,.07); padding:1.8rem; }
 .video-platform { font-family:'Space Mono',monospace; font-size:.6rem; letter-spacing:.3em; margin-bottom:.8rem; }
 .tiktok-color { color:#69C9D0; }
 .insta-color { color:#E1306C; }
@@ -187,21 +213,23 @@ nav {
 .btn-generer:hover { background:var(--rouge); color:var(--blanc); }
 .loading { font-family:'Space Mono',monospace; font-size:.6rem; color:var(--gris); margin-top:.4rem; display:none; }
 
-/* URGENCE */
 .urgence { background:var(--rouge); padding:4rem 6vw; text-align:center; }
 .urgence h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(2rem,5.5vw,4rem); color:var(--blanc); line-height:1; margin-bottom:1rem; }
 .urgence p { font-family:'Barlow Condensed',sans-serif; font-size:1.15rem; color:rgba(255,255,255,.85); max-width:460px; margin:0 auto 2rem; font-weight:300; }
 
-/* FOOTER */
 footer { padding:2.5rem 6vw; border-top:1px solid rgba(255,255,255,.05); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
 .footer-logo { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; color:var(--blanc); letter-spacing:.1em; }
-.footer-links { display:flex; gap:1.8rem; list-style:none; }
+.footer-links { display:flex; gap:1.8rem; list-style:none; flex-wrap:wrap; }
 .footer-links a { font-family:'Space Mono',monospace; font-size:.6rem; color:var(--gris); letter-spacing:.1em; transition:color .2s; }
 .footer-links a:hover { color:var(--rouge-vif); }
 .footer-copy { font-family:'Space Mono',monospace; font-size:.55rem; color:rgba(136,136,136,.5); }
 
-/* ANIMATIONS */
-@keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+.disclaimer {
+  text-align:center; margin-top:3rem; font-family:'Space Mono',monospace;
+  font-size:.65rem; color:#444; max-width:600px;
+  margin-left:auto; margin-right:auto; line-height:1.8;
+}
+
 @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
@@ -215,259 +243,407 @@ footer { padding:2.5rem 6vw; border-top:1px solid rgba(255,255,255,.05); display
 
 <nav>
   <a href="/" class="nav-logo">FOLLOW<span>.</span>LIFE</a>
-  <ul class="nav-links">
-    <li><a href="#produits">ÉQUIPEMENT</a></li>
-    <li><a href="#contenu">CONTENU IA</a></li>
-    <li><a href="https://6bbgv0-f4.myshopify.com" target="_blank">MA BOUTIQUE</a></li>
-    <li><a href="#produits" class="nav-cta">ACHETER</a></li>
-  </ul>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#produits" data-i18n="nav_eq">ÉQUIPEMENT</a></li>
+      <li><a href="#outils" data-i18n="nav_ai">OUTILS IA</a></li>
+      <li><a href="#contenu" data-i18n="nav_content">CONTENU</a></li>
+      <li><a href="https://6bbgv0-f4.myshopify.com" target="_blank" data-i18n="nav_shop">BOUTIQUE</a></li>
+    </ul>
+    <div class="lang-selector">
+      <button class="lang-btn active" data-lang="fr" onclick="setLang('fr')">FR</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
+    </div>
+  </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-grid"></div>
-  <p class="hero-tag">Survie & Résilience — Équipement sélectionné</p>
+  <p class="hero-tag" data-i18n="h_tag">Survie & Résilience — Équipement sélectionné</p>
   <h1>
-    PRÊT POUR<br>
-    <span class="accent">TOUT</span><br>
-    <span class="stroke">CE QUI VIENT</span>
+    <span data-i18n="h_t1">PRÊT POUR</span><br>
+    <span class="accent" data-i18n="h_t2">TOUT</span><br>
+    <span class="stroke" data-i18n="h_t3">CE QUI VIENT</span>
   </h1>
-  <p class="hero-sub">
-    Matériel de survie <strong>testé et approuvé</strong>. Kits d'urgence, filtres à eau,<br>
-    rations longue durée. Parce que la préparation <strong>n'attend pas</strong>.
-  </p>
+  <p class="hero-sub" data-i18n="h_sub">Matériel de survie <strong>testé et approuvé</strong>. Kits d'urgence, filtres à eau, rations longue durée.</p>
   <div class="hero-ctas">
-    <a href="#produits" class="btn-primary">VOIR L'ÉQUIPEMENT</a>
-    <a href="https://6bbgv0-f4.myshopify.com" target="_blank" class="btn-secondary">MA BOUTIQUE</a>
+    <a href="#produits" class="btn-primary" data-i18n="h_cta1">VOIR L'ÉQUIPEMENT</a>
+    <a href="https://6bbgv0-f4.myshopify.com" target="_blank" class="btn-secondary" data-i18n="h_cta2">MA BOUTIQUE</a>
   </div>
   <div class="hero-badge">
-    <span id="agent-status">🟢 AGENT IA ACTIF</span><br>
+    <span id="agent-status" data-i18n="agent_on">🟢 AGENT IA ACTIF</span><br>
     <span id="prospects-count" style="color:var(--or)">0 PROSPECTS</span><br>
-    <span style="color:var(--gris);font-size:.5rem">SYSTÈME AUTONOME</span>
+    <span style="color:var(--gris);font-size:.5rem" data-i18n="sys_auto">SYSTÈME AUTONOME</span>
   </div>
-  <div class="hero-scroll">↓ SCROLLER<span class="cursor-blink">_</span></div>
+  <div class="hero-scroll" data-i18n="scroll">↓ SCROLLER<span class="cursor-blink">_</span></div>
 </section>
 
-<!-- TICKER -->
 <div class="ticker">
   <div class="ticker-inner">
     <span class="ticker-item">KIT SURVIE 72H</span>
-    <span class="ticker-item">FILTRE À EAU PORTABLE</span>
+    <span class="ticker-item">FILTRE À EAU</span>
     <span class="ticker-item">RATION LONGUE DURÉE</span>
-    <span class="ticker-item">LAMPE FRONTALE LED</span>
-    <span class="ticker-item">SAC BUG OUT BAG</span>
+    <span class="ticker-item">LAMPE FRONTALE</span>
+    <span class="ticker-item">BUG OUT BAG</span>
     <span class="ticker-item">COUTEAU BUSHCRAFT</span>
-    <span class="ticker-item">RADIO URGENCE SOLAIRE</span>
+    <span class="ticker-item">RADIO SOLAIRE</span>
     <span class="ticker-item">COUVERTURE THERMIQUE</span>
     <span class="ticker-item">KIT SURVIE 72H</span>
-    <span class="ticker-item">FILTRE À EAU PORTABLE</span>
+    <span class="ticker-item">FILTRE À EAU</span>
     <span class="ticker-item">RATION LONGUE DURÉE</span>
-    <span class="ticker-item">LAMPE FRONTALE LED</span>
-    <span class="ticker-item">SAC BUG OUT BAG</span>
+    <span class="ticker-item">LAMPE FRONTALE</span>
+    <span class="ticker-item">BUG OUT BAG</span>
     <span class="ticker-item">COUTEAU BUSHCRAFT</span>
-    <span class="ticker-item">RADIO URGENCE SOLAIRE</span>
+    <span class="ticker-item">RADIO SOLAIRE</span>
     <span class="ticker-item">COUVERTURE THERMIQUE</span>
   </div>
 </div>
 
-<!-- PRODUITS -->
 <section class="section" id="produits">
-  <p class="section-label reveal">// Catalogue sélectionné</p>
-  <h2 class="section-title reveal">ÉQUIPEMENT<br><span style="color:var(--rouge)">DE SURVIE</span></h2>
-  <div class="produits-grid" id="produits-grid">
-    <!-- Généré par JS -->
-  </div>
+  <p class="section-label reveal" data-i18n="p_label">// Catalogue sélectionné</p>
+  <h2 class="section-title reveal">
+    <span data-i18n="p_t1">ÉQUIPEMENT</span><br>
+    <span style="color:var(--rouge)" data-i18n="p_t2">DE SURVIE</span>
+  </h2>
+  <div class="produits-grid" id="produits-grid"></div>
 </section>
 
-<!-- WHY -->
 <section class="section why">
-  <p class="section-label reveal">// Pourquoi nous</p>
-  <h2 class="section-title reveal">SÉLECTIONNÉ<br><span style="color:var(--rouge)">POUR VOUS</span></h2>
+  <p class="section-label reveal" data-i18n="w_label">// Pourquoi nous</p>
+  <h2 class="section-title reveal">
+    <span data-i18n="w_t1">SÉLECTIONNÉ</span><br>
+    <span style="color:var(--rouge)" data-i18n="w_t2">POUR VOUS</span>
+  </h2>
   <div class="why-grid">
     <div class="reveal">
       <div class="why-num">01</div>
-      <h3 class="why-titre">PRODUITS TESTÉS</h3>
-      <p class="why-texte">Chaque équipement est sélectionné et évalué par des passionnés de survie. Fini les produits gadgets qui lâchent au mauvais moment.</p>
+      <h3 class="why-titre" data-i18n="w1t">PRODUITS TESTÉS</h3>
+      <p class="why-texte" data-i18n="w1d">Chaque équipement sélectionné par des passionnés. Fini les gadgets qui lâchent.</p>
     </div>
     <div class="reveal">
       <div class="why-num">02</div>
-      <h3 class="why-titre">LIVRAISON RAPIDE</h3>
-      <p class="why-texte">Depuis notre boutique Shopify ou Amazon Prime. Parce qu'une urgence peut arriver à tout moment et l'attente n'est pas une option.</p>
+      <h3 class="why-titre" data-i18n="w2t">LIVRAISON RAPIDE</h3>
+      <p class="why-texte" data-i18n="w2d">Une urgence peut arriver à tout moment, l'attente n'est pas une option.</p>
     </div>
     <div class="reveal">
       <div class="why-num">03</div>
-      <h3 class="why-titre">PRIX NÉGOCIÉS</h3>
-      <p class="why-texte">Affiliation directe avec les meilleurs fournisseurs. Vous payez le prix juste, sans intermédiaire superflu.</p>
+      <h3 class="why-titre" data-i18n="w3t">PRIX NÉGOCIÉS</h3>
+      <p class="why-texte" data-i18n="w3d">Vous payez le prix juste, sans intermédiaire superflu.</p>
     </div>
     <div class="reveal">
       <div class="why-num">04</div>
-      <h3 class="why-titre">COMMUNAUTÉ</h3>
-      <p class="why-texte">Rejoignez des milliers de familles qui se préparent. Conseils, guides, et retours d'expérience terrain partagés chaque semaine.</p>
+      <h3 class="why-titre" data-i18n="w4t">COMMUNAUTÉ</h3>
+      <p class="why-texte" data-i18n="w4d">Rejoignez des milliers de familles qui se préparent. Conseils et retours d'expérience.</p>
     </div>
   </div>
 </section>
 
-<!-- CONTENU IA -->
+<section class="section" id="outils" style="background:linear-gradient(180deg,#050505 0%,#0a0a0a 100%);">
+  <p class="section-label reveal" data-i18n="o_label">// Stack IA recommandée</p>
+  <h2 class="section-title reveal">
+    <span data-i18n="o_t1">MES OUTILS IA</span><br>
+    <span style="color:var(--or)" data-i18n="o_t2">POUR CRÉER DES VIDÉOS</span>
+  </h2>
+  <p style="max-width:600px;color:var(--gris);font-size:1rem;line-height:1.6;margin-bottom:3rem;font-weight:300" class="reveal" data-i18n="o_intro">
+    Les outils que <strong style="color:var(--beige)">j'utilise vraiment</strong> pour produire mon contenu. Testés, approuvés.
+  </p>
+
+  <div class="outils-grid">
+    <div class="reveal outil-card dispo">
+      <div class="outil-badge">⭐ TOP 1</div>
+      <div class="outil-emoji">🎙️</div>
+      <h3 class="outil-nom">ELEVENLABS</h3>
+      <p class="outil-cat" data-i18n="o_e_cat">VOIX IA — RÉALISTE</p>
+      <p class="outil-desc" data-i18n="o_e_desc">L'outil que j'utilise pour créer toutes les voix de mes vidéos. Voix françaises ultra-réalistes.</p>
+      <div class="outil-bullets" data-i18n="o_e_b">✓ Voix en français parfait<br>✓ Plan gratuit pour tester<br>✓ Pro: ~5€/mois illimité<br>✓ Parfait pour TikTok/Insta</div>
+      <a href="https://try.elevenlabs.io/nf10ytlfcypx" target="_blank" class="btn-outil" data-i18n="o_e_btn">🚀 ESSAYER GRATUITEMENT →</a>
+    </div>
+
+    <div class="reveal outil-card bientot">
+      <div class="outil-emoji">🎬</div>
+      <h3 class="outil-nom">HEYGEN</h3>
+      <p class="outil-cat gris" data-i18n="o_h_cat">AVATARS VIDÉO IA — BIENTÔT</p>
+      <p class="outil-desc" data-i18n="o_h_desc">Création de vidéos avec un avatar IA. Idéal pour les tutos sans se filmer.</p>
+      <div class="outil-attente" data-i18n="o_wait">EN ATTENTE DE VALIDATION...</div>
+    </div>
+
+    <div class="reveal outil-card bientot">
+      <div class="outil-emoji">📧</div>
+      <h3 class="outil-nom">GETRESPONSE</h3>
+      <p class="outil-cat gris" data-i18n="o_g_cat">EMAIL MARKETING — BIENTÔT</p>
+      <p class="outil-desc" data-i18n="o_g_desc">Pour fidéliser tes clients et leur envoyer offres + conseils.</p>
+      <div class="outil-attente" data-i18n="o_wait2">EN ATTENTE DE VALIDATION...</div>
+    </div>
+
+    <div class="reveal outil-card bientot">
+      <div class="outil-emoji">✂️</div>
+      <h3 class="outil-nom">INVIDEO</h3>
+      <p class="outil-cat gris" data-i18n="o_i_cat">MONTAGE VIDÉO IA — BIENTÔT</p>
+      <p class="outil-desc" data-i18n="o_i_desc">Montage vidéo automatique pour TikTok/Reels.</p>
+      <div class="outil-attente" data-i18n="o_wait3">EN ATTENTE DE VALIDATION...</div>
+    </div>
+  </div>
+
+  <p class="disclaimer" data-i18n="o_disc">⚠️ Liens d'affiliation : si vous achetez via mes liens, je touche une petite commission. Aucun coût supplémentaire pour vous 🙏</p>
+</section>
+
 <section class="section video-section" id="contenu">
-  <p class="section-label reveal">// Contenu généré par IA</p>
-  <h2 class="section-title reveal">SCRIPTS VIDÉO<br><span style="color:var(--rouge)">TIKTOK & INSTAGRAM</span></h2>
+  <p class="section-label reveal" data-i18n="v_label">// Contenu généré par IA</p>
+  <h2 class="section-title reveal">
+    <span data-i18n="v_t1">SCRIPTS VIDÉO</span><br>
+    <span style="color:var(--rouge)" data-i18n="v_t2">TIKTOK & INSTAGRAM</span>
+  </h2>
   <div class="video-grid">
     <div class="video-card reveal">
       <p class="video-platform tiktok-color">▶ TIKTOK</p>
-      <p class="video-accroche" id="tiktok-accroche">Clique pour générer un script viral...</p>
+      <p class="video-accroche" id="tiktok-accroche" data-i18n="v_clic">Clique pour générer un script viral...</p>
       <p class="video-script" id="tiktok-script" style="display:none"></p>
       <div class="video-hashtags" id="tiktok-hashtags"></div>
-      <button class="btn-generer" onclick="genererScript('tiktok')">⚡ GÉNÉRER SCRIPT TIKTOK</button>
-      <p class="loading" id="loading-tiktok">Génération en cours<span class="cursor-blink">_</span></p>
+      <button class="btn-generer" onclick="genererScript('tiktok')" data-i18n="v_btn_t">⚡ GÉNÉRER SCRIPT TIKTOK</button>
+      <p class="loading" id="loading-tiktok" data-i18n="v_load">Génération en cours<span class="cursor-blink">_</span></p>
     </div>
     <div class="video-card reveal">
       <p class="video-platform insta-color">◉ INSTAGRAM</p>
-      <p class="video-accroche" id="insta-accroche">Clique pour générer un script viral...</p>
+      <p class="video-accroche" id="insta-accroche" data-i18n="v_clic2">Clique pour générer un script viral...</p>
       <p class="video-script" id="insta-script" style="display:none"></p>
       <div class="video-hashtags" id="insta-hashtags"></div>
-      <button class="btn-generer" onclick="genererScript('instagram')">⚡ GÉNÉRER SCRIPT INSTA</button>
-      <p class="loading" id="loading-insta">Génération en cours<span class="cursor-blink">_</span></p>
+      <button class="btn-generer" onclick="genererScript('instagram')" data-i18n="v_btn_i">⚡ GÉNÉRER SCRIPT INSTA</button>
+      <p class="loading" id="loading-insta" data-i18n="v_load2">Génération en cours<span class="cursor-blink">_</span></p>
     </div>
   </div>
-  <p style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--gris);margin-top:2rem;text-align:center;">
-    Scripts optimisés pour l'algorithme — Copiez, collez, publiez. Lien affiliation en bio.
-  </p>
 </section>
 
-<!-- URGENCE CTA -->
 <section class="urgence">
-  <h2>NE PARIEZ PAS<br>SUR LA CHANCE</h2>
-  <p>Une seule panne de courant, une seule crise peut tout changer. Préparez-vous maintenant pendant que vous le pouvez.</p>
-  <a href="https://6bbgv0-f4.myshopify.com" target="_blank" class="btn-primary" style="background:var(--blanc);color:var(--rouge)">ACCÉDER À LA BOUTIQUE</a>
+  <h2>
+    <span data-i18n="u_t1">NE PARIEZ PAS</span><br>
+    <span data-i18n="u_t2">SUR LA CHANCE</span>
+  </h2>
+  <p data-i18n="u_p">Une seule panne de courant peut tout changer. Préparez-vous maintenant.</p>
+  <a href="https://6bbgv0-f4.myshopify.com" target="_blank" class="btn-primary" style="background:var(--blanc);color:var(--rouge)" data-i18n="u_btn">ACCÉDER À LA BOUTIQUE</a>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-logo">FOLLOW<span style="color:var(--rouge-vif)">.</span>LIFE</div>
   <ul class="footer-links">
-    <li><a href="https://6bbgv0-f4.myshopify.com" target="_blank">BOUTIQUE</a></li>
-    <li><a href="#produits">ÉQUIPEMENT</a></li>
-    <li><a href="/dashboard">DASHBOARD</a></li>
-    <li><a href="https://instagram.com" target="_blank">INSTAGRAM</a></li>
-    <li><a href="https://tiktok.com" target="_blank">TIKTOK</a></li>
+    <li><a href="https://6bbgv0-f4.myshopify.com" target="_blank" data-i18n="f_shop">BOUTIQUE</a></li>
+    <li><a href="#produits" data-i18n="f_eq">ÉQUIPEMENT</a></li>
+    <li><a href="#outils" data-i18n="f_ai">OUTILS IA</a></li>
+    <li><a href="/login" data-i18n="f_dash">DASHBOARD</a></li>
   </ul>
-  <p class="footer-copy">© 2025 FOLLOW.LIFE — Liens affiliés Amazon & Shopify</p>
+  <p class="footer-copy">© 2025 FOLLOW.LIFE</p>
 </footer>
 
 <script>
-// ============================================================
-// PRODUITS
-// ============================================================
-const SHOPIFY = "https://6bbgv0-f4.myshopify.com";
-const AMAZON_TAG = "followtrend-21";
+const TR = {
+  fr: {
+    nav_eq:"ÉQUIPEMENT", nav_ai:"OUTILS IA", nav_content:"CONTENU", nav_shop:"BOUTIQUE",
+    h_tag:"Survie & Résilience — Équipement sélectionné",
+    h_t1:"PRÊT POUR", h_t2:"TOUT", h_t3:"CE QUI VIENT",
+    h_sub:"Matériel de survie <strong>testé et approuvé</strong>. Kits d'urgence, filtres à eau, rations longue durée.",
+    h_cta1:"VOIR L'ÉQUIPEMENT", h_cta2:"MA BOUTIQUE",
+    agent_on:"🟢 AGENT IA ACTIF", sys_auto:"SYSTÈME AUTONOME", scroll:"↓ SCROLLER",
+    p_label:"// Catalogue sélectionné", p_t1:"ÉQUIPEMENT", p_t2:"DE SURVIE",
+    w_label:"// Pourquoi nous", w_t1:"SÉLECTIONNÉ", w_t2:"POUR VOUS",
+    w1t:"PRODUITS TESTÉS", w1d:"Chaque équipement sélectionné par des passionnés. Fini les gadgets qui lâchent.",
+    w2t:"LIVRAISON RAPIDE", w2d:"Une urgence peut arriver à tout moment, l'attente n'est pas une option.",
+    w3t:"PRIX NÉGOCIÉS", w3d:"Vous payez le prix juste, sans intermédiaire superflu.",
+    w4t:"COMMUNAUTÉ", w4d:"Rejoignez des milliers de familles qui se préparent.",
+    o_label:"// Stack IA recommandée", o_t1:"MES OUTILS IA", o_t2:"POUR CRÉER DES VIDÉOS",
+    o_intro:"Les outils que <strong style='color:var(--beige)'>j'utilise vraiment</strong> pour produire mon contenu. Testés, approuvés.",
+    o_e_cat:"VOIX IA — RÉALISTE",
+    o_e_desc:"L'outil que j'utilise pour créer toutes les voix de mes vidéos. Voix françaises ultra-réalistes.",
+    o_e_b:"✓ Voix en français parfait<br>✓ Plan gratuit pour tester<br>✓ Pro: ~5€/mois illimité<br>✓ Parfait pour TikTok/Insta",
+    o_e_btn:"🚀 ESSAYER GRATUITEMENT →",
+    o_h_cat:"AVATARS VIDÉO IA — BIENTÔT", o_h_desc:"Création de vidéos avec un avatar IA. Idéal pour les tutos sans se filmer.",
+    o_g_cat:"EMAIL MARKETING — BIENTÔT", o_g_desc:"Pour fidéliser tes clients et leur envoyer offres + conseils.",
+    o_i_cat:"MONTAGE VIDÉO IA — BIENTÔT", o_i_desc:"Montage vidéo automatique pour TikTok/Reels.",
+    o_wait:"EN ATTENTE DE VALIDATION...", o_wait2:"EN ATTENTE DE VALIDATION...", o_wait3:"EN ATTENTE DE VALIDATION...",
+    o_disc:"⚠️ Liens d'affiliation : si vous achetez via mes liens, je touche une petite commission. Aucun coût supplémentaire pour vous 🙏",
+    v_label:"// Contenu généré par IA", v_t1:"SCRIPTS VIDÉO", v_t2:"TIKTOK & INSTAGRAM",
+    v_clic:"Clique pour générer un script viral...", v_clic2:"Clique pour générer un script viral...",
+    v_btn_t:"⚡ GÉNÉRER SCRIPT TIKTOK", v_btn_i:"⚡ GÉNÉRER SCRIPT INSTA",
+    v_load:"Génération en cours", v_load2:"Génération en cours",
+    u_t1:"NE PARIEZ PAS", u_t2:"SUR LA CHANCE",
+    u_p:"Une seule panne de courant peut tout changer. Préparez-vous maintenant.", u_btn:"ACCÉDER À LA BOUTIQUE",
+    f_shop:"BOUTIQUE", f_eq:"ÉQUIPEMENT", f_ai:"OUTILS IA", f_dash:"DASHBOARD"
+  },
+  en: {
+    nav_eq:"GEAR", nav_ai:"AI TOOLS", nav_content:"CONTENT", nav_shop:"SHOP",
+    h_tag:"Survival & Resilience — Curated gear",
+    h_t1:"READY FOR", h_t2:"ANYTHING", h_t3:"THAT COMES",
+    h_sub:"Survival gear <strong>tested and approved</strong>. Emergency kits, water filters, long-shelf rations.",
+    h_cta1:"SEE THE GEAR", h_cta2:"MY SHOP",
+    agent_on:"🟢 AI AGENT ACTIVE", sys_auto:"AUTONOMOUS SYSTEM", scroll:"↓ SCROLL",
+    p_label:"// Curated catalog", p_t1:"SURVIVAL", p_t2:"GEAR",
+    w_label:"// Why us", w_t1:"SELECTED", w_t2:"FOR YOU",
+    w1t:"TESTED PRODUCTS", w1d:"Every piece selected by survival experts. No more gadgets that fail.",
+    w2t:"FAST DELIVERY", w2d:"An emergency can happen anytime, waiting isn't an option.",
+    w3t:"FAIR PRICES", w3d:"You pay the right price, no unnecessary middlemen.",
+    w4t:"COMMUNITY", w4d:"Join thousands of families preparing for what comes.",
+    o_label:"// Recommended AI stack", o_t1:"MY AI TOOLS", o_t2:"FOR CREATING VIDEOS",
+    o_intro:"The tools I <strong style='color:var(--beige)'>actually use</strong> to produce my content. Tested and approved.",
+    o_e_cat:"AI VOICE — REALISTIC",
+    o_e_desc:"The tool I use to create all the voices for my videos. Ultra-realistic AI voices.",
+    o_e_b:"✓ Multilingual perfect voices<br>✓ Free plan to test<br>✓ Pro: ~$5/month unlimited<br>✓ Perfect for TikTok/Insta",
+    o_e_btn:"🚀 TRY FREE →",
+    o_h_cat:"AI VIDEO AVATARS — SOON", o_h_desc:"Create videos with an AI avatar. Perfect for tutorials without filming yourself.",
+    o_g_cat:"EMAIL MARKETING — SOON", o_g_desc:"To retain your customers and send them tips + offers.",
+    o_i_cat:"AI VIDEO EDITING — SOON", o_i_desc:"Automatic video editing for TikTok/Reels.",
+    o_wait:"PENDING VALIDATION...", o_wait2:"PENDING VALIDATION...", o_wait3:"PENDING VALIDATION...",
+    o_disc:"⚠️ Affiliate links: if you purchase through my links, I earn a small commission. No extra cost for you 🙏",
+    v_label:"// AI-generated content", v_t1:"VIDEO SCRIPTS", v_t2:"TIKTOK & INSTAGRAM",
+    v_clic:"Click to generate a viral script...", v_clic2:"Click to generate a viral script...",
+    v_btn_t:"⚡ GENERATE TIKTOK SCRIPT", v_btn_i:"⚡ GENERATE INSTA SCRIPT",
+    v_load:"Generating", v_load2:"Generating",
+    u_t1:"DON'T BET", u_t2:"ON LUCK",
+    u_p:"A single power outage can change everything. Prepare now while you can.", u_btn:"GO TO SHOP",
+    f_shop:"SHOP", f_eq:"GEAR", f_ai:"AI TOOLS", f_dash:"DASHBOARD"
+  },
+  es: {
+    nav_eq:"EQUIPO", nav_ai:"HERRAMIENTAS IA", nav_content:"CONTENIDO", nav_shop:"TIENDA",
+    h_tag:"Supervivencia & Resiliencia — Equipo seleccionado",
+    h_t1:"LISTO PARA", h_t2:"TODO", h_t3:"LO QUE VENGA",
+    h_sub:"Material de supervivencia <strong>probado y aprobado</strong>. Kits de emergencia, filtros de agua, raciones larga duración.",
+    h_cta1:"VER EL EQUIPO", h_cta2:"MI TIENDA",
+    agent_on:"🟢 AGENTE IA ACTIVO", sys_auto:"SISTEMA AUTÓNOMO", scroll:"↓ DESPLAZAR",
+    p_label:"// Catálogo seleccionado", p_t1:"EQUIPO", p_t2:"DE SUPERVIVENCIA",
+    w_label:"// Por qué nosotros", w_t1:"SELECCIONADO", w_t2:"PARA TI",
+    w1t:"PRODUCTOS PROBADOS", w1d:"Cada equipo seleccionado por expertos. Se acabaron los gadgets que fallan.",
+    w2t:"ENTREGA RÁPIDA", w2d:"Una emergencia puede ocurrir en cualquier momento, esperar no es opción.",
+    w3t:"PRECIOS JUSTOS", w3d:"Pagas el precio justo, sin intermediarios innecesarios.",
+    w4t:"COMUNIDAD", w4d:"Únete a miles de familias que se preparan.",
+    o_label:"// Stack IA recomendado", o_t1:"MIS HERRAMIENTAS IA", o_t2:"PARA CREAR VIDEOS",
+    o_intro:"Las herramientas que <strong style='color:var(--beige)'>realmente uso</strong> para producir mi contenido. Probadas y aprobadas.",
+    o_e_cat:"VOZ IA — REALISTA",
+    o_e_desc:"La herramienta que uso para crear todas las voces de mis videos. Voces ultra-realistas en español.",
+    o_e_b:"✓ Español perfecto<br>✓ Plan gratuito para probar<br>✓ Pro: ~5€/mes ilimitado<br>✓ Perfecto para TikTok/Insta",
+    o_e_btn:"🚀 PROBAR GRATIS →",
+    o_h_cat:"AVATARES VIDEO IA — PRONTO", o_h_desc:"Crear videos con un avatar IA. Ideal para tutoriales sin filmarte.",
+    o_g_cat:"EMAIL MARKETING — PRONTO", o_g_desc:"Para fidelizar a tus clientes y enviar ofertas + consejos.",
+    o_i_cat:"EDICIÓN VIDEO IA — PRONTO", o_i_desc:"Edición automática de videos para TikTok/Reels.",
+    o_wait:"ESPERANDO VALIDACIÓN...", o_wait2:"ESPERANDO VALIDACIÓN...", o_wait3:"ESPERANDO VALIDACIÓN...",
+    o_disc:"⚠️ Enlaces de afiliación: si compras a través de mis enlaces, recibo una pequeña comisión. Sin costo extra 🙏",
+    v_label:"// Contenido generado por IA", v_t1:"GUIONES VIDEO", v_t2:"TIKTOK & INSTAGRAM",
+    v_clic:"Haz clic para generar un guión viral...", v_clic2:"Haz clic para generar un guión viral...",
+    v_btn_t:"⚡ GENERAR GUIÓN TIKTOK", v_btn_i:"⚡ GENERAR GUIÓN INSTA",
+    v_load:"Generando", v_load2:"Generando",
+    u_t1:"NO APUESTES", u_t2:"A LA SUERTE",
+    u_p:"Un solo apagón puede cambiarlo todo. Prepárate ahora mientras puedas.", u_btn:"IR A LA TIENDA",
+    f_shop:"TIENDA", f_eq:"EQUIPO", f_ai:"HERRAMIENTAS", f_dash:"DASHBOARD"
+  }
+};
 
-const PRODUITS = [
-  { emoji:"🎒", nom:"SAC BUG OUT 72H", desc:"Sac d'évacuation complet pour 72h. Étanche, militaire, tout terrain.", handle:"sac-72h", amazon:"sac+survie+72h+bug+out+bag", score:"94/100" },
-  { emoji:"💧", nom:"FILTRE À EAU LIFESTRAW", desc:"Purification de 1000L d'eau. Bactéries et parasites éliminés à 99,9%.", handle:"filtre-eau", amazon:"lifestraw+filtre+eau+survie", score:"97/100" },
-  { emoji:"🥫", nom:"RATIONS 30 JOURS", desc:"Pack alimentaire freeze-dried longue durée. Jusqu'à 25 ans de conservation.", handle:"ration-survie", amazon:"ration+alimentaire+urgence+longue+duree", score:"91/100" },
-  { emoji:"🔦", nom:"LAMPE FRONTALE 1000LM", desc:"Rechargeable USB-C, mode rouge, IPX7 waterproof. 200h d'autonomie.", handle:"lampe-frontale", amazon:"lampe+frontale+rechargeable+1000+lumens", score:"88/100" },
-  { emoji:"🔪", nom:"COUTEAU BUSHCRAFT", desc:"Lame acier 12C27, manche micarta. Le couteau des professionnels du terrain.", handle:"couteau-survie", amazon:"couteau+bushcraft+survie+fixe", score:"92/100" },
-  { emoji:"📻", nom:"RADIO URGENCE SOLAIRE", desc:"Manivelle + panneau solaire + USB. AM/FM/WX météo. Banque d'énergie intégrée.", handle:"radio-urgence", amazon:"radio+urgence+manivelle+solaire+noaa", score:"86/100" },
-  { emoji:"🏥", nom:"KIT PREMIERS SECOURS", desc:"Garrot, bandages compression, NRC, guide de terrain. Militaire grade.", handle:"kit-premiers-secours", amazon:"kit+premiers+secours+survie+complet", score:"95/100" },
-  { emoji:"🔥", nom:"KIT ALLUMAGE FEU", desc:"Briquet plasma, bâton de feu, allume-feu naturel. Fonctionne dans l'eau.", handle:"kit-feu", amazon:"kit+allumage+feu+survie+briquet", score:"89/100" }
-];
+const PRODUITS = {
+  fr: [
+    { e:"🎒", n:"SAC BUG OUT 72H", d:"Sac d'évacuation complet pour 72h. Étanche, militaire, tout terrain.", h:"sac-72h", s:"94/100" },
+    { e:"💧", n:"FILTRE À EAU", d:"Purification de 1000L d'eau. Bactéries éliminées à 99,9%.", h:"filtre-eau", s:"97/100" },
+    { e:"🥫", n:"RATIONS 30 JOURS", d:"Pack alimentaire freeze-dried. Jusqu'à 25 ans de conservation.", h:"ration-survie", s:"91/100" },
+    { e:"🔦", n:"LAMPE FRONTALE 1000LM", d:"Rechargeable USB-C, IPX7. 200h d'autonomie.", h:"lampe-frontale", s:"88/100" },
+    { e:"🔪", n:"COUTEAU BUSHCRAFT", d:"Acier 12C27, manche micarta. Le couteau des pros du terrain.", h:"couteau-survie", s:"92/100" },
+    { e:"📻", n:"RADIO URGENCE SOLAIRE", d:"Manivelle + solaire + USB. AM/FM/WX. Banque d'énergie.", h:"radio-urgence", s:"86/100" },
+    { e:"🏥", n:"KIT PREMIERS SECOURS", d:"Garrot, bandages, NRC, guide terrain. Grade militaire.", h:"kit-premiers-secours", s:"95/100" },
+    { e:"🔥", n:"KIT ALLUMAGE FEU", d:"Briquet plasma, bâton de feu, allume-feu. Fonctionne dans l'eau.", h:"kit-feu", s:"89/100" }
+  ],
+  en: [
+    { e:"🎒", n:"BUG OUT BAG 72H", d:"Complete 72h evacuation bag. Waterproof, military-grade, all-terrain.", h:"sac-72h", s:"94/100" },
+    { e:"💧", n:"WATER FILTER", d:"Purifies 1000L of water. 99.9% bacteria removal.", h:"filtre-eau", s:"97/100" },
+    { e:"🥫", n:"30-DAY RATIONS", d:"Long-shelf freeze-dried pack. Up to 25 years preservation.", h:"ration-survie", s:"91/100" },
+    { e:"🔦", n:"1000LM HEADLAMP", d:"USB-C rechargeable, IPX7 waterproof. 200h battery life.", h:"lampe-frontale", s:"88/100" },
+    { e:"🔪", n:"BUSHCRAFT KNIFE", d:"12C27 steel, micarta handle. The pro choice for fieldwork.", h:"couteau-survie", s:"92/100" },
+    { e:"📻", n:"SOLAR EMERGENCY RADIO", d:"Hand crank + solar + USB. AM/FM/WX. Built-in power bank.", h:"radio-urgence", s:"86/100" },
+    { e:"🏥", n:"FIRST AID KIT", d:"Tourniquet, bandages, NRC, field guide. Military grade.", h:"kit-premiers-secours", s:"95/100" },
+    { e:"🔥", n:"FIRE STARTER KIT", d:"Plasma lighter, fire stick, tinder. Works in water.", h:"kit-feu", s:"89/100" }
+  ],
+  es: [
+    { e:"🎒", n:"BOLSA EVACUACIÓN 72H", d:"Bolsa completa para 72h. Impermeable, militar, todo terreno.", h:"sac-72h", s:"94/100" },
+    { e:"💧", n:"FILTRO DE AGUA", d:"Purifica 1000L de agua. Elimina 99.9% de bacterias.", h:"filtre-eau", s:"97/100" },
+    { e:"🥫", n:"RACIONES 30 DÍAS", d:"Pack alimentario liofilizado. Hasta 25 años de conservación.", h:"ration-survie", s:"91/100" },
+    { e:"🔦", n:"LINTERNA 1000LM", d:"Recargable USB-C, IPX7. 200h de autonomía.", h:"lampe-frontale", s:"88/100" },
+    { e:"🔪", n:"CUCHILLO BUSHCRAFT", d:"Acero 12C27, mango micarta. El cuchillo de los profesionales.", h:"couteau-survie", s:"92/100" },
+    { e:"📻", n:"RADIO EMERGENCIA SOLAR", d:"Manivela + solar + USB. AM/FM/WX. Banco de energía.", h:"radio-urgence", s:"86/100" },
+    { e:"🏥", n:"KIT PRIMEROS AUXILIOS", d:"Torniquete, vendajes, NRC, guía. Grado militar.", h:"kit-premiers-secours", s:"95/100" },
+    { e:"🔥", n:"KIT ENCENDIDO FUEGO", d:"Encendedor plasma, palo de fuego, yesca. Funciona en agua.", h:"kit-feu", s:"89/100" }
+  ]
+};
+
+const SHOPIFY = "https://6bbgv0-f4.myshopify.com";
+const BTN_LABEL = { fr:"🛒 ACHETER MAINTENANT →", en:"🛒 BUY NOW →", es:"🛒 COMPRAR AHORA →" };
+
+let currentLang = localStorage.getItem('lang') || 'fr';
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (TR[lang] && TR[lang][key]) el.innerHTML = TR[lang][key];
+  });
+  renderProduits();
+}
 
 function renderProduits() {
   const grid = document.getElementById('produits-grid');
-  grid.innerHTML = PRODUITS.map(p => `
+  const list = PRODUITS[currentLang] || PRODUITS.fr;
+  grid.innerHTML = list.map(p => `
     <div class="produit-card">
-      <div class="produit-score">${p.score}</div>
-      <div class="produit-emoji">${p.emoji}</div>
-      <h3 class="produit-nom">${p.nom}</h3>
-      <p class="produit-desc">${p.desc}</p>
-      <div class="produit-liens">
-        <a href="${SHOPIFY}/products/${p.handle}" target="_blank" class="lien-shop" style="flex:1;text-align:center;padding:.7rem 1rem;font-size:.7rem" onclick="trackClick('shopify','${p.nom}')">🛒 ACHETER MAINTENANT →</a>
-      </div>
+      <div class="produit-score">${p.s}</div>
+      <div class="produit-emoji">${p.e}</div>
+      <h3 class="produit-nom">${p.n}</h3>
+      <p class="produit-desc">${p.d}</p>
+      <a href="${SHOPIFY}/products/${p.h}" target="_blank" class="lien-shop">${BTN_LABEL[currentLang]}</a>
     </div>
   `).join('');
 }
 
-function trackClick(source, produit) {
-  fetch('/api/prospect/converti', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({id: Date.now(), source, produit})
-  }).catch(()=>{});
-}
-
-// ============================================================
-// GÉNÉRATION SCRIPT VIDÉO
-// ============================================================
-const PRODUITS_NOMS = PRODUITS.map(p => p.nom.split(' ').slice(0,2).join(' '));
-
 async function genererScript(plateforme) {
-  const produit = PRODUITS_NOMS[Math.floor(Math.random() * PRODUITS_NOMS.length)];
+  const noms = (PRODUITS[currentLang] || PRODUITS.fr).map(p => p.n);
+  const produit = noms[Math.floor(Math.random() * noms.length)];
   const prefix = plateforme === 'tiktok' ? 'tiktok' : 'insta';
   const loadingEl = document.getElementById(`loading-${prefix}`);
-
-  document.getElementById(`${prefix}-accroche`).textContent = 'Génération en cours...';
+  document.getElementById(`${prefix}-accroche`).textContent = '...';
   document.getElementById(`${prefix}-script`).style.display = 'none';
   document.getElementById(`${prefix}-hashtags`).innerHTML = '';
   loadingEl.style.display = 'block';
-
   try {
     const res = await fetch('/api/video/generer', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ produit, plateforme })
+      body: JSON.stringify({ produit, plateforme, langue: currentLang })
     });
     const data = await res.json();
-
-    document.getElementById(`${prefix}-accroche`).textContent = data.accroche || '🔥 Script généré !';
+    document.getElementById(`${prefix}-accroche`).textContent = data.accroche || '🔥 OK';
     const scriptEl = document.getElementById(`${prefix}-script`);
     scriptEl.textContent = data.script || '';
     scriptEl.style.display = 'block';
     document.getElementById(`${prefix}-hashtags`).innerHTML =
       (data.hashtags || []).map(h => `<span class="hashtag">${h}</span>`).join('');
   } catch(e) {
-    document.getElementById(`${prefix}-accroche`).textContent = '⚠️ Erreur — Serveur non connecté';
+    document.getElementById(`${prefix}-accroche`).textContent = '⚠️ Erreur';
   }
   loadingEl.style.display = 'none';
 }
 
-// ============================================================
-// STATS EN DIRECT
-// ============================================================
 async function updateStats() {
   try {
     const res = await fetch('/api/stats');
     const data = await res.json();
+    const T = TR[currentLang];
     document.getElementById('prospects-count').textContent = `${data.prospectsTrouves || 0} PROSPECTS`;
-    document.getElementById('agent-status').textContent = data.agentActif ? '🟢 AGENT IA ACTIF' : '🔴 AGENT EN PAUSE';
+    document.getElementById('agent-status').textContent = data.agentActif ? T.agent_on : '🔴 PAUSE';
   } catch(e) {}
 }
 
-// ============================================================
-// SCROLL REVEAL
-// ============================================================
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1 });
-
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// ============================================================
-// INIT
-// ============================================================
-renderProduits();
+setLang(currentLang);
 updateStats();
 setInterval(updateStats, 30000);
-
-// Observer les cartes produits après render
-setTimeout(() => {
-  document.querySelectorAll('.produit-card').forEach((el, i) => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = `all .5s ease ${i * 0.08}s`;
-    observer.observe(el);
-    el.classList.add('reveal');
-  });
-}, 100);
 </script>
 </body>
 </html>
