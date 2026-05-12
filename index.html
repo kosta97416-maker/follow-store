@@ -316,6 +316,85 @@ footer { background:#080605; padding:5rem 6vw 3rem; border-top:1px solid rgba(20
 }
 .chat-bubble svg { width:28px; height:28px; fill:var(--noir); }
 
+/* === BULLE TEASER (Sophie qui s'invite) === */
+.chat-teaser {
+  position:fixed; bottom:30px; right:95px; z-index:299;
+  background:var(--noir-doux);
+  border:1px solid var(--or);
+  border-radius:14px 14px 4px 14px;
+  padding:1rem 1.2rem;
+  max-width:280px;
+  font-family:'Inter',sans-serif;
+  box-shadow:0 15px 40px rgba(0,0,0,0.5), 0 0 30px rgba(201,169,97,0.2);
+  opacity:0; transform:translateY(20px) scale(0.8); transform-origin:bottom right;
+  pointer-events:none;
+  transition:opacity .5s, transform .5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.chat-teaser.show {
+  opacity:1; transform:translateY(0) scale(1);
+  pointer-events:auto;
+}
+.chat-teaser-header {
+  display:flex; align-items:center; gap:0.6rem;
+  margin-bottom:0.6rem;
+  padding-bottom:0.6rem;
+  border-bottom:1px solid rgba(201,169,97,0.15);
+}
+.chat-teaser-avatar {
+  width:32px; height:32px; border-radius:50%;
+  background:linear-gradient(135deg, var(--or), var(--or-doux));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cormorant Garamond',serif;
+  font-size:1rem; color:var(--noir); font-weight:600;
+}
+.chat-teaser-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:0.95rem; color:var(--creme); font-weight:500;
+}
+.chat-teaser-sub {
+  font-size:.6rem; color:#4ade80; letter-spacing:.1em; text-transform:uppercase;
+  display:flex; align-items:center; gap:0.25rem;
+}
+.chat-teaser-sub::before { content:''; width:5px; height:5px; background:#4ade80; border-radius:50%; }
+.chat-teaser-msg {
+  font-size:.85rem; color:var(--creme-doux); line-height:1.5;
+  margin-bottom:0.8rem;
+}
+.chat-teaser-msg strong { color:var(--or-clair); font-weight:500; }
+.chat-teaser-cta {
+  display:inline-flex; align-items:center; gap:0.4rem;
+  font-size:.7rem; letter-spacing:.15em;
+  color:var(--or); text-transform:uppercase; font-weight:600;
+  cursor:pointer;
+  padding:0.5rem 0;
+  border-bottom:1px solid var(--or);
+  transition:all .2s;
+}
+.chat-teaser-cta:hover { color:var(--or-clair); border-color:var(--or-clair); }
+.chat-teaser-close {
+  position:absolute; top:8px; right:10px;
+  background:none; border:none; color:var(--gris); cursor:pointer;
+  font-size:1.1rem; line-height:1; padding:2px 6px;
+}
+.chat-teaser-close:hover { color:var(--or); }
+
+/* Indicateur "typing" dans teaser */
+.typing-dots { display:inline-flex; gap:3px; align-items:center; }
+.typing-dots span {
+  width:5px; height:5px; background:var(--or); border-radius:50%;
+  animation:typingDot 1.4s infinite ease-in-out both;
+}
+.typing-dots span:nth-child(1) { animation-delay:-0.32s; }
+.typing-dots span:nth-child(2) { animation-delay:-0.16s; }
+@keyframes typingDot {
+  0%, 80%, 100% { transform:scale(0.6); opacity:0.5; }
+  40% { transform:scale(1); opacity:1; }
+}
+
+@media(max-width:780px) {
+  .chat-teaser { right:80px; max-width:240px; }
+}
+
 .chat-window {
   position:fixed; bottom:95px; right:20px; z-index:301;
   width:340px; max-width:calc(100vw - 40px); 
@@ -337,15 +416,31 @@ footer { background:#080605; padding:5rem 6vw 3rem; border-top:1px solid rgba(20
 .chat-status::before { content:''; width:6px; height:6px; background:#4ade80; border-radius:50%; }
 .chat-close { background:none; border:none; color:var(--gris); cursor:pointer; font-size:1.5rem; padding:0; line-height:1; }
 .chat-close:hover { color:var(--or); }
-.chat-body { padding:1.2rem; max-height:300px; overflow-y:auto; display:flex; flex-direction:column; gap:0.8rem; }
+.chat-body { padding:1.2rem; max-height:380px; overflow-y:auto; display:flex; flex-direction:column; gap:0.8rem; }
+.chat-body::-webkit-scrollbar { width:6px; }
+.chat-body::-webkit-scrollbar-track { background:rgba(201,169,97,0.05); }
+.chat-body::-webkit-scrollbar-thumb { background:rgba(201,169,97,0.3); border-radius:3px; }
 .chat-msg { padding:0.8rem 1rem; max-width:85%; font-family:'Inter',sans-serif; font-size:.85rem; line-height:1.5; }
 .chat-msg.bot { background:rgba(201,169,97,0.1); border:1px solid rgba(201,169,97,0.2); color:var(--creme); align-self:flex-start; border-radius:14px 14px 14px 4px; }
 .chat-msg.bot strong { color:var(--or-clair); }
+.chat-msg.bot a { color:var(--or-clair); text-decoration:underline; }
 .chat-msg.user { background:var(--or); color:var(--noir); align-self:flex-end; border-radius:14px 14px 4px 14px; font-weight:500; }
 .chat-quick { padding:0.8rem 1.2rem; border-top:1px solid rgba(201,169,97,0.15); display:flex; flex-wrap:wrap; gap:0.5rem; }
 .chat-quick-btn { font-family:'Inter',sans-serif; font-size:.7rem; padding:0.5rem 0.9rem; background:transparent; color:var(--or); border:1px solid var(--or-doux); cursor:pointer; transition:all .2s; }
-.chat-quick-btn:hover { background:var(--or); color:var(--noir); }
-.chat-footer { padding:0.8rem 1rem; border-top:1px solid rgba(201,169,97,0.15); font-family:'Inter',sans-serif; font-size:.65rem; color:var(--gris); text-align:center; font-style:italic; }
+.chat-quick-btn:hover:not(:disabled) { background:var(--or); color:var(--noir); }
+.chat-quick-btn:disabled { opacity:0.3; cursor:not-allowed; }
+.chat-input-wrap { padding:0.7rem 1rem; border-top:1px solid rgba(201,169,97,0.15); display:flex; gap:0.4rem; }
+.chat-input { flex:1; background:rgba(244,237,225,0.05); border:1px solid rgba(201,169,97,0.2); padding:0.7rem 0.9rem; color:var(--creme); font-family:'Inter',sans-serif; font-size:.85rem; border-radius:4px; outline:none; transition:border-color .2s; }
+.chat-input:focus { border-color:var(--or); }
+.chat-input::placeholder { color:var(--gris); }
+.chat-send { background:var(--or); color:var(--noir); border:none; padding:0 1rem; font-family:'Inter',sans-serif; font-size:.7rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; border-radius:4px; }
+.chat-send:hover:not(:disabled) { background:var(--or-clair); }
+.chat-send:disabled { opacity:0.4; cursor:wait; }
+.chat-typing { display:flex; gap:4px; padding:0.8rem 1rem; align-self:flex-start; background:rgba(201,169,97,0.08); border-radius:14px 14px 14px 4px; }
+.chat-typing span { width:6px; height:6px; background:var(--or); border-radius:50%; animation:typingDot 1.4s infinite ease-in-out both; }
+.chat-typing span:nth-child(1) { animation-delay:-0.32s; }
+.chat-typing span:nth-child(2) { animation-delay:-0.16s; }
+.chat-footer { padding:0.6rem 1rem; border-top:1px solid rgba(201,169,97,0.15); font-family:'Inter',sans-serif; font-size:.6rem; color:var(--gris); text-align:center; font-style:italic; letter-spacing:.1em; }
 </style>
 </head>
 <body>
@@ -706,6 +801,22 @@ footer { background:#080605; padding:5rem 6vw 3rem; border-top:1px solid rgba(20
 <!-- NOTIFICATIONS STACK -->
 <div class="notif-stack" id="notifStack"></div>
 
+<!-- BULLE TEASER (Sophie qui s'invite) -->
+<div class="chat-teaser" id="chatTeaser">
+  <button class="chat-teaser-close" id="teaserClose" aria-label="Fermer">×</button>
+  <div class="chat-teaser-header">
+    <div class="chat-teaser-avatar">S</div>
+    <div>
+      <div class="chat-teaser-name">Sophie</div>
+      <div class="chat-teaser-sub">conseillère</div>
+    </div>
+  </div>
+  <div class="chat-teaser-msg" id="teaserMsg">
+    <span class="typing-dots"><span></span><span></span><span></span></span>
+  </div>
+  <span class="chat-teaser-cta" id="teaserCta">Parler avec Sophie →</span>
+</div>
+
 <!-- BULLE CHAT -->
 <button class="chat-bubble" id="chatBubble" aria-label="Ouvrir le chat">
   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
@@ -724,13 +835,17 @@ footer { background:#080605; padding:5rem 6vw 3rem; border-top:1px solid rgba(20
     <div class="chat-msg bot">Bonjour 🖤<br>Je suis Sophie, ta conseillère Follow.Life.</div>
     <div class="chat-msg bot">Tu cherches quelque chose en particulier pour <strong>te préparer</strong> ou <strong>protéger ta famille</strong> ?</div>
   </div>
-  <div class="chat-quick">
-    <button class="chat-quick-btn" data-q="solo">Je suis maman solo</button>
-    <button class="chat-quick-btn" data-q="famille">J'ai une famille</button>
-    <button class="chat-quick-btn" data-q="debutante">Je débute</button>
-    <button class="chat-quick-btn" data-q="ville">Je vis en ville</button>
+  <div class="chat-quick" id="chatQuick">
+    <button class="chat-quick-btn" data-q="Je suis maman solo">Maman solo</button>
+    <button class="chat-quick-btn" data-q="J'ai une famille avec des enfants">J'ai une famille</button>
+    <button class="chat-quick-btn" data-q="Je débute, par où commencer ?">Je débute</button>
+    <button class="chat-quick-btn" data-q="Je vis en ville">Je vis en ville</button>
   </div>
-  <div class="chat-footer">Bientôt : IA personnalisée 24h/24</div>
+  <div class="chat-input-wrap">
+    <input type="text" class="chat-input" id="chatInput" placeholder="Écris à Sophie..." maxlength="300" autocomplete="off">
+    <button class="chat-send" id="chatSend">Envoyer</button>
+  </div>
+  <div class="chat-footer">Sophie · IA conseillère Follow.Life</div>
 </div>
 
 <script>
@@ -819,78 +934,198 @@ chatClose.addEventListener('click', () => {
   chatWindow.classList.remove('open');
 });
 
-// Réponses prédéfinies
-const chatResponses = {
-  solo: {
-    user: "Je suis maman solo",
-    bot: [
-      "Je comprends. Tu portes tout, toute seule. C'est encore plus important de ne pas être prise au dépourvu. 🖤",
-      "Pour toi, je recommande <strong>Le sac qui rassure</strong> en priorité. Il rassemble 72h d'autonomie pour toi et tes enfants. C'est le geste le plus important.",
-      "Tu veux que je t'envoie vers la boutique ? <a href='https://6bbgv0-f4.myshopify.com' target='_blank' style='color:var(--or-clair);text-decoration:underline'>C'est par ici →</a>"
-    ]
-  },
-  famille: {
-    user: "J'ai une famille",
-    bot: [
-      "Magnifique. Tu veilles sur eux, c'est ça qui compte. 💛",
-      "Je te conseille de commencer par <strong>Le sac qui rassure</strong> + <strong>L'eau toujours</strong> + <strong>Le kit qui sauve</strong>. C'est la base pour protéger une famille en cas d'imprévu.",
-      "<a href='https://6bbgv0-f4.myshopify.com' target='_blank' style='color:var(--or-clair);text-decoration:underline'>Découvrir la boutique →</a>"
-    ]
-  },
-  debutante: {
-    user: "Je débute",
-    bot: [
-      "Bienvenue 🖤 Tu fais déjà mieux que 95% des gens en venant ici.",
-      "Pour commencer simplement, prends <strong>Le sac qui rassure</strong>. C'est l'essentiel 72h, pensé clé en main. Tu n'as rien à choisir, tout est dedans.",
-      "Pas de jargon, pas de panique. Juste un premier pas. <a href='https://6bbgv0-f4.myshopify.com' target='_blank' style='color:var(--or-clair);text-decoration:underline'>Voir →</a>"
-    ]
-  },
-  ville: {
-    user: "Je vis en ville",
-    bot: [
-      "En ville, les coupures et pénuries arrivent plus vite. Bonne pioche de t'en occuper maintenant. 🏙️",
-      "Mes recommandations pour toi : <strong>L'eau toujours</strong> (filtre 1000L), <strong>La radio sereine</strong> (info en temps réel) et <strong>La lampe frontale</strong>. L'essentiel urbain.",
-      "<a href='https://6bbgv0-f4.myshopify.com' target='_blank' style='color:var(--or-clair);text-decoration:underline'>Voir l'arsenal →</a>"
-    ]
-  }
-};
+// === SOPHIE IA - Connexion à l'API ===
+const chatInput = document.getElementById('chatInput');
+const chatSend = document.getElementById('chatSend');
+const chatQuick = document.getElementById('chatQuick');
 
+// ID de session unique par visiteuse (pour mémoire de conversation)
+let sessionId = sessionStorage.getItem('sophieSession');
+if (!sessionId) {
+  sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  sessionStorage.setItem('sophieSession', sessionId);
+}
+
+function addMessage(content, type) {
+  const msg = document.createElement('div');
+  msg.className = 'chat-msg ' + type;
+  msg.innerHTML = content;
+  chatBody.appendChild(msg);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  return msg;
+}
+
+function showTyping() {
+  const typing = document.createElement('div');
+  typing.className = 'chat-typing';
+  typing.id = 'chatTyping';
+  typing.innerHTML = '<span></span><span></span><span></span>';
+  chatBody.appendChild(typing);
+  chatBody.scrollTop = chatBody.scrollHeight;
+  return typing;
+}
+
+function hideTyping() {
+  const t = document.getElementById('chatTyping');
+  if (t) t.remove();
+}
+
+async function sendToSophie(userMessage) {
+  if (!userMessage || !userMessage.trim()) return;
+  
+  // Affiche le message de l'utilisatrice
+  addMessage(userMessage, 'user');
+  
+  // Désactive l'input pendant la réponse
+  chatInput.disabled = true;
+  chatSend.disabled = true;
+  chatInput.value = '';
+  
+  // Cache les boutons rapides après le premier message
+  if (chatQuick && !chatQuick.classList.contains('hidden')) {
+    chatQuick.style.display = 'none';
+  }
+  
+  // Affiche l'indicateur "Sophie écrit..."
+  showTyping();
+  
+  try {
+    const response = await fetch('/api/sophie', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        message: userMessage, 
+        sessionId: sessionId 
+      })
+    });
+    
+    hideTyping();
+    
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      addMessage(errData.error || "Désolée, je rencontre un petit souci. Réessaie dans un instant 🖤", 'bot');
+    } else {
+      const data = await response.json();
+      // Convertit les retours à la ligne en <br>
+      const formattedReply = data.reply.replace(/\n/g, '<br>');
+      addMessage(formattedReply, 'bot');
+    }
+  } catch (e) {
+    hideTyping();
+    addMessage("Connexion interrompue. Vérifie ta connexion et réessaie 🖤", 'bot');
+  } finally {
+    chatInput.disabled = false;
+    chatSend.disabled = false;
+    chatInput.focus();
+  }
+}
+
+// Bouton envoyer
+chatSend.addEventListener('click', () => {
+  sendToSophie(chatInput.value);
+});
+
+// Touche Entrée
+chatInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter' && !chatInput.disabled) {
+    sendToSophie(chatInput.value);
+  }
+});
+
+// Boutons rapides
 document.querySelectorAll('.chat-quick-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    const key = btn.dataset.q;
-    const r = chatResponses[key];
-    
-    // Message user
-    const userMsg = document.createElement('div');
-    userMsg.className = 'chat-msg user';
-    userMsg.textContent = r.user;
-    chatBody.appendChild(userMsg);
-    chatBody.scrollTop = chatBody.scrollHeight;
-    
-    // Désactive les boutons rapides
-    document.querySelectorAll('.chat-quick-btn').forEach(b => b.disabled = true);
-    document.querySelector('.chat-quick').style.opacity = '0.4';
-    
-    // Messages bot avec délai
-    r.bot.forEach((msg, i) => {
-      setTimeout(() => {
-        const botMsg = document.createElement('div');
-        botMsg.className = 'chat-msg bot';
-        botMsg.innerHTML = msg;
-        chatBody.appendChild(botMsg);
-        chatBody.scrollTop = chatBody.scrollHeight;
-      }, 800 * (i + 1));
-    });
+    const message = btn.dataset.q;
+    sendToSophie(message);
   });
 });
 
-// Auto-ouvre le chat après 25 secondes (engagement)
-setTimeout(() => {
-  if (!chatWindow.classList.contains('open') && !sessionStorage.getItem('chatSeen')) {
-    bubble.style.animation = 'chatPulse 1s ease-in-out 3';
-    sessionStorage.setItem('chatSeen', '1');
+// === BULLE TEASER : Sophie se manifeste automatiquement ===
+const teaser = document.getElementById('chatTeaser');
+const teaserMsg = document.getElementById('teaserMsg');
+const teaserClose = document.getElementById('teaserClose');
+const teaserCta = document.getElementById('teaserCta');
+
+// Messages que Sophie peut dire (rotation aléatoire à chaque visite)
+const teaserMessages = [
+  "Bonjour 🖤<br>Je vois que tu prends le temps de regarder. <strong>C'est déjà un premier pas.</strong><br>Tu veux que je te conseille ?",
+  "Hey toi 🖤<br><strong>Tu n'es pas arrivée ici par hasard.</strong><br>Si tu veux, je peux t'orienter vers ce qui te ressemble.",
+  "Bienvenue ✨<br>Je suis Sophie. Tu cherches <strong>par où commencer</strong> ? Je suis là pour t'aider.",
+  "Coucou 🌙<br>Tu fais déjà mieux que 95% des gens en venant ici. <strong>Tu veux qu'on en discute ?</strong>"
+];
+
+let teaserAlreadyShown = sessionStorage.getItem('teaserShown');
+
+function showTeaser() {
+  if (teaserAlreadyShown) return;
+  
+  teaser.classList.add('show');
+  
+  // Effet "typing" pendant 1.5s puis vraie phrase
+  setTimeout(() => {
+    const msg = teaserMessages[Math.floor(Math.random() * teaserMessages.length)];
+    teaserMsg.innerHTML = msg;
+  }, 1500);
+  
+  sessionStorage.setItem('teaserShown', '1');
+  
+  // Auto-cacher après 25 secondes si pas cliqué
+  setTimeout(() => {
+    if (teaser.classList.contains('show') && !chatWindow.classList.contains('open')) {
+      teaser.classList.remove('show');
+    }
+  }, 25000);
+}
+
+// Apparaît après 5 secondes (laisse le temps d'arriver sur le site)
+setTimeout(showTeaser, 5000);
+
+// Apparaît AUSSI quand la personne scroll vers le bas (intention d'engagement)
+let scrolled = false;
+window.addEventListener('scroll', () => {
+  if (!scrolled && window.scrollY > 600 && !teaserAlreadyShown) {
+    scrolled = true;
+    showTeaser();
   }
-}, 25000);
+});
+
+// Apparaît AUSSI quand la souris quitte la page (intention de partir)
+let exitShown = false;
+document.addEventListener('mouseleave', e => {
+  if (e.clientY <= 0 && !exitShown && !sessionStorage.getItem('exitShown')) {
+    exitShown = true;
+    sessionStorage.setItem('exitShown', '1');
+    // Force la réapparition même si déjà vu
+    sessionStorage.removeItem('teaserShown');
+    teaserAlreadyShown = false;
+    teaserMsg.innerHTML = "Tu pars déjà ? 🖤<br><strong>Une seule décision peut tout changer.</strong><br>Reste un instant, je te montre l'essentiel.";
+    teaser.classList.add('show');
+  }
+});
+
+// Fermer la bulle
+teaserClose.addEventListener('click', e => {
+  e.stopPropagation();
+  teaser.classList.remove('show');
+});
+
+// Cliquer sur la bulle ouvre le chat
+teaserCta.addEventListener('click', () => {
+  teaser.classList.remove('show');
+  chatWindow.classList.add('open');
+});
+
+// Cliquer n'importe où sur le teaser (sauf close) ouvre aussi
+teaser.addEventListener('click', e => {
+  if (e.target === teaserClose) return;
+  teaser.classList.remove('show');
+  chatWindow.classList.add('open');
+});
+
+// Quand le chat s'ouvre, cache le teaser
+bubble.addEventListener('click', () => {
+  teaser.classList.remove('show');
+});
 </script>
 </body>
 </html>
