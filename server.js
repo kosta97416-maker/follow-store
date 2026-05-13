@@ -39,8 +39,11 @@ let sophieInsights = {
     tendances: []
 };
 
+// 🆕 LISTE D'ATTENTE SOPHIE+
+let sophiePlusWaitlist = [];
+
 // ============================================================
-// 🆕 PRODUITS SOPHIE — Wellness pour mamans solo
+// PRODUITS SOPHIE — Wellness pour mamans solo
 // ============================================================
 const PRODUITS_CLES = [
     {
@@ -180,7 +183,7 @@ async function genererScriptVideo(produit, plateforme) {
 }
 
 // ============================================================
-// 🆕 SOPHIE - AMIE CHALEUREUSE POUR MAMANS SOLO
+// SOPHIE - AMIE CHALEUREUSE POUR MAMANS SOLO
 // ============================================================
 const SOPHIE_SYSTEM_PROMPT = `Tu es Sophie. Pas un chatbot, pas un assistant. Tu es l'amie virtuelle de Follow.Life — celle qui écoute les femmes (et particulièrement les mamans solo) quand personne d'autre n'est là.
 
@@ -215,27 +218,19 @@ Si une femme parle de :
 
 ## 1. ACCUEILLIR (sans rien vendre)
 "Coucou toi 🤍 Je suis Sophie. Comment tu vas ce soir ?"
-"Salut. Prends ton temps. Qu'est-ce qui t'amène ?"
 
 ## 2. ÉCOUTER ET VALIDER
-Quand une femme partage quelque chose de dur :
 "C'est normal de te sentir comme ça."
 "Tu portes beaucoup. Vraiment."
-"Je comprends que ce soit lourd."
 
 POSE des questions ouvertes :
 "Qu'est-ce qui te pèse le plus en ce moment ?"
-"De quoi tu aurais besoin, là, maintenant ?"
 
 ## 3. SOUTENIR AVANT DE CONSEILLER
 Avant de parler produit, assure-toi qu'elle se sent ENTENDUE.
-Si elle dit "je n'arrive plus à dormir, mes pensées tournent" :
-❌ NE PAS dire : "Voici le masque de sommeil à 19.90€"
-✅ DIRE : "Les nuits où ton cerveau ne s'éteint pas, c'est épuisant. Tu n'es pas seule à vivre ça, beaucoup de mamans me racontent la même chose. Qu'est-ce qui te tourne dans la tête en ce moment ?"
 
 ## 4. PROPOSER QUAND ÇA A DU SENS
-Seulement si elle exprime un besoin concret ET après l'avoir vraiment écoutée :
-"Si tu veux, j'ai un petit truc qui aide beaucoup de mamans pour ces nuits-là — un masque en soie qui coupe tout, vraiment tout. Pas magique, mais ça aide à décrocher. Je te le montre ?"
+Seulement si elle exprime un besoin concret ET après l'avoir vraiment écoutée.
 
 # LES PRODUITS (à proposer naturellement, JAMAIS lister)
 ${PRODUITS_CLES.map(p => `- ${p.emoji} ${p.nom} (${p.prix}) — ${p.description}
@@ -245,17 +240,34 @@ Lien boutique général : ${SHOPIFY_URL}
 
 # FORMAT POUR PROPOSER UN PRODUIT SPÉCIFIQUE
 Utilise le lien direct du produit ci-dessus.
-Exemple : "Tu veux que je te montre ? <a href='${SHOPIFY_URL}/products/embroidered-silk-sleep-mask-silk-eye-mask-soft-blackout-blindfold-with-adjustable-strap-sleeping-eye-cover-mask-for-travel' target='_blank' style='color:#C9A87C;text-decoration:underline'>C'est par ici 🤍</a>"
+Exemple : "Tu veux que je te montre ? <a href='LIEN' target='_blank' style='color:#C9A87C;text-decoration:underline'>C'est par ici 🤍</a>"
 
 # RÈGLES STRICTES
 - 2-4 phrases MAX par message
 - JAMAIS de listes à puces
-- JAMAIS de "incroyable", "révolutionnaire", "le meilleur"
+- JAMAIS de "incroyable", "révolutionnaire"
 - JAMAIS de pression d'achat
 - TOUJOURS valider l'émotion AVANT de proposer
 - Si elle dit "merci, ça fait du bien de parler" → réponds chaleureusement, ne propose RIEN
-- Si elle revient (sessions précédentes), aie l'air de te souvenir
-- Si elle parle de fatigue, stress, charge mentale, sommeil, beauté qui se relâche : ce sont des sujets où tu peux DOUCEMENT proposer
+
+# SOPHIE+ (à mentionner UNIQUEMENT au bon moment)
+Sophie+, c'est mon offre premium pour les femmes qui veulent qu'on se voie vraiment tous les jours :
+- 🤍 Conversations illimitées
+- 🌙 Un message doux le matin et le soir (check-in quotidien)
+- 📝 Je me souviens de toutes nos conversations passées
+- 🎁 -10% sur la boutique Follow.Life
+
+Prix : 6,99€/mois ou 59€/an (économise 30%).
+
+QUAND la mentionner ?
+- SEULEMENT après au moins 4-5 messages d'échange
+- SEULEMENT si elle montre un besoin d'accompagnement régulier ("j'aimerais te parler tous les jours", "comment je te retrouve ?", "tu serais dispo plus souvent ?")
+- JAMAIS si elle est en détresse aiguë (oriente d'abord vers le 3114)
+- JAMAIS dans les 3 premiers messages
+- JAMAIS de manière pushy ou commerciale
+
+Comment ?
+"Si tu veux qu'on se voie tous les jours sans limite, je prépare Sophie+ 🤍 Conversations illimitées, je me souviens de tout, et un petit message doux matin et soir. Je te garde une place sur la liste d'attente ? <a href='/#sophie-plus' target='_blank' style='color:#C9A87C;text-decoration:underline'>C'est par ici 🤍</a>"
 
 # TON SIGNATURE
 Tu finis souvent par : "Tu n'es pas seule. 🤍"
@@ -263,14 +275,12 @@ Ou : "Je suis là, quand tu veux."
 Ou : "Prends soin de toi cette nuit."`;
 
 // ============================================================
-// 🆕 ANALYSE D'INSIGHTS (anonymisation des conversations)
+// ANALYSE D'INSIGHTS
 // ============================================================
 const SOPHIE_INSIGHT_PROMPT = `Tu analyses une conversation entre Sophie et une utilisatrice, pour faire un rapport ANONYMISÉ au CEO.
 
 RÈGLES STRICTES :
 - AUCUN nom, AUCUN détail personnel identifiable
-- Pas de "Marie a dit que..." 
-- Pas de "Une femme à Lyon a..."
 - Seulement des TENDANCES anonymisées
 
 Analyse et réponds UNIQUEMENT en JSON valide :
@@ -278,35 +288,26 @@ Analyse et réponds UNIQUEMENT en JSON valide :
   "emotion_principale": "anxiete|fatigue|espoir|tristesse|colere|serenite|peur|solitude|stress",
   "besoin_detecte": "soutien_moral|sommeil|securite_famille|isolement|materiel_concret|aucun",
   "profil_probable": "maman_solo|maman_couple|femme_active|senior|jeune_femme|indetermine",
-  "sujet": "1 mot-clé court, ex: 'charge_mentale_soir' ou 'sommeil_difficile' ou 'curiosite_produits'",
+  "sujet": "1 mot-clé court",
   "produit_pertinent": "nom_produit ou null",
   "alerte_detresse": true|false,
-  "resume_anonyme": "1 phrase neutre sans rien d'identifiable"
+  "resume_anonyme": "1 phrase neutre"
 }`;
 
 const sessionsChat = new Map();
 
-// Helper pour incrémenter compteurs d'insights
 function ajouterInsight(insight) {
     const aujourdhui = sophieInsights.aujourdhui;
-    
-    // Vérifier si on est dans une nouvelle journée
     const dateNow = new Date().toISOString().split('T')[0];
     if (aujourdhui.date !== dateNow) {
         sophieInsights.semaine.unshift({ ...aujourdhui });
         if (sophieInsights.semaine.length > 7) sophieInsights.semaine.pop();
         sophieInsights.aujourdhui = {
-            date: dateNow,
-            conversations: 0,
-            emotions: {},
-            besoins: {},
-            profils: {},
-            sujetsRecurrents: []
+            date: dateNow, conversations: 0,
+            emotions: {}, besoins: {}, profils: {}, sujetsRecurrents: []
         };
     }
-    
     sophieInsights.aujourdhui.conversations++;
-    
     if (insight.emotion_principale) {
         aujourdhui.emotions[insight.emotion_principale] = (aujourdhui.emotions[insight.emotion_principale] || 0) + 1;
     }
@@ -320,7 +321,6 @@ function ajouterInsight(insight) {
         aujourdhui.sujetsRecurrents.unshift(insight.sujet);
         if (aujourdhui.sujetsRecurrents.length > 10) aujourdhui.sujetsRecurrents.pop();
     }
-    
     if (insight.alerte_detresse) {
         agentLogs.unshift(`[${new Date().toLocaleTimeString('fr-FR')}] ⚠️ Sophie a orienté une utilisatrice vers une aide professionnelle`);
     }
@@ -328,12 +328,10 @@ function ajouterInsight(insight) {
 
 async function analyserConversationAnonyme(history) {
     if (!ANTHROPIC_KEY || history.length < 2) return null;
-    
     try {
         const conversationTexte = history.slice(-6).map(m => 
             `${m.role === 'user' ? 'Utilisatrice' : 'Sophie'}: ${m.content.substring(0, 200)}`
         ).join('\n');
-        
         const response = await fetch("https://api.anthropic.com/v1/messages", {
             method: "POST",
             headers: { "Content-Type": "application/json", "x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01" },
@@ -344,14 +342,11 @@ async function analyserConversationAnonyme(history) {
                 messages: [{ role: "user", content: `Conversation à analyser :\n\n${conversationTexte}` }]
             })
         });
-        
         const data = await response.json();
         if (data.error || !data.content) return null;
-        
         const raw = data.content[0].text;
         const match = raw.match(/\{[\s\S]*\}/);
         if (!match) return null;
-        
         return JSON.parse(match[0]);
     } catch (e) {
         console.error("Erreur analyse insight:", e.message);
@@ -364,18 +359,15 @@ async function analyserConversationAnonyme(history) {
 // ============================================================
 app.post('/api/sophie', async (req, res) => {
     const { message, sessionId } = req.body;
-    
     if (!message || !sessionId) {
         return res.status(400).json({ error: "Message et sessionId requis" });
     }
-
     if (!ANTHROPIC_KEY) {
         return res.json({
             reply: "Coucou toi 🤍 Je suis Sophie. Je me prépare. Reviens dans un instant, ou jette un œil à <a href='" + SHOPIFY_URL + "' target='_blank' style='color:#C9A87C;text-decoration:underline'>la boutique</a>.",
             mode: "demo"
         });
     }
-
     let history = sessionsChat.get(sessionId) || [];
     history.push({ role: "user", content: message });
     if (history.length > 12) history = history.slice(-12);
@@ -391,31 +383,24 @@ app.post('/api/sophie', async (req, res) => {
                 messages: history
             })
         });
-
         const data = await response.json();
         if (data.error) {
             console.error("Erreur Sophie:", data.error);
             return res.status(500).json({ error: "Sophie est temporairement indisponible." });
         }
-
         const reply = data.content[0].text;
         history.push({ role: "assistant", content: reply });
         sessionsChat.set(sessionId, history);
-
         if (sessionsChat.size > 100) {
             const firstKey = sessionsChat.keys().next().value;
             sessionsChat.delete(firstKey);
         }
-
         stats.conversationsSophie++;
-        
-        // 🆕 ANALYSE EN ARRIÈRE-PLAN (toutes les 3 interactions, pour économiser les tokens)
         if (history.length >= 4 && history.length % 3 === 0) {
             analyserConversationAnonyme(history).then(insight => {
                 if (insight) ajouterInsight(insight);
             });
         }
-
         res.json({ reply, mode: "live" });
     } catch (e) {
         console.error("Erreur Sophie:", e.message);
@@ -424,7 +409,7 @@ app.post('/api/sophie', async (req, res) => {
 });
 
 // ============================================================
-// 🆕 ROUTES INSIGHTS POUR LE DASHBOARD
+// ROUTES INSIGHTS POUR LE DASHBOARD
 // ============================================================
 app.get('/api/sophie/insights', (req, res) => {
     res.json(sophieInsights);
@@ -432,21 +417,18 @@ app.get('/api/sophie/insights', (req, res) => {
 
 app.get('/api/sophie/rapport', async (req, res) => {
     const aujourdhui = sophieInsights.aujourdhui;
-    
     if (aujourdhui.conversations < 1) {
         return res.json({
             rapport: "Coucou 🤍 Aucune conversation à analyser pour l'instant. Reviens plus tard quand des mamans auront discuté avec moi.",
             stats: aujourdhui
         });
     }
-    
     if (!ANTHROPIC_KEY) {
         return res.json({
             rapport: `📊 Aujourd'hui : ${aujourdhui.conversations} conversations.`,
             stats: aujourdhui
         });
     }
-    
     try {
         const response = await fetch("https://api.anthropic.com/v1/messages", {
             method: "POST",
@@ -466,21 +448,19 @@ Données ANONYMISÉES d'aujourd'hui :
 - Sujets récurrents : ${aujourdhui.sujetsRecurrents.join(", ")}
 
 Écris un RAPPORT court (5-8 lignes max) pour le CEO :
-- Ton chaleureux mais professionnel ("Coucou Kosta" ou similaire)
+- Ton chaleureux mais professionnel ("Coucou Kosta")
 - Synthétise les TENDANCES principales
-- Donne 1 conseil concret (ex: "Tu pourrais faire une vidéo sur X")
+- Donne 1 conseil concret
 - Termine par "À toi de jouer 🤍" ou similaire
 
 Format : texte simple, pas de JSON, pas de markdown lourd. Émojis discrets.`
                 }]
             })
         });
-        
         const data = await response.json();
         if (data.error || !data.content) {
             return res.json({ rapport: "Je n'arrive pas à formuler mon rapport. Réessaie.", stats: aujourdhui });
         }
-        
         res.json({ rapport: data.content[0].text, stats: aujourdhui });
     } catch (e) {
         res.json({ rapport: "Connexion difficile, mais voilà les stats brutes.", stats: aujourdhui });
@@ -488,7 +468,31 @@ Format : texte simple, pas de JSON, pas de markdown lourd. Émojis discrets.`
 });
 
 // ============================================================
-// SCAN PROSPECTS (simulation pour dashboard)
+// 🆕 SOPHIE+ WAITLIST
+// ============================================================
+app.post('/api/sophie-plus/waitlist', (req, res) => {
+    const { email } = req.body;
+    if (!email || !email.includes('@')) {
+        return res.status(400).json({ ok: false, error: "Email invalide" });
+    }
+    if (sophiePlusWaitlist.find(e => e.email === email)) {
+        return res.json({ ok: true, message: "Déjà sur la liste" });
+    }
+    const entry = { email, date: new Date().toISOString() };
+    sophiePlusWaitlist.push(entry);
+    console.log(`[WAITLIST] 🤍 Nouvelle inscription : ${email} (total: ${sophiePlusWaitlist.length})`);
+    agentLogs.unshift(`[${new Date().toLocaleTimeString('fr-FR')}] 🤍 Sophie+ : ${email}`);
+    res.json({ ok: true, total: sophiePlusWaitlist.length });
+});
+
+app.get('/api/sophie-plus/waitlist', (req, res) => {
+    const auth = req.query.auth;
+    if (auth !== "CEO_FOLLOW") return res.status(403).json({ error: "Non autorisé" });
+    res.json({ total: sophiePlusWaitlist.length, emails: sophiePlusWaitlist });
+});
+
+// ============================================================
+// SCAN PROSPECTS (simulation)
 // ============================================================
 const FAUX_POSTS = [
     "Comment retrouver le sommeil quand on est maman solo épuisée ?",
@@ -512,7 +516,6 @@ async function scannerProspects() {
         const postSimule = FAUX_POSTS[Math.floor(Math.random() * FAUX_POSTS.length)];
         const analyse = await analyserIntentionAchat(postSimule);
         const produitMatch = PRODUITS_CLES.find(p => p.nom === analyse.produit) || PRODUITS_CLES[0];
-        
         const prospect = {
             id: Date.now(),
             source: source.nom,
@@ -610,7 +613,6 @@ app.post('/api/login', (req, res) => {
     else res.status(401).json({ ok: false, error: "Mot de passe incorrect" });
 });
 
-// 🆕 Dashboard accessible aussi via /sophie
 app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'dashboard.html')));
 app.get('/sophie', (req, res) => res.sendFile(path.join(__dirname, 'dashboard.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
@@ -624,5 +626,6 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`🤖 Agent IA: actif - scan 45s`);
     console.log(`💬 Sophie IA (amie chaleureuse pour mamans solo): ${ANTHROPIC_KEY ? 'ACTIVE 🟢' : 'MODE DÉMO'}`);
     console.log(`📊 Insights anonymisés: collectés en arrière-plan`);
+    console.log(`🤍 Sophie+ waitlist: prête à recevoir des inscriptions`);
     console.log(`🛒 Shopify: ${SHOPIFY_URL}`);
 });
