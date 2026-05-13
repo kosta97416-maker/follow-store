@@ -3,441 +3,706 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FOLLOW.LIFE — Dashboard CEO</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<title>Sophie · Mon bureau virtuel 🤍</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+:root {
+  --noir: #1a1410; --noir-doux: #251d18; --terre: #322519;
+  --or: #C9A87C; --or-clair: #E8C99E; --or-doux: #8B7355;
+  --creme: #F5EDE0; --creme-doux: #DDC9B0; --gris: #847b6f;
+  --vert-doux: #7da97e; --rouge-doux: #c97a7a; --rose: #E8B8B8;
+  --shadow: 0 20px 50px -20px rgba(0,0,0,0.5);
+}
 * { margin:0; padding:0; box-sizing:border-box; }
-body { background:#050505; color:#00ff41; font-family:'Space Mono',monospace; overflow-x:hidden; font-size:12px; }
+body { background:var(--noir); color:var(--creme); font-family:'DM Sans',sans-serif; font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased; min-height:100vh; }
 a { text-decoration:none; color:inherit; }
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--noir); }
+::-webkit-scrollbar-thumb { background:rgba(201,168,124,0.2); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:rgba(201,168,124,0.4); }
 
-/* HEADER */
+/* === HEADER === */
 header {
-  background:#0a0a0a; border-bottom:1px solid #00ff4130;
-  padding:1rem 1.5rem; display:flex; justify-content:space-between; align-items:center;
-  position:sticky; top:0; z-index:100;
+  background:rgba(26,20,16,0.95); backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(201,168,124,0.15);
+  padding:1.2rem 2rem; display:flex; justify-content:space-between; align-items:center;
+  position:sticky; top:0; z-index:100; flex-wrap:wrap; gap:1rem;
 }
-.header-logo { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; color:#fff; letter-spacing:.1em; }
-.header-logo span { color:#e74c3c; }
-.header-status { display:flex; gap:1.5rem; align-items:center; }
-.status-dot { width:8px; height:8px; border-radius:50%; background:#00ff41; display:inline-block; animation:pulse 2s infinite; margin-right:.4rem; }
-.header-nav { display:flex; gap:1rem; }
+.header-logo { font-family:'Cormorant Garamond',serif; font-size:1.5rem; color:var(--creme); font-weight:500; font-style:italic; letter-spacing:0.02em; }
+.header-logo span { color:var(--or); font-style:normal; }
+.header-logo .sub { font-family:'Caveat',cursive; font-size:1rem; color:var(--or-clair); font-style:normal; margin-left:0.5rem; }
+.header-right { display:flex; gap:1.5rem; align-items:center; }
+.header-status { display:flex; align-items:center; gap:0.5rem; font-size:0.75rem; color:var(--creme-doux); letter-spacing:0.05em; }
+.status-dot { width:8px; height:8px; border-radius:50%; background:var(--vert-doux); animation:pulse 2s infinite; }
+.header-clock { font-size:0.75rem; color:var(--gris); font-variant-numeric:tabular-nums; }
+.header-nav { display:flex; gap:0.5rem; }
 .header-nav a {
-  font-size:.6rem; letter-spacing:.1em; color:#555; padding:.4rem .8rem;
-  border:1px solid #1a1a1a; transition:all .2s;
+  font-size:0.7rem; letter-spacing:0.12em; color:var(--creme-doux); padding:0.5rem 1rem;
+  border:1px solid rgba(201,168,124,0.2); border-radius:100px; text-transform:uppercase; transition:all 0.2s;
 }
-.header-nav a:hover { color:#00ff41; border-color:#00ff4150; }
-.header-nav a.active { color:#00ff41; border-color:#00ff4150; }
+.header-nav a:hover { color:var(--or); border-color:var(--or); }
+.header-nav a.logout { color:var(--rouge-doux); border-color:rgba(201,122,122,0.3); }
+.header-nav a.logout:hover { background:rgba(201,122,122,0.1); border-color:var(--rouge-doux); }
 
-/* LAYOUT */
-.dashboard { display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:auto; gap:1px; background:#111; min-height:calc(100vh - 58px); }
+/* === MAIN LAYOUT === */
+main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-direction:column; gap:1.5rem; }
 
-/* PANELS */
-.panel { background:#050505; padding:1.2rem; }
-.panel-full { grid-column:1/-1; }
-.panel-half { grid-column:span 1; }
-.panel-2 { grid-column:span 2; }
-
-.panel-title {
-  font-size:.6rem; letter-spacing:.3em; color:#555; text-transform:uppercase;
-  margin-bottom:1rem; padding-bottom:.5rem; border-bottom:1px solid #111;
-  display:flex; justify-content:space-between; align-items:center;
+/* === CARTE COMMUNE === */
+.card {
+  background:var(--noir-doux); border:1px solid rgba(201,168,124,0.12);
+  border-radius:16px; padding:1.8rem; transition:border-color 0.3s;
 }
-.panel-title span { color:#00ff41; }
+.card:hover { border-color:rgba(201,168,124,0.25); }
+.card-label {
+  font-family:'DM Sans',sans-serif; font-size:0.65rem; letter-spacing:0.3em;
+  color:var(--or-doux); text-transform:uppercase; margin-bottom:1rem; font-weight:500;
+}
+.card-label-caveat {
+  font-family:'Caveat',cursive; font-size:1.2rem; color:var(--or-clair); margin-bottom:0.5rem;
+}
 
-/* STATS */
-.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#111; }
-.stat-box { background:#050505; padding:1.2rem; text-align:center; }
-.stat-val { font-family:'Bebas Neue',sans-serif; font-size:2.8rem; color:#fff; line-height:1; margin-bottom:.3rem; }
-.stat-val.rouge { color:#e74c3c; }
-.stat-val.or { color:#d4a017; }
-.stat-val.vert { color:#00ff41; }
-.stat-label { font-size:.55rem; color:#444; letter-spacing:.2em; text-transform:uppercase; }
+/* === RAPPORT SOPHIE (hero) === */
+.rapport {
+  background:linear-gradient(135deg, var(--noir-doux) 0%, var(--terre) 100%);
+  border:1px solid rgba(201,168,124,0.3);
+  border-radius:20px; padding:2.5rem; position:relative; overflow:hidden;
+}
+.rapport::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at top right, rgba(201,168,124,0.1) 0%, transparent 60%);
+  pointer-events:none;
+}
+.rapport-header { display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem; position:relative; z-index:1; }
+.rapport-title {
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.6rem; color:var(--creme);
+  display:flex; align-items:center; gap:0.8rem;
+}
+.rapport-title .badge {
+  width:42px; height:42px; border-radius:50%;
+  background:linear-gradient(135deg, var(--or), var(--or-doux));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.3rem; color:var(--noir); font-weight:600;
+}
+.rapport-refresh {
+  background:transparent; border:1px solid rgba(201,168,124,0.3); color:var(--or);
+  padding:0.5rem 1rem; border-radius:100px; font-family:'DM Sans',sans-serif;
+  font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer;
+  transition:all 0.2s; display:flex; align-items:center; gap:0.4rem;
+}
+.rapport-refresh:hover { background:rgba(201,168,124,0.1); border-color:var(--or); }
+.rapport-refresh:disabled { opacity:0.4; cursor:wait; }
+.rapport-body {
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.15rem;
+  color:var(--creme-doux); line-height:1.8; white-space:pre-wrap; position:relative; z-index:1;
+}
+.rapport-body strong { color:var(--or-clair); font-style:normal; font-weight:500; }
+.rapport-time { margin-top:1.5rem; font-size:0.7rem; color:var(--gris); font-style:normal; letter-spacing:0.05em; }
+.rapport-loading { color:var(--gris); font-style:italic; animation:pulse 1.5s infinite; }
 
-/* AGENT */
-.agent-controls { display:flex; gap:.5rem; margin-bottom:1rem; flex-wrap:wrap; }
+/* === STATS ROW === */
+.stats-row { display:grid; grid-template-columns:repeat(4, 1fr); gap:1rem; }
+.stat {
+  background:var(--noir-doux); border:1px solid rgba(201,168,124,0.12);
+  border-radius:14px; padding:1.5rem; text-align:center; transition:all 0.3s;
+}
+.stat:hover { border-color:rgba(201,168,124,0.3); transform:translateY(-2px); }
+.stat-val {
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:3rem;
+  color:var(--creme); line-height:1; margin-bottom:0.5rem; font-weight:400;
+}
+.stat-val.or { color:var(--or-clair); }
+.stat-val.vert { color:var(--vert-doux); }
+.stat-val.rose { color:var(--rose); }
+.stat-label { font-size:0.7rem; color:var(--gris); letter-spacing:0.15em; text-transform:uppercase; font-weight:500; }
+
+/* === INSIGHTS (2 cols) === */
+.insights-grid { display:grid; grid-template-columns:1.2fr 1fr; gap:1rem; }
+
+/* Émotions bars */
+.emotions-list { display:flex; flex-direction:column; gap:0.8rem; }
+.emotion-row { display:grid; grid-template-columns:120px 1fr 40px; align-items:center; gap:1rem; }
+.emotion-name { font-size:0.85rem; color:var(--creme-doux); text-transform:capitalize; }
+.emotion-name .emoji { margin-right:0.4rem; }
+.emotion-bar { background:rgba(201,168,124,0.08); height:8px; border-radius:100px; overflow:hidden; }
+.emotion-fill {
+  height:100%; background:linear-gradient(90deg, var(--or-doux), var(--or-clair));
+  border-radius:100px; transition:width 1s ease;
+}
+.emotion-count { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; color:var(--or); text-align:right; }
+.empty-state { text-align:center; padding:2rem 1rem; color:var(--gris); font-style:italic; font-family:'Cormorant Garamond',serif; font-size:1rem; }
+
+/* Tags besoins/sujets */
+.tags-section { margin-bottom:1.5rem; }
+.tags-section:last-child { margin-bottom:0; }
+.tags-section-title { font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--or-doux); margin-bottom:0.8rem; font-weight:500; }
+.tags-list { display:flex; flex-wrap:wrap; gap:0.5rem; }
+.tag {
+  background:rgba(201,168,124,0.08); border:1px solid rgba(201,168,124,0.2);
+  color:var(--creme-doux); padding:0.4rem 0.9rem; border-radius:100px;
+  font-size:0.75rem; display:inline-flex; align-items:center; gap:0.4rem; transition:all 0.2s;
+}
+.tag:hover { border-color:var(--or); color:var(--or-clair); }
+.tag .count {
+  background:var(--or); color:var(--noir); padding:0.1rem 0.5rem; border-radius:100px;
+  font-size:0.65rem; font-weight:600; margin-left:0.3rem;
+}
+
+/* === IDÉES DE CONTENU === */
+.idea-box {
+  background:rgba(201,168,124,0.05); border-left:3px solid var(--or);
+  padding:1rem 1.2rem; border-radius:0 12px 12px 0; margin-bottom:0.8rem;
+}
+.idea-box:last-child { margin-bottom:0; }
+.idea-subject {
+  font-family:'Caveat',cursive; font-size:1.1rem; color:var(--or-clair); margin-bottom:0.3rem;
+}
+.idea-text { font-size:0.9rem; color:var(--creme-doux); line-height:1.6; margin-bottom:0.5rem; }
+.idea-text strong { color:var(--or-clair); font-weight:600; }
+.idea-cta {
+  font-size:0.7rem; color:var(--or); letter-spacing:0.1em; text-transform:uppercase;
+  font-weight:600; cursor:pointer; padding:0.4rem 0; border:none; background:transparent;
+  font-family:'DM Sans',sans-serif;
+}
+.idea-cta:hover { color:var(--or-clair); }
+
+/* === TOOLS (2 cols) === */
+.tools-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+
+/* Video generator */
+.video-form { display:flex; flex-direction:column; gap:0.8rem; }
+.video-select {
+  background:rgba(245,237,224,0.05); border:1px solid rgba(201,168,124,0.2);
+  color:var(--creme); font-family:'DM Sans',sans-serif; font-size:0.85rem;
+  padding:0.8rem 1rem; border-radius:8px; width:100%; outline:none; transition:border-color 0.2s;
+}
+.video-select:focus { border-color:var(--or); }
+.video-buttons { display:flex; gap:0.5rem; }
 .btn {
-  background:transparent; border:1px solid #00ff4140; color:#00ff41;
-  font-family:'Space Mono',monospace; font-size:.6rem; padding:.4rem .8rem;
-  cursor:pointer; letter-spacing:.08em; transition:all .2s;
+  background:transparent; border:1px solid rgba(201,168,124,0.3); color:var(--or);
+  font-family:'DM Sans',sans-serif; font-size:0.72rem; padding:0.7rem 1.2rem;
+  cursor:pointer; letter-spacing:0.12em; transition:all 0.2s; text-transform:uppercase;
+  font-weight:500; border-radius:100px;
 }
-.btn:hover { background:#00ff4115; border-color:#00ff41; }
-.btn.rouge { border-color:#e74c3c40; color:#e74c3c; }
-.btn.rouge:hover { background:#e74c3c15; border-color:#e74c3c; }
-.btn.or { border-color:#d4a01740; color:#d4a017; }
-.btn.or:hover { background:#d4a01715; border-color:#d4a017; }
+.btn:hover:not(:disabled) { background:var(--or); color:var(--noir); border-color:var(--or); }
+.btn:disabled { opacity:0.4; cursor:wait; }
+.btn.primary { background:var(--or); color:var(--noir); border-color:var(--or); }
+.btn.primary:hover:not(:disabled) { background:var(--or-clair); border-color:var(--or-clair); }
+.btn.danger { color:var(--rouge-doux); border-color:rgba(201,122,122,0.3); }
+.btn.danger:hover:not(:disabled) { background:rgba(201,122,122,0.1); border-color:var(--rouge-doux); color:var(--rouge-doux); }
+.btn.flex1 { flex:1; }
 
+.video-result {
+  background:var(--noir); border:1px solid rgba(201,168,124,0.1);
+  border-radius:10px; padding:1.2rem; min-height:120px; margin-top:0.5rem;
+}
+.video-accroche {
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem;
+  color:var(--or-clair); margin-bottom:0.8rem; line-height:1.4;
+}
+.video-script { font-size:0.85rem; color:var(--creme-doux); line-height:1.7; white-space:pre-wrap; margin-bottom:1rem; }
+.video-tags { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.8rem; }
+.video-tag {
+  background:rgba(201,168,124,0.1); color:var(--or); font-size:0.7rem;
+  padding:0.2rem 0.6rem; border-radius:100px;
+}
+.video-duree { font-size:0.7rem; color:var(--gris); font-style:italic; }
+.video-empty { color:var(--gris); font-style:italic; font-size:0.9rem; font-family:'Cormorant Garamond',serif; }
+
+/* === REVENUS === */
+.revenu-row { margin-bottom:1.2rem; }
+.revenu-row:last-child { margin-bottom:0; }
+.revenu-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; }
+.revenu-name { font-size:0.85rem; color:var(--creme-doux); }
+.revenu-val { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.2rem; color:var(--or-clair); }
+.revenu-track { background:rgba(201,168,124,0.08); height:8px; border-radius:100px; overflow:hidden; }
+.revenu-fill { height:100%; border-radius:100px; transition:width 1s ease; background:linear-gradient(90deg, var(--or-doux), var(--or-clair)); }
+.revenu-fill.sage { background:linear-gradient(90deg, #5a8a6e, var(--vert-doux)); }
+.objectif-box {
+  margin-top:1.5rem; padding:1.5rem; background:var(--noir);
+  border:1px solid rgba(201,168,124,0.15); border-radius:12px;
+}
+.objectif-label { font-size:0.65rem; color:var(--or-doux); letter-spacing:0.25em; text-transform:uppercase; margin-bottom:0.5rem; }
+.objectif-val {
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:2.5rem;
+  color:var(--creme); line-height:1; margin-bottom:0.3rem;
+}
+.objectif-detail { font-size:0.8rem; color:var(--gris); margin-bottom:0.8rem; }
+
+/* === TECH (collapsible) === */
+.tech-toggle {
+  text-align:center; padding:1rem; cursor:pointer; color:var(--or-doux);
+  font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; transition:color 0.2s;
+}
+.tech-toggle:hover { color:var(--or); }
+.tech-toggle .arrow { display:inline-block; transition:transform 0.3s; margin-left:0.5rem; }
+.tech-toggle.open .arrow { transform:rotate(180deg); }
+.tech-panel { display:none; }
+.tech-panel.open { display:block; }
+.tech-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
 .logs-box {
-  background:#000; border:1px solid #111; padding:.8rem;
-  height:180px; overflow-y:auto; font-size:.6rem; line-height:1.9;
-  scrollbar-width:thin; scrollbar-color:#222 #000;
+  background:var(--noir); border:1px solid rgba(201,168,124,0.1); border-radius:8px;
+  padding:1rem; max-height:240px; overflow-y:auto; font-size:0.75rem; line-height:1.8;
+  font-family:'DM Sans',sans-serif;
 }
-.log-line { color:#444; }
-.log-line.ok { color:#00ff41; }
-.log-line.warn { color:#d4a017; }
-.log-line.err { color:#e74c3c; }
+.log-line { color:var(--gris); padding:0.15rem 0; }
+.log-line.ok { color:var(--vert-doux); }
+.log-line.warn { color:var(--or); }
+.log-line.err { color:var(--rouge-doux); }
+.log-line .time { color:var(--gris); margin-right:0.5rem; }
 
-/* PROSPECTS */
-.prospects-list { display:flex; flex-direction:column; gap:1px; max-height:420px; overflow-y:auto; }
-.prospect-card {
-  background:#0a0a0a; border-left:2px solid #1a1a1a; padding:.9rem 1rem;
-  transition:all .2s; cursor:default;
-}
-.prospect-card:hover { background:#111; border-left-color:#00ff41; }
-.prospect-card.haute { border-left-color:#e74c3c; }
-.prospect-card.moyenne { border-left-color:#d4a017; }
-.prospect-card.basse { border-left-color:#2d5a27; }
-.prospect-card.converti { opacity:.4; }
-.prospect-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:.4rem; }
-.prospect-source { font-size:.55rem; color:#444; letter-spacing:.1em; }
-.prospect-score {
-  font-family:'Bebas Neue',sans-serif; font-size:1.1rem;
-  padding:0 .4rem; background:#111;
-}
-.score-haute { color:#e74c3c; }
-.score-moyenne { color:#d4a017; }
-.score-basse { color:#2d5a27; }
-.prospect-produit { font-size:.65rem; color:#fff; margin-bottom:.3rem; font-weight:700; letter-spacing:.05em; }
-.prospect-texte { font-size:.58rem; color:#555; line-height:1.6; margin-bottom:.6rem; }
-.prospect-actions { display:flex; gap:.4rem; flex-wrap:wrap; }
-.lien-mini {
-  font-size:.55rem; padding:.2rem .6rem; border:1px solid #1a1a1a; color:#444;
-  transition:all .2s;
-}
-.lien-mini:hover { border-color:#00ff41; color:#00ff41; }
-.lien-mini.amazon:hover { border-color:#d4a017; color:#d4a017; }
-.lien-mini.converti-btn { border-color:#00ff4130; color:#00ff4170; cursor:pointer; background:transparent; font-family:'Space Mono',monospace; }
-.lien-mini.converti-btn:hover { border-color:#00ff41; color:#00ff41; background:#00ff4110; }
-
-/* SOURCES */
-.sources-list { display:flex; flex-direction:column; gap:1px; }
-.source-item { background:#0a0a0a; padding:.7rem 1rem; display:flex; justify-content:space-between; align-items:center; }
-.source-nom { font-size:.6rem; color:#888; }
-.source-status { font-size:.55rem; }
-.source-on { color:#00ff41; }
-.source-off { color:#333; }
-
-/* VIDÉO */
-.video-form { display:flex; flex-direction:column; gap:.8rem; }
-.select-produit {
-  background:#000; border:1px solid #1a1a1a; color:#888;
-  font-family:'Space Mono',monospace; font-size:.65rem; padding:.5rem;
-  width:100%;
-}
-.select-produit:focus { outline:none; border-color:#00ff4150; }
-.video-result { background:#000; border:1px solid #1a1a1a; padding:1rem; min-height:100px; margin-top:.8rem; }
-.video-accroche { color:#fff; font-size:.75rem; margin-bottom:.6rem; font-weight:700; line-height:1.4; }
-.video-script-text { color:#555; font-size:.58rem; line-height:1.8; white-space:pre-wrap; }
-.video-tags { display:flex; flex-wrap:wrap; gap:.3rem; margin-top:.6rem; }
-.tag { background:#111; color:#444; font-size:.5rem; padding:.15rem .35rem; }
-
-/* REVENUS */
-.revenu-bar { margin-bottom:1rem; }
-.revenu-label { display:flex; justify-content:space-between; font-size:.58rem; color:#555; margin-bottom:.3rem; }
-.revenu-track { background:#0a0a0a; height:6px; border-radius:0; }
-.revenu-fill { height:6px; background:#00ff41; transition:width 1s ease; }
-.revenu-fill.rouge { background:#e74c3c; }
-.revenu-fill.or { background:#d4a017; }
-
-/* ANIMATIONS */
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+/* === ANIMATIONS === */
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
 @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-.new-prospect { animation:fadeIn .4s ease; }
+.fade-in { animation:fadeIn 0.4s ease; }
 
-/* SCROLLBAR */
-::-webkit-scrollbar { width:4px; }
-::-webkit-scrollbar-track { background:#000; }
-::-webkit-scrollbar-thumb { background:#1a1a1a; }
-::-webkit-scrollbar-thumb:hover { background:#333; }
+/* === RESPONSIVE === */
+@media (max-width:900px) {
+  main { padding:1rem; gap:1rem; }
+  .stats-row { grid-template-columns:repeat(2, 1fr); }
+  .insights-grid, .tools-grid, .tech-grid { grid-template-columns:1fr; }
+  .rapport { padding:1.5rem; }
+  .rapport-title { font-size:1.3rem; }
+  .rapport-body { font-size:1rem; }
+  header { padding:1rem; }
+  .header-right { gap:0.8rem; }
+  .header-clock { display:none; }
+  .stat-val { font-size:2.2rem; }
+}
+@media (max-width:600px) {
+  .stats-row { grid-template-columns:1fr; }
+  .header-nav a { padding:0.4rem 0.7rem; font-size:0.6rem; }
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="header-logo">FOLLOW<span>.</span>LIFE <span style="font-size:.7rem;color:#333;font-family:'Space Mono',monospace;font-weight:400;">// CEO DASHBOARD</span></div>
-  <div class="header-status">
-    <span><span class="status-dot" id="dot"></span><span id="agent-txt" style="font-size:.6rem;color:#555">AGENT ACTIF</span></span>
-    <span style="font-size:.55rem;color:#333" id="clock"></span>
+  <div class="header-logo">
+    Sophie<span>·</span>
+    <span class="sub">mon bureau</span>
   </div>
-  <div class="header-nav">
-    <a href="/" >SITE PUBLIC</a>
-    <a href="/dashboard" class="active">DASHBOARD</a>
-    <a href="#" onclick="logout();return false;" style="color:#e74c3c;border-color:#e74c3c30">🔒 DÉCONNEXION</a>
+  <div class="header-right">
+    <div class="header-status">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="agentTxt">Sophie en ligne</span>
+    </div>
+    <div class="header-clock" id="clock">--:--</div>
+    <div class="header-nav">
+      <a href="/" target="_blank">Site</a>
+      <a href="https://6bbgv0-f4.myshopify.com" target="_blank">Boutique</a>
+      <a href="#" onclick="logout();return false;" class="logout">Déconnexion</a>
+    </div>
   </div>
 </header>
 
-<!-- STATS ROW -->
-<div class="stats-row">
-  <div class="stat-box">
-    <div class="stat-val vert" id="s-prospects">0</div>
-    <div class="stat-label">Prospects détectés</div>
-  </div>
-  <div class="stat-box">
-    <div class="stat-val or" id="s-clics">0</div>
-    <div class="stat-label">Clics affiliation</div>
-  </div>
-  <div class="stat-box">
-    <div class="stat-val rouge" id="s-revenus">0€</div>
-    <div class="stat-label">Revenus estimés</div>
-  </div>
-  <div class="stat-box">
-    <div class="stat-val" id="s-visiteurs">0</div>
-    <div class="stat-label">Visiteurs aujourd'hui</div>
-  </div>
-</div>
+<main>
 
-<div class="dashboard">
+  <!-- RAPPORT SOPHIE (HERO) -->
+  <section class="rapport">
+    <div class="rapport-header">
+      <div class="rapport-title">
+        <div class="badge">S</div>
+        <span>Le rapport du jour, par Sophie</span>
+      </div>
+      <button class="rapport-refresh" id="btnRefreshRapport">
+        <span>↻</span> Rafraîchir
+      </button>
+    </div>
+    <div class="rapport-body" id="rapportBody">
+      <span class="rapport-loading">Sophie écrit son rapport...</span>
+    </div>
+    <div class="rapport-time" id="rapportTime"></div>
+  </section>
 
-  <!-- PANEL AGENT -->
-  <div class="panel panel-half">
-    <div class="panel-title">🤖 AGENT IA <span id="agent-etat">EN LIGNE</span></div>
-    <div class="agent-controls">
-      <button class="btn" onclick="toggleAgent()" id="btn-toggle">⏸ PAUSE</button>
-      <button class="btn or" onclick="forcerScan()">⚡ SCAN MAINTENANT</button>
-      <button class="btn" onclick="clearProspects()">🗑 VIDER</button>
+  <!-- STATS ROW -->
+  <section class="stats-row">
+    <div class="stat">
+      <div class="stat-val or" id="sConversations">0</div>
+      <div class="stat-label">Conversations Sophie</div>
     </div>
-    <div class="panel-title" style="margin-top:1rem">LOGS EN DIRECT</div>
-    <div class="logs-box" id="logs-box">
-      <div class="log-line ok">[SYSTÈME] Agent IA initialisé...</div>
-      <div class="log-line ok">[SYSTÈME] Connexion Shopify follow.life ✓</div>
-      <div class="log-line ok">[SYSTÈME] Amazon affilié tag: followtrend-21 ✓</div>
-      <div class="log-line warn">[INFO] Scan automatique: toutes les 45s</div>
+    <div class="stat">
+      <div class="stat-val" id="sVisiteuses">0</div>
+      <div class="stat-label">Visiteuses aujourd'hui</div>
     </div>
+    <div class="stat">
+      <div class="stat-val vert" id="sVentes">0€</div>
+      <div class="stat-label">Ventes estimées</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val rose" id="sAlertes">0</div>
+      <div class="stat-label">Orientations pro</div>
+    </div>
+  </section>
+
+  <!-- INSIGHTS (2 cols) -->
+  <section class="insights-grid">
+    <div class="card">
+      <div class="card-label-caveat">Comment elles se sentent</div>
+      <div class="card-label">Émotions du jour</div>
+      <div id="emotionsList" class="emotions-list">
+        <div class="empty-state">Sophie attend tes premières utilisatrices 🤍</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label-caveat">Ce qu'elles cherchent</div>
+      <div class="card-label">Besoins & Sujets récurrents</div>
+      <div class="tags-section">
+        <div class="tags-section-title">Besoins détectés</div>
+        <div class="tags-list" id="besoinsTags">
+          <div class="empty-state" style="padding:0.5rem">—</div>
+        </div>
+      </div>
+      <div class="tags-section">
+        <div class="tags-section-title">Sujets qui reviennent</div>
+        <div class="tags-list" id="sujetsTags">
+          <div class="empty-state" style="padding:0.5rem">—</div>
+        </div>
+      </div>
+      <div class="tags-section">
+        <div class="tags-section-title">Profils types</div>
+        <div class="tags-list" id="profilsTags">
+          <div class="empty-state" style="padding:0.5rem">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLS (2 cols) -->
+  <section class="tools-grid">
+    <div class="card">
+      <div class="card-label-caveat">Inspiré par ce qu'elles te disent</div>
+      <div class="card-label">Idées de contenu TikTok</div>
+      <div id="ideasContainer">
+        <div class="idea-box">
+          <div class="idea-subject">Une idée pour démarrer</div>
+          <div class="idea-text">Fais une vidéo "POV : tu rentres crevée du boulot" → finis par <strong>Le masque qui efface le monde</strong> 🌙</div>
+          <button class="idea-cta" onclick="document.getElementById('produitSelect').value='Le masque qui efface le monde'; generateVideo('tiktok');">Générer le script →</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label-caveat">Sophie t'aide à créer</div>
+      <div class="card-label">Générateur de scripts vidéo</div>
+      <div class="video-form">
+        <select class="video-select" id="produitSelect">
+          <option>Le masque qui efface le monde</option>
+          <option>Mes petites bouteilles magiques</option>
+          <option>Mon rituel petit bonheur</option>
+          <option>Mes 7 couleurs apaisantes</option>
+          <option>Mon rituel lifting doux</option>
+          <option>Pour bien dormir et avoir de beaux cheveux</option>
+          <option>Mon cocon entre l'école et le boulot</option>
+          <option>Mon atelier cocooning</option>
+          <option>Mes 6 pierres pour les bons vibes</option>
+          <option>Mon ancre de calme</option>
+        </select>
+        <div class="video-buttons">
+          <button class="btn flex1 primary" onclick="generateVideo('tiktok')">▶ TikTok</button>
+          <button class="btn flex1" onclick="generateVideo('instagram')">◉ Instagram</button>
+        </div>
+        <div class="video-result" id="videoResult">
+          <div class="video-empty">Sélectionne un produit et clique sur TikTok ou Instagram...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVENUS -->
+  <section class="card">
+    <div class="card-label-caveat">L'argent qui rentre</div>
+    <div class="card-label">Revenus & Performance</div>
+    <div class="revenu-row">
+      <div class="revenu-header">
+        <span class="revenu-name">🛒 Ventes Shopify estimées</span>
+        <span class="revenu-val" id="rShopify">0€</span>
+      </div>
+      <div class="revenu-track"><div class="revenu-fill sage" id="barShopify" style="width:0%"></div></div>
+    </div>
+    <div class="revenu-row">
+      <div class="revenu-header">
+        <span class="revenu-name">📈 Taux de conversion (visiteur → vente)</span>
+        <span class="revenu-val" id="rTaux">0%</span>
+      </div>
+      <div class="revenu-track"><div class="revenu-fill" id="barTaux" style="width:0%"></div></div>
+    </div>
+    <div class="objectif-box">
+      <div class="objectif-label">Objectif du mois</div>
+      <div class="objectif-val" id="objPct">0%</div>
+      <div class="objectif-detail" id="objDetail">0€ / 500€</div>
+      <div class="revenu-track"><div class="revenu-fill" id="barObj" style="width:0%"></div></div>
+    </div>
+  </section>
+
+  <!-- TECH PANEL (collapsible) -->
+  <div class="tech-toggle" id="techToggle" onclick="toggleTech()">
+    🔧 Outils techniques · Logs & Simulateur <span class="arrow">▼</span>
   </div>
-
-  <!-- PANEL SOURCES -->
-  <div class="panel panel-half">
-    <div class="panel-title">📡 SOURCES SCANNÉES <span id="sources-count">0 ACTIVES</span></div>
-    <div class="sources-list" id="sources-list">
-      <!-- Généré par JS -->
-    </div>
-    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid #111">
-      <div class="panel-title">🎯 PRODUITS SUIVIS</div>
-      <div style="display:flex;flex-wrap:wrap;gap:.3rem" id="produits-tags"></div>
-    </div>
-  </div>
-
-  <!-- PANEL PROSPECTS -->
-  <div class="panel panel-half" style="grid-row:span 2">
-    <div class="panel-title">🎯 PROSPECTS CHAUDS <span id="prospects-count">0</span></div>
-    <div class="prospects-list" id="prospects-list">
-      <div style="color:#333;font-size:.6rem;padding:1rem 0;text-align:center">
-        En attente du premier scan...<br><span style="font-size:.55rem;color:#222">Le système démarre dans quelques secondes</span>
+  <div class="tech-panel" id="techPanel">
+    <div class="tech-grid">
+      <div class="card">
+        <div class="card-label">Agent simulateur prospects</div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
+          <button class="btn" id="btnToggleAgent" onclick="toggleAgent()">⏸ Pause</button>
+          <button class="btn" onclick="forcerScan()">⚡ Scan maintenant</button>
+        </div>
+        <div style="font-size:0.75rem; color:var(--gris); line-height:1.6;">
+          Le simulateur génère des "prospects" fictifs basés sur des forums de mamans. C'est un outil de démo, pas des vraies utilisatrices.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Activité de Sophie</div>
+        <div class="logs-box" id="logsBox">
+          <div class="log-line ok"><span class="time">[init]</span>Sophie initialisée 🤍</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- PANEL VIDÉO IA -->
-  <div class="panel panel-half">
-    <div class="panel-title">🎬 GÉNÉRATEUR SCRIPT VIDÉO</div>
-    <div class="video-form">
-      <select class="select-produit" id="produit-select">
-        <option value="Kit survie 72h">Kit survie 72h</option>
-        <option value="Filtre à eau">Filtre à eau Lifestraw</option>
-        <option value="Rations longue durée">Rations longue durée</option>
-        <option value="Lampe frontale">Lampe frontale LED</option>
-        <option value="Couteau bushcraft">Couteau bushcraft</option>
-        <option value="Radio urgence">Radio urgence solaire</option>
-        <option value="Sac bug out bag">Sac bug out bag</option>
-        <option value="Kit premiers secours">Kit premiers secours</option>
-      </select>
-      <div style="display:flex;gap:.5rem">
-        <button class="btn" style="flex:1" onclick="genererVideo('tiktok')">▶ TIKTOK</button>
-        <button class="btn" style="flex:1" onclick="genererVideo('instagram')">◉ INSTAGRAM</button>
-      </div>
-      <div class="video-result" id="video-result">
-        <div style="color:#222;font-size:.6rem">Sélectionne un produit et clique pour générer...</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PANEL REVENUS -->
-  <div class="panel panel-half">
-    <div class="panel-title">💰 REVENUS & PERFORMANCE</div>
-    <div class="revenu-bar">
-      <div class="revenu-label"><span>🛒 Ventes Shopify (100%)</span><span id="r-shopify" style="color:#00ff41">0€</span></div>
-      <div class="revenu-track"><div class="revenu-fill" id="bar-shopify" style="width:0%"></div></div>
-    </div>
-    <div class="revenu-bar">
-      <div class="revenu-label"><span>📦 Affiliation Amazon</span><span id="r-amazon" style="color:#444">À venir</span></div>
-      <div class="revenu-track"><div class="revenu-fill or" id="bar-amazon" style="width:0%"></div></div>
-    </div>
-    <div class="revenu-bar">
-      <div class="revenu-label"><span>Taux de conversion</span><span id="r-taux" style="color:#e74c3c">0%</span></div>
-      <div class="revenu-track"><div class="revenu-fill rouge" id="bar-taux" style="width:0%"></div></div>
-    </div>
-    <div style="margin-top:1.5rem;padding:1rem;background:#000;border:1px solid #111">
-      <div style="color:#333;font-size:.55rem;margin-bottom:.5rem;letter-spacing:.2em">OBJECTIF MENSUEL</div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#fff" id="objectif-pct">0%</div>
-      <div style="font-size:.55rem;color:#333" id="objectif-txt">0€ / 500€</div>
-      <div class="revenu-track" style="margin-top:.5rem"><div class="revenu-fill" id="bar-objectif" style="width:0%"></div></div>
-    </div>
-  </div>
-
-</div>
+</main>
 
 <script>
-// ============================================================
-// PROTECTION PAR MOT DE PASSE
-// ============================================================
+// === PROTECTION ===
 if (sessionStorage.getItem('follow_auth') !== 'ok') {
   window.location.href = '/login';
 }
-
 function logout() {
   sessionStorage.removeItem('follow_auth');
   window.location.href = '/login';
 }
 
-// ============================================================
-// CONFIG
-// ============================================================
-const SHOPIFY = "https://6bbgv0-f4.myshopify.com";
-const AMAZON_TAG = "followtrend-21";
+// === CONFIG ===
+const SUJET_TO_PRODUIT = {
+  'sommeil': { produit: 'Le masque qui efface le monde', emoji: '🌙', angle: 'Pour les nuits où tu n\'en peux plus' },
+  'dormir': { produit: 'Le masque qui efface le monde', emoji: '🌙', angle: 'Pour les nuits où tu n\'en peux plus' },
+  'fatigue': { produit: 'Le masque qui efface le monde', emoji: '🌙', angle: 'POV : tu rentres crevée du boulot' },
+  'stress': { produit: 'Mes petites bouteilles magiques', emoji: '🌿', angle: 'Mes 3 huiles essentielles pour respirer' },
+  'anxiete': { produit: 'Mes petites bouteilles magiques', emoji: '🌿', angle: 'Quand l\'angoisse monte, fais ça' },
+  'charge': { produit: 'Mon rituel petit bonheur', emoji: '🕯️', angle: 'Mon rituel du dimanche soir pour décompresser' },
+  'mentale': { produit: 'Mon rituel petit bonheur', emoji: '🕯️', angle: 'Mon rituel du dimanche soir' },
+  'cocon': { produit: 'Mes 7 couleurs apaisantes', emoji: '🔥', angle: 'Spa à la maison en 30 secondes' },
+  'beaute': { produit: 'Mon rituel lifting doux', emoji: '🌸', angle: 'Le Gua Sha qui réveille ma peau' },
+  'visage': { produit: 'Mon rituel lifting doux', emoji: '🌸', angle: '3 min de Gua Sha le matin' },
+  'cheveux': { produit: 'Pour bien dormir et avoir de beaux cheveux', emoji: '✨', angle: 'La taie d\'oreiller en soie qui sauve mes cheveux' },
+  'voiture': { produit: 'Mon cocon entre l\'école et le boulot', emoji: '🚗', angle: 'Mon trajet boulot devient ma pause à moi' },
+  'meditation': { produit: 'Mes 6 pierres pour les bons vibes', emoji: '💎', angle: 'Mes 6 cristaux pour bonne énergie' },
+  'spirituel': { produit: 'Mes 6 pierres pour les bons vibes', emoji: '💎', angle: 'Pour les copines spirituelles' },
+  'calme': { produit: 'Mon ancre de calme', emoji: '🔮', angle: 'Cette pyramide sur ma table de chevet' },
+  'famille': { produit: 'Mon rituel petit bonheur', emoji: '🕯️', angle: 'Quand les enfants sont enfin couchés...' },
+  'solitude': { produit: 'Le masque qui efface le monde', emoji: '🌙', angle: 'Le rituel qui me reconnecte à moi' },
+  'isolement': { produit: 'Mon ancre de calme', emoji: '🔮', angle: 'Ce que je fais quand je me sens seule' }
+};
+
+const EMOTION_EMOJI = {
+  'anxiete': '😰', 'fatigue': '😴', 'espoir': '✨', 'tristesse': '🥺',
+  'colere': '😤', 'serenite': '🌿', 'peur': '😨', 'solitude': '🌙', 'stress': '😖'
+};
+
+const BESOIN_LABEL = {
+  'soutien_moral': '🫂 Soutien moral',
+  'sommeil': '🌙 Sommeil',
+  'securite_famille': '🏠 Sécurité famille',
+  'isolement': '💭 Isolement',
+  'materiel_concret': '🎁 Objets concrets'
+};
+
+const PROFIL_LABEL = {
+  'maman_solo': '👩 Maman solo',
+  'maman_couple': '👨‍👩‍👧 Maman en couple',
+  'femme_active': '💼 Femme active',
+  'senior': '🌟 Senior',
+  'jeune_femme': '🌸 Jeune femme'
+};
+
 let agentActif = true;
-let totalRevenus = 0;
-let totalClics = 0;
-let prospectsData = [];
+let totalVentes = 0;
+let alertesCount = 0;
 
-const SOURCES = [
-  "Reddit r/prepping", "Reddit r/preppers", "Reddit r/survival",
-  "Reddit r/bushcraft", "Forums survie.fr", "Forum preppers.fr"
-];
-
-const PRODUITS_KEYS = [
-  { nom:"Kit survie 72h", handle:"sac-72h", amazon:"sac+survie+72h+bug+out+bag" },
-  { nom:"Filtre à eau", handle:"filtre-eau", amazon:"lifestraw+filtre+eau+survie" },
-  { nom:"Rations longue durée", handle:"ration-survie", amazon:"ration+alimentaire+urgence" },
-  { nom:"Lampe frontale", handle:"lampe-frontale", amazon:"lampe+frontale+rechargeable+1000+lumens" },
-  { nom:"Couteau bushcraft", handle:"couteau-survie", amazon:"couteau+bushcraft+survie" },
-  { nom:"Radio urgence", handle:"radio-urgence", amazon:"radio+urgence+manivelle+solaire" },
-  { nom:"Sac bug out bag", handle:"sac-72h", amazon:"sac+survie+72h" },
-  { nom:"Kit premiers secours", handle:"kit-premiers-secours", amazon:"kit+premiers+secours+survie" }
-];
-
-// ============================================================
-// HORLOGE
-// ============================================================
+// === HORLOGE ===
 function updateClock() {
-  document.getElementById('clock').textContent = new Date().toLocaleTimeString('fr-FR');
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
 }
 setInterval(updateClock, 1000);
 updateClock();
 
-// ============================================================
-// SOURCES
-// ============================================================
-function renderSources(actives) {
-  const el = document.getElementById('sources-list');
-  el.innerHTML = SOURCES.map((s, i) => {
-    const on = actives > i;
-    return `<div class="source-item">
-      <span class="source-nom">${s}</span>
-      <span class="source-status ${on ? 'source-on' : 'source-off'}">${on ? '● EN LIGNE' : '○ HORS LIGNE'}</span>
-    </div>`;
-  }).join('');
-  document.getElementById('sources-count').textContent = `${actives} ACTIVES`;
-}
-
-function renderProduitsKeys() {
-  document.getElementById('produits-tags').innerHTML =
-    PRODUITS_KEYS.map(p => `<span style="font-size:.5rem;color:#333;background:#0a0a0a;padding:.15rem .4rem;border:1px solid #111">${p.nom}</span>`).join('');
-}
-
-// ============================================================
-// PROSPECTS
-// ============================================================
-function scoreClass(score) {
-  if (score >= 75) return 'haute';
-  if (score >= 50) return 'moyenne';
-  return 'basse';
-}
-
-function renderProspects() {
-  const el = document.getElementById('prospects-list');
-  if (prospectsData.length === 0) {
-    el.innerHTML = '<div style="color:#333;font-size:.6rem;padding:1rem 0;text-align:center">Aucun prospect encore...</div>';
-    return;
-  }
-  el.innerHTML = prospectsData.slice(0, 20).map(p => {
-    const cls = scoreClass(p.score);
-    const produitKey = PRODUITS_KEYS.find(k => k.nom.toLowerCase().includes(p.produit?.toLowerCase()?.split(' ')[0] || 'kit')) || PRODUITS_KEYS[0];
-    return `
-      <div class="prospect-card ${cls} ${p.converti ? 'converti' : ''} new-prospect" id="prospect-${p.id}">
-        <div class="prospect-header">
-          <span class="prospect-source">${p.source} · ${p.timestamp}</span>
-          <span class="prospect-score score-${cls}">${p.score}</span>
-        </div>
-        <div class="prospect-produit">📦 ${p.produit || 'Kit survie'}</div>
-        <div class="prospect-texte">${p.texte}</div>
-        <div class="prospect-actions">
-          <a href="${SHOPIFY}/products/${produitKey.handle}" target="_blank" class="lien-mini" style="border-color:#00ff4140;color:#00ff41">🛒 VOIR DANS MA BOUTIQUE →</a>
-          ${!p.converti ? `<button class="lien-mini converti-btn" onclick="marquerConverti(${p.id})">✓ CONVERTI</button>` : '<span style="font-size:.5rem;color:#00ff4140">✓ CONVERTI</span>'}
-        </div>
-      </div>`;
-  }).join('');
-  document.getElementById('prospects-count').textContent = prospectsData.length;
-}
-
-async function marquerConverti(id) {
-  await fetch('/api/prospect/converti', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({id})
-  });
-  const p = prospectsData.find(x => x.id === id);
-  if (p) { p.converti = true; totalClics++; totalRevenus += Math.floor(Math.random() * 12) + 5; }
-  renderProspects();
-  updateRevenus();
-}
-
-function clearProspects() {
-  prospectsData = [];
-  renderProspects();
-}
-
-// ============================================================
-// LOGS
-// ============================================================
-function addLog(msg, type = 'ok') {
-  const box = document.getElementById('logs-box');
+// === LOGS ===
+function addLog(msg, type='ok') {
+  const box = document.getElementById('logsBox');
+  const time = new Date().toLocaleTimeString('fr-FR');
   const line = document.createElement('div');
   line.className = `log-line ${type}`;
-  line.textContent = `[${new Date().toLocaleTimeString('fr-FR')}] ${msg}`;
+  line.innerHTML = `<span class="time">[${time}]</span>${msg}`;
   box.prepend(line);
-  if (box.children.length > 30) box.lastChild.remove();
+  if (box.children.length > 40) box.lastChild.remove();
 }
 
-// ============================================================
-// STATS API
-// ============================================================
+// === RAPPORT SOPHIE ===
+async function fetchRapport() {
+  const body = document.getElementById('rapportBody');
+  const time = document.getElementById('rapportTime');
+  const btn = document.getElementById('btnRefreshRapport');
+  btn.disabled = true;
+  body.innerHTML = '<span class="rapport-loading">Sophie écrit son rapport...</span>';
+  
+  try {
+    const res = await fetch('/api/sophie/rapport');
+    const data = await res.json();
+    body.textContent = data.rapport || 'Pas de rapport disponible.';
+    time.textContent = '🕐 Rapport généré à ' + new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+    addLog('Rapport quotidien généré', 'ok');
+  } catch(e) {
+    body.innerHTML = '<em style="color:var(--rouge-doux)">Sophie n\'arrive pas à écrire son rapport. Réessaie dans un instant.</em>';
+    addLog('Erreur rapport: ' + e.message, 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('btnRefreshRapport').addEventListener('click', fetchRapport);
+
+// === INSIGHTS ===
+async function fetchInsights() {
+  try {
+    const res = await fetch('/api/sophie/insights');
+    const data = await res.json();
+    const today = data.aujourdhui || {};
+    
+    // Conversations count
+    document.getElementById('sConversations').textContent = today.conversations || 0;
+    
+    // Émotions
+    const emotionsList = document.getElementById('emotionsList');
+    const emotions = today.emotions || {};
+    const emotionsEntries = Object.entries(emotions).sort((a,b) => b[1] - a[1]);
+    if (emotionsEntries.length === 0) {
+      emotionsList.innerHTML = '<div class="empty-state">Sophie attend tes premières utilisatrices 🤍</div>';
+    } else {
+      const max = Math.max(...emotionsEntries.map(e => e[1]));
+      emotionsList.innerHTML = emotionsEntries.map(([name, count]) => {
+        const pct = (count / max) * 100;
+        const emoji = EMOTION_EMOJI[name] || '💫';
+        return `<div class="emotion-row">
+          <div class="emotion-name"><span class="emoji">${emoji}</span>${name}</div>
+          <div class="emotion-bar"><div class="emotion-fill" style="width:${pct}%"></div></div>
+          <div class="emotion-count">${count}</div>
+        </div>`;
+      }).join('');
+    }
+    
+    // Besoins tags
+    const besoinsTags = document.getElementById('besoinsTags');
+    const besoins = today.besoins || {};
+    const besoinsEntries = Object.entries(besoins).sort((a,b) => b[1] - a[1]);
+    if (besoinsEntries.length === 0) {
+      besoinsTags.innerHTML = '<div class="empty-state" style="padding:0.5rem">—</div>';
+    } else {
+      besoinsTags.innerHTML = besoinsEntries.map(([name, count]) => {
+        const label = BESOIN_LABEL[name] || name;
+        return `<span class="tag">${label}<span class="count">${count}</span></span>`;
+      }).join('');
+    }
+    
+    // Sujets tags
+    const sujetsTags = document.getElementById('sujetsTags');
+    const sujets = today.sujetsRecurrents || [];
+    if (sujets.length === 0) {
+      sujetsTags.innerHTML = '<div class="empty-state" style="padding:0.5rem">—</div>';
+    } else {
+      sujetsTags.innerHTML = sujets.slice(0, 10).map(s => `<span class="tag">#${s.replace(/_/g, ' ')}</span>`).join('');
+    }
+    
+    // Profils tags
+    const profilsTags = document.getElementById('profilsTags');
+    const profils = today.profils || {};
+    const profilsEntries = Object.entries(profils).sort((a,b) => b[1] - a[1]);
+    if (profilsEntries.length === 0) {
+      profilsTags.innerHTML = '<div class="empty-state" style="padding:0.5rem">—</div>';
+    } else {
+      profilsTags.innerHTML = profilsEntries.map(([name, count]) => {
+        const label = PROFIL_LABEL[name] || name;
+        return `<span class="tag">${label}<span class="count">${count}</span></span>`;
+      }).join('');
+    }
+    
+    // Idées de contenu (basées sur sujets)
+    updateContentIdeas(sujets);
+    
+    // Alertes détresse (estimé via logs)
+    // Pas directement dispo, on regarde les logs pour "détresse"
+    
+  } catch(e) {
+    // Silently fail, pas grave
+  }
+}
+
+function updateContentIdeas(sujets) {
+  const container = document.getElementById('ideasContainer');
+  if (!sujets || sujets.length === 0) {
+    container.innerHTML = `
+      <div class="idea-box">
+        <div class="idea-subject">Une idée pour démarrer</div>
+        <div class="idea-text">Fais une vidéo "POV : tu rentres crevée du boulot" → finis par <strong>Le masque qui efface le monde</strong> 🌙</div>
+        <button class="idea-cta" onclick="document.getElementById('produitSelect').value='Le masque qui efface le monde'; generateVideo('tiktok');">Générer le script →</button>
+      </div>
+      <div class="idea-box">
+        <div class="idea-subject">Idée du soir</div>
+        <div class="idea-text">Montre ton rituel du dimanche soir → <strong>Mon rituel petit bonheur</strong> 🕯️</div>
+        <button class="idea-cta" onclick="document.getElementById('produitSelect').value='Mon rituel petit bonheur'; generateVideo('tiktok');">Générer le script →</button>
+      </div>
+    `;
+    return;
+  }
+  
+  // Match sujets to products
+  const matchedIdeas = [];
+  const usedProducts = new Set();
+  
+  for (const sujet of sujets) {
+    if (matchedIdeas.length >= 3) break;
+    const sujetLower = sujet.toLowerCase();
+    for (const [keyword, match] of Object.entries(SUJET_TO_PRODUIT)) {
+      if (sujetLower.includes(keyword) && !usedProducts.has(match.produit)) {
+        matchedIdeas.push({ sujet, ...match });
+        usedProducts.add(match.produit);
+        break;
+      }
+    }
+  }
+  
+  if (matchedIdeas.length === 0) {
+    container.innerHTML = `<div class="idea-box">
+      <div class="idea-subject">À explorer</div>
+      <div class="idea-text">Tes sujets du jour : <strong>${sujets.slice(0,3).join(', ')}</strong>. Parle-en dans tes vidéos !</div>
+    </div>`;
+    return;
+  }
+  
+  container.innerHTML = matchedIdeas.map(idea => `
+    <div class="idea-box fade-in">
+      <div class="idea-subject">Sujet du jour : #${idea.sujet.replace(/_/g, ' ')}</div>
+      <div class="idea-text">${idea.angle} → <strong>${idea.produit}</strong> ${idea.emoji}</div>
+      <button class="idea-cta" onclick="document.getElementById('produitSelect').value='${idea.produit}'; generateVideo('tiktok');">Générer le script →</button>
+    </div>
+  `).join('');
+}
+
+// === STATS ===
 async function fetchStats() {
   try {
     const res = await fetch('/api/stats');
     const data = await res.json();
-    document.getElementById('s-visiteurs').textContent = data.visiteursAujourdhui || 0;
-    document.getElementById('s-clics').textContent = data.clicsAffiliation || totalClics;
-    document.getElementById('s-revenus').textContent = (data.revenusEstimes || totalRevenus) + '€';
-    renderSources(data.sourcesActives || 5);
+    document.getElementById('sVisiteuses').textContent = data.visiteursAujourdhui || 0;
+    
+    // Ventes estimées
+    totalVentes = data.revenusEstimes || 0;
+    document.getElementById('sVentes').textContent = totalVentes + '€';
+    
+    // Agent state
     agentActif = data.agentActif !== undefined ? data.agentActif : agentActif;
-    document.getElementById('agent-etat').textContent = agentActif ? 'EN LIGNE' : 'EN PAUSE';
-    document.getElementById('agent-txt').textContent = agentActif ? 'AGENT ACTIF' : 'AGENT PAUSE';
-    document.getElementById('dot').style.background = agentActif ? '#00ff41' : '#e74c3c';
-  } catch(e) {
-    addLog('Erreur connexion serveur', 'err');
-  }
-}
-
-async function fetchProspects() {
-  try {
-    const res = await fetch('/api/prospects');
-    const data = await res.json();
-    if (data.length > prospectsData.length) {
-      const nouveaux = data.length - prospectsData.length;
-      addLog(`${nouveaux} nouveau(x) prospect(s) détecté(s)`, 'ok');
-      document.getElementById('s-prospects').textContent = data.length;
-    }
-    prospectsData = data;
-    renderProspects();
+    document.getElementById('agentTxt').textContent = agentActif ? 'Sophie en ligne' : 'Sophie en pause';
+    document.getElementById('statusDot').style.background = agentActif ? 'var(--vert-doux)' : 'var(--gris)';
+    document.getElementById('btnToggleAgent').textContent = agentActif ? '⏸ Pause' : '▶ Activer';
+    
+    updateRevenus();
   } catch(e) {}
 }
 
@@ -445,67 +710,76 @@ async function fetchLogs() {
   try {
     const res = await fetch('/api/logs');
     const logs = await res.json();
-    const box = document.getElementById('logs-box');
-    if (logs.length > 0 && box.children.length < 8) {
-      logs.slice(0, 5).forEach(l => {
+    const box = document.getElementById('logsBox');
+    const existing = Array.from(box.children).map(c => c.textContent);
+    let newCount = 0;
+    let alertes = 0;
+    logs.forEach(l => {
+      if (!existing.some(e => e.includes(l.substring(15, 50)))) {
         const line = document.createElement('div');
-        line.className = 'log-line ok';
+        const isWarn = l.includes('⚠️') || l.toLowerCase().includes('détresse');
+        line.className = `log-line ${isWarn ? 'warn' : 'ok'}`;
         line.textContent = l;
-        box.appendChild(line);
-      });
+        box.prepend(line);
+        newCount++;
+        if (isWarn) alertes++;
+      }
+    });
+    if (box.children.length > 40) {
+      while (box.children.length > 40) box.lastChild.remove();
     }
+    
+    // Update alertes count
+    alertesCount = logs.filter(l => l.includes('⚠️') || l.toLowerCase().includes('détresse') || l.toLowerCase().includes('orient')).length;
+    document.getElementById('sAlertes').textContent = alertesCount;
   } catch(e) {}
 }
 
-// ============================================================
-// REVENUS
-// ============================================================
+// === REVENUS ===
 function updateRevenus() {
-  const shopifyRev = totalRevenus; // 100% Shopify maintenant
-  const taux = prospectsData.length > 0 ? Math.round((prospectsData.filter(p => p.converti).length / prospectsData.length) * 100) : 0;
-  const objectif = 500;
-
-  document.getElementById('r-shopify').textContent = shopifyRev + '€';
-  document.getElementById('r-taux').textContent = taux + '%';
-  document.getElementById('bar-shopify').style.width = Math.min(100, (shopifyRev / objectif) * 100) + '%';
-  document.getElementById('bar-taux').style.width = Math.min(100, taux * 2) + '%';
-
-  const pct = Math.round((totalRevenus / objectif) * 100);
-  document.getElementById('objectif-pct').textContent = pct + '%';
-  document.getElementById('objectif-txt').textContent = totalRevenus + '€ / ' + objectif + '€';
-  document.getElementById('bar-objectif').style.width = Math.min(100, pct) + '%';
+  const obj = 500;
+  document.getElementById('rShopify').textContent = totalVentes + '€';
+  document.getElementById('barShopify').style.width = Math.min(100, (totalVentes / obj) * 100) + '%';
+  
+  // Taux conversion estimé (très simplifié)
+  const visiteurs = parseInt(document.getElementById('sVisiteuses').textContent) || 1;
+  const taux = visiteurs > 0 ? ((totalVentes / 20) / visiteurs * 100).toFixed(1) : 0;
+  document.getElementById('rTaux').textContent = taux + '%';
+  document.getElementById('barTaux').style.width = Math.min(100, taux * 5) + '%';
+  
+  // Objectif mensuel
+  const pct = Math.round((totalVentes / obj) * 100);
+  document.getElementById('objPct').textContent = pct + '%';
+  document.getElementById('objDetail').textContent = totalVentes + '€ / ' + obj + '€';
+  document.getElementById('barObj').style.width = Math.min(100, pct) + '%';
 }
 
-// ============================================================
-// AGENT CONTROLS
-// ============================================================
+// === AGENT CONTROLS ===
 async function toggleAgent() {
   try {
     const res = await fetch('/api/agent/toggle', { method: 'POST' });
     const data = await res.json();
     agentActif = data.actif;
-    document.getElementById('btn-toggle').textContent = agentActif ? '⏸ PAUSE' : '▶ ACTIVER';
-    addLog(agentActif ? '🟢 Agent activé par CEO' : '🔴 Agent mis en pause', agentActif ? 'ok' : 'warn');
+    addLog(agentActif ? 'Simulateur activé' : 'Simulateur en pause', agentActif ? 'ok' : 'warn');
     fetchStats();
-  } catch(e) { addLog('Erreur toggle agent', 'err'); }
+  } catch(e) { addLog('Erreur toggle: ' + e.message, 'err'); }
 }
 
 async function forcerScan() {
-  addLog('⚡ Scan forcé par CEO...', 'warn');
+  addLog('Scan forcé...', 'warn');
   try {
-    const res = await fetch('/api/agent/scan', { method: 'POST' });
-    await res.json();
-    addLog('✅ Scan terminé', 'ok');
-    fetchProspects();
-  } catch(e) { addLog('Erreur scan forcé', 'err'); }
+    await fetch('/api/agent/scan', { method: 'POST' });
+    addLog('Scan terminé', 'ok');
+    fetchLogs();
+  } catch(e) { addLog('Erreur scan', 'err'); }
 }
 
-// ============================================================
-// GÉNÉRATEUR VIDÉO
-// ============================================================
-async function genererVideo(plateforme) {
-  const produit = document.getElementById('produit-select').value;
-  document.getElementById('video-result').innerHTML = '<div style="color:#555;font-size:.6rem;animation:pulse 1s infinite">Génération en cours...</div>';
+// === VIDEO GENERATOR ===
+async function generateVideo(plateforme) {
+  const produit = document.getElementById('produitSelect').value;
+  const result = document.getElementById('videoResult');
+  result.innerHTML = '<div class="video-empty" style="animation:pulse 1s infinite">Sophie écrit ton script...</div>';
+  
   try {
     const res = await fetch('/api/video/generer', {
       method: 'POST',
@@ -513,36 +787,40 @@ async function genererVideo(plateforme) {
       body: JSON.stringify({ produit, plateforme })
     });
     const data = await res.json();
-    document.getElementById('video-result').innerHTML = `
-      <div class="video-accroche">${plateforme === 'tiktok' ? '▶' : '◉'} ${data.accroche || '🔥 Script généré'}</div>
-      <div class="video-script-text">${data.script || ''}</div>
-      <div class="video-tags">${(data.hashtags || []).map(h => `<span class="tag">${h}</span>`).join('')}</div>
-      <div style="margin-top:.8rem;font-size:.55rem;color:#333">Durée cible: ${data.duree || '45s'}</div>
-      <button class="btn" style="margin-top:.8rem;font-size:.55rem" onclick="copierScript()">📋 COPIER</button>
+    result.innerHTML = `
+      <div class="video-accroche">${plateforme === 'tiktok' ? '▶' : '◉'} ${data.accroche || produit}</div>
+      <div class="video-script">${data.script || ''}</div>
+      <div class="video-tags">${(data.hashtags || []).map(h => `<span class="video-tag">${h}</span>`).join('')}</div>
+      <div class="video-duree">⏱ Durée cible : ${data.duree || '30-60s'}</div>
+      <button class="btn primary" style="margin-top:0.8rem;font-size:0.65rem;" onclick="copyScript()">📋 Copier le script</button>
     `;
-    addLog(`Script ${plateforme} généré pour: ${produit}`, 'ok');
+    addLog(`Script ${plateforme} : ${produit}`, 'ok');
   } catch(e) {
-    document.getElementById('video-result').innerHTML = '<div style="color:#e74c3c;font-size:.6rem">Erreur — Vérifiez la clé API Anthropic</div>';
+    result.innerHTML = '<div class="video-empty" style="color:var(--rouge-doux)">Erreur — vérifie la clé API Anthropic</div>';
   }
 }
 
-function copierScript() {
-  const txt = document.getElementById('video-result').innerText;
-  navigator.clipboard.writeText(txt).then(() => addLog('Script copié dans le presse-papier', 'ok'));
+function copyScript() {
+  const txt = document.getElementById('videoResult').innerText;
+  navigator.clipboard.writeText(txt).then(() => addLog('Script copié 📋', 'ok'));
 }
 
-// ============================================================
-// INIT + POLLING
-// ============================================================
-renderSources(5);
-renderProduitsKeys();
+// === TECH TOGGLE ===
+function toggleTech() {
+  document.getElementById('techToggle').classList.toggle('open');
+  document.getElementById('techPanel').classList.toggle('open');
+}
+
+// === INIT ===
+fetchRapport();
+fetchInsights();
 fetchStats();
-fetchProspects();
 fetchLogs();
 
+// === POLLING ===
+setInterval(fetchInsights, 30000);
 setInterval(fetchStats, 15000);
-setInterval(fetchProspects, 20000);
-setInterval(() => { updateRevenus(); }, 5000);
+setInterval(fetchLogs, 25000);
 </script>
 </body>
 </html>
