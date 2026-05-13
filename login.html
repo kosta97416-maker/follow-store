@@ -3,113 +3,180 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FOLLOW.LIFE — Accès Privé</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>Sophie · mon bureau 🤍</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
 <style>
+:root {
+  --noir: #1a1410; --noir-doux: #251d18; --terre: #322519;
+  --or: #C9A87C; --or-clair: #E8C99E; --or-doux: #8B7355;
+  --creme: #F5EDE0; --creme-doux: #DDC9B0; --gris: #847b6f;
+  --rouge-doux: #c97a7a; --vert-doux: #7da97e;
+  --shadow: 0 30px 80px -20px rgba(0,0,0,0.6);
+}
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
-  background:#050505; color:#00ff41; font-family:'Space Mono',monospace;
+  background:var(--noir); color:var(--creme); font-family:'DM Sans',sans-serif;
   min-height:100vh; display:flex; align-items:center; justify-content:center;
-  position:relative; overflow:hidden;
+  position:relative; overflow:hidden; padding:1rem;
 }
+
+/* Soft moon ambiance */
 body::before {
   content:''; position:absolute; inset:0; pointer-events:none;
   background:
-    radial-gradient(ellipse at center, rgba(192,57,43,.1) 0%, transparent 60%),
-    linear-gradient(rgba(0,255,65,.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,255,65,.02) 1px, transparent 1px);
-  background-size: 100% 100%, 40px 40px, 40px 40px;
+    radial-gradient(ellipse 60% 40% at 70% 20%, rgba(201,168,124,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 20% 90%, rgba(232,184,184,0.06) 0%, transparent 60%);
+}
+body::after {
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:1;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+  opacity:0.03; mix-blend-mode:overlay;
 }
 
-.login-box {
-  background:#0a0a0a; border:1px solid #1a1a1a;
-  padding:3rem 2.5rem; width:90%; max-width:420px;
-  position:relative; z-index:10;
-  clip-path:polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+/* Status indicator */
+.status {
+  position:absolute; top:1.5rem; right:1.5rem; z-index:5;
+  display:flex; align-items:center; gap:0.5rem;
+  font-size:0.7rem; color:var(--creme-doux); letter-spacing:0.08em;
+  padding:0.5rem 1rem; border:1px solid rgba(201,168,124,0.2);
+  border-radius:100px; background:rgba(37,29,24,0.6); backdrop-filter:blur(10px);
+}
+.status .dot {
+  width:7px; height:7px; border-radius:50%; background:var(--vert-doux);
+  animation:pulse 2s infinite;
 }
 
-.logo {
-  font-family:'Bebas Neue',sans-serif; font-size:2.2rem; color:#fff;
-  letter-spacing:.1em; text-align:center; margin-bottom:.3rem;
+/* Card */
+.card {
+  background:var(--noir-doux); border:1px solid rgba(201,168,124,0.2);
+  padding:3rem 2.5rem; width:100%; max-width:420px;
+  position:relative; z-index:10; border-radius:24px;
+  box-shadow:var(--shadow);
+  animation:cardIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
-.logo span { color:#e74c3c; }
+
+@keyframes cardIn {
+  from { opacity:0; transform:translateY(20px) scale(0.96); }
+  to { opacity:1; transform:translateY(0) scale(1); }
+}
+
+.badge {
+  width:64px; height:64px; border-radius:50%;
+  background:linear-gradient(135deg, var(--or), var(--or-doux));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:2rem; color:var(--noir); font-weight:600;
+  margin:0 auto 1.5rem; box-shadow:0 10px 30px rgba(201,168,124,0.3);
+}
+
+.greeting {
+  font-family:'Caveat',cursive; font-size:1.6rem; color:var(--or-clair);
+  text-align:center; margin-bottom:0.5rem; font-weight:500;
+}
+
+h1 {
+  font-family:'Cormorant Garamond',serif; font-weight:400; font-size:1.6rem;
+  color:var(--creme); text-align:center; line-height:1.3; margin-bottom:0.8rem;
+}
+h1 em { color:var(--or); font-weight:500; }
 
 .subtitle {
-  text-align:center; color:#444; font-size:.6rem; letter-spacing:.3em;
-  text-transform:uppercase; margin-bottom:2.5rem;
+  text-align:center; color:var(--creme-doux); font-size:0.85rem;
+  line-height:1.6; margin-bottom:2.5rem; font-style:italic;
+  font-family:'Cormorant Garamond',serif; opacity:0.85;
+  padding:0 0.5rem;
 }
 
 .form-group { margin-bottom:1.2rem; }
 
 label {
-  display:block; font-size:.55rem; color:#666;
-  letter-spacing:.2em; text-transform:uppercase; margin-bottom:.5rem;
+  display:block; font-size:0.65rem; color:var(--or-doux);
+  letter-spacing:0.25em; text-transform:uppercase; margin-bottom:0.6rem;
+  font-weight:500;
 }
 
 input[type="password"] {
-  width:100%; background:#000; border:1px solid #1a1a1a; color:#00ff41;
-  font-family:'Space Mono',monospace; font-size:.9rem;
-  padding:.9rem 1rem; outline:none; transition:border .2s;
-  letter-spacing:.1em;
+  width:100%; background:rgba(245,237,224,0.05);
+  border:1px solid rgba(201,168,124,0.2); color:var(--creme);
+  font-family:'DM Sans',sans-serif; font-size:1rem;
+  padding:1rem 1.2rem; outline:none; transition:all 0.2s;
+  letter-spacing:0.15em; border-radius:100px;
 }
-input[type="password"]:focus { border-color:#00ff41; }
-input[type="password"]::placeholder { color:#222; }
+input[type="password"]:focus { border-color:var(--or); background:rgba(245,237,224,0.08); }
+input[type="password"]::placeholder { color:var(--gris); letter-spacing:0.3em; }
 
 .btn-login {
-  width:100%; background:#e74c3c; color:#fff; border:none;
-  font-family:'Bebas Neue',sans-serif; font-size:1.1rem; letter-spacing:.15em;
-  padding:1rem; cursor:pointer; transition:all .2s; margin-top:.5rem;
+  width:100%; background:var(--or); color:var(--noir); border:none;
+  font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:600;
+  letter-spacing:0.18em; text-transform:uppercase;
+  padding:1.1rem; cursor:pointer; transition:all 0.3s; margin-top:1rem;
+  border-radius:100px; position:relative; overflow:hidden;
 }
-.btn-login:hover { background:#c0392b; }
-.btn-login:disabled { opacity:.5; cursor:not-allowed; }
+.btn-login::before {
+  content:''; position:absolute; inset:0; background:var(--or-clair);
+  transform:translateX(-100%); transition:transform 0.4s ease;
+}
+.btn-login:hover::before { transform:translateX(0); }
+.btn-login:hover { box-shadow:0 10px 30px rgba(201,168,124,0.4); transform:translateY(-2px); }
+.btn-login:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+.btn-login span { position:relative; z-index:1; }
+.btn-login.success { background:var(--vert-doux); }
+.btn-login.success::before { display:none; }
 
 .error {
-  color:#e74c3c; font-size:.6rem; text-align:center;
-  margin-top:1rem; min-height:1rem; letter-spacing:.05em;
+  color:var(--rouge-doux); font-size:0.8rem; text-align:center;
+  margin-top:1rem; min-height:1rem; font-style:italic;
+  font-family:'Cormorant Garamond',serif;
 }
 
-.warning {
+.footer-note {
   text-align:center; margin-top:2rem; padding-top:1.5rem;
-  border-top:1px solid #1a1a1a; font-size:.55rem; color:#333;
-  letter-spacing:.1em; line-height:1.8;
-}
-.warning span { color:#d4a017; }
-
-.status {
-  position:absolute; top:1.5rem; left:1.5rem;
-  font-size:.55rem; color:#444; letter-spacing:.2em;
-}
-.status::before {
-  content:''; display:inline-block; width:6px; height:6px;
-  background:#00ff41; border-radius:50%; margin-right:.5rem;
-  animation:pulse 2s infinite;
+  border-top:1px solid rgba(201,168,124,0.1);
+  font-family:'Caveat',cursive; font-size:1rem; color:var(--or-doux);
+  line-height:1.5;
 }
 
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-10px)} 75%{transform:translateX(10px)} }
-.shake { animation:shake .3s ease; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+@keyframes shake {
+  0%, 100% { transform:translateX(0); }
+  20% { transform:translateX(-10px); }
+  40% { transform:translateX(10px); }
+  60% { transform:translateX(-6px); }
+  80% { transform:translateX(6px); }
+}
+.shake { animation:shake 0.4s ease; }
+
+@media (max-width:480px) {
+  .card { padding:2.2rem 1.8rem; }
+  .badge { width:54px; height:54px; font-size:1.6rem; }
+  h1 { font-size:1.4rem; }
+  .status { top:1rem; right:1rem; font-size:0.6rem; padding:0.4rem 0.8rem; }
+}
 </style>
 </head>
 <body>
 
-<div class="status">SYSTÈME EN LIGNE</div>
+<div class="status">
+  <span class="dot"></span>
+  <span>Sophie en ligne</span>
+</div>
 
-<div class="login-box" id="login-box">
-  <div class="logo">FOLLOW<span>.</span>LIFE</div>
-  <p class="subtitle">// ACCÈS CEO</p>
+<div class="card" id="card">
+  <div class="badge">S</div>
+  <div class="greeting">Coucou toi 🤍</div>
+  <h1>Bienvenue dans <em>mon bureau</em></h1>
+  <p class="subtitle">Le coin privé où je te raconte mes journées avec les utilisatrices.</p>
 
   <form onsubmit="connexion(event)">
     <div class="form-group">
-      <label for="pwd">Mot de passe</label>
-      <input type="password" id="pwd" placeholder="••••••••••" required autofocus>
+      <label for="pwd">Ton mot de passe</label>
+      <input type="password" id="pwd" placeholder="••••••••" required autofocus autocomplete="current-password">
     </div>
-    <button type="submit" class="btn-login" id="btn">ACCÉDER AU DASHBOARD</button>
+    <button type="submit" class="btn-login" id="btn"><span>Entrer dans mon bureau</span></button>
     <div class="error" id="error"></div>
   </form>
 
-  <div class="warning">
-    🔒 ACCÈS RÉSERVÉ AU CEO<br>
-    <span>Toute tentative non autorisée est journalisée</span>
+  <div class="footer-note">
+    Anonyme, privé, doux 🤍<br>Comme tout chez Follow.Life
   </div>
 </div>
 
@@ -119,10 +186,10 @@ async function connexion(e) {
   const pwd = document.getElementById('pwd').value;
   const btn = document.getElementById('btn');
   const err = document.getElementById('error');
-  const box = document.getElementById('login-box');
+  const card = document.getElementById('card');
 
   btn.disabled = true;
-  btn.textContent = 'VÉRIFICATION...';
+  btn.innerHTML = '<span>Sophie te reconnaît...</span>';
   err.textContent = '';
 
   try {
@@ -135,26 +202,26 @@ async function connexion(e) {
 
     if (data.ok) {
       sessionStorage.setItem('follow_auth', 'ok');
-      btn.textContent = '✓ CONNEXION RÉUSSIE';
-      btn.style.background = '#00ff41';
-      btn.style.color = '#000';
-      setTimeout(() => window.location.href = '/dashboard', 600);
+      btn.classList.add('success');
+      btn.innerHTML = '<span>✓ Bienvenue 🤍</span>';
+      setTimeout(() => window.location.href = '/dashboard', 700);
     } else {
-      box.classList.add('shake');
-      err.textContent = '❌ MOT DE PASSE INCORRECT';
+      card.classList.add('shake');
+      err.textContent = "Hmm, ce n'est pas ça... Réessaie 🤍";
       btn.disabled = false;
-      btn.textContent = 'RÉESSAYER';
+      btn.innerHTML = '<span>Réessayer</span>';
       document.getElementById('pwd').value = '';
-      setTimeout(() => box.classList.remove('shake'), 300);
+      document.getElementById('pwd').focus();
+      setTimeout(() => card.classList.remove('shake'), 400);
     }
   } catch (e) {
-    err.textContent = '⚠️ ERREUR SERVEUR';
+    err.textContent = "Connexion difficile, réessaie dans un instant.";
     btn.disabled = false;
-    btn.textContent = 'RÉESSAYER';
+    btn.innerHTML = '<span>Réessayer</span>';
   }
 }
 
-// Auto-redirect si déjà connecté
+// Auto-redirect si déjà connectée
 if (sessionStorage.getItem('follow_auth') === 'ok') {
   window.location.href = '/dashboard';
 }
