@@ -52,7 +52,8 @@ const PRODUITS_CLES = [
         description: "Soie pure, blackout total. Pour les nuits où tu as juste besoin que tout s'éteigne.",
         prix: "19.90€",
         keywords: ["sommeil", "dormir", "fatigue", "nuit", "masque", "yeux", "insomnie", "endormir"],
-        shopifyHandle: "embroidered-silk-sleep-mask-silk-eye-mask-soft-blackout-blindfold-with-adjustable-strap-sleeping-eye-cover-mask-for-travel"
+        shopifyHandle: "embroidered-silk-sleep-mask-silk-eye-mask-soft-blackout-blindfold-with-adjustable-strap-sleeping-eye-cover-mask-for-travel",
+        image: "https://cdn.shopify.com/s/files/1/0811/7842/7641/files/S6bd2cbdf15e5469abf8642818ed59b2dE.webp"
     },
     {
         nom: "Mes petites bouteilles magiques",
@@ -60,7 +61,8 @@ const PRODUITS_CLES = [
         description: "Huiles essentielles pures — lavande pour le calme, eucalyptus pour l'énergie.",
         prix: "12.90€",
         keywords: ["huile", "essentielle", "lavande", "calme", "stress", "aromathérapie", "anxiété", "respirer"],
-        shopifyHandle: "mayjam-1pcs-30ml-aromatherapy-essential-oil-lavender-vanilla-jasmine-eucalyptus-peppermint-aroma-oil-for-diffuser-candle-soap"
+        shopifyHandle: "mayjam-1pcs-30ml-aromatherapy-essential-oil-lavender-vanilla-jasmine-eucalyptus-peppermint-aroma-oil-for-diffuser-candle-soap",
+        image: "https://cdn.shopify.com/s/files/1/0811/7842/7641/files/S7d825f43b1c94678a58555a1c9621ecbT.webp"
     },
     {
         nom: "Mon rituel petit bonheur",
@@ -68,7 +70,8 @@ const PRODUITS_CLES = [
         description: "Bougies parfumées cire de soja. Pour les soirs où tu veux juste souffler.",
         prix: "12.90€",
         keywords: ["bougie", "parfum", "soir", "détente", "ambiance", "souffler", "relax"],
-        shopifyHandle: "1-4pcs-vintage-scented-candles-soy-wax-candle-jars-flower-fragrance-scent-candle-wedding-ceremony-birthday-gifts-home-decoration"
+        shopifyHandle: "1-4pcs-vintage-scented-candles-soy-wax-candle-jars-flower-fragrance-scent-candle-wedding-ceremony-birthday-gifts-home-decoration",
+        image: "https://cdn.shopify.com/s/files/1/0811/7842/7641/files/S061386aae0ed445786a8c1bc8c3b43f2H.webp"
     },
     {
         nom: "Mes 7 couleurs apaisantes",
@@ -76,7 +79,8 @@ const PRODUITS_CLES = [
         description: "Diffuseur flamme mystique. La lumière qui danse + ton huile préférée = spa à la maison.",
         prix: "29.90€",
         keywords: ["diffuseur", "ambiance", "détente", "flamme", "lumière", "maison", "cocon"],
-        shopifyHandle: "aroma-diffuser-mini-7-colorful-flame-air-humidifier-add-essential-oil-aromatherapy-with-timing-setting-for-home-bedroom-office"
+        shopifyHandle: "aroma-diffuser-mini-7-colorful-flame-air-humidifier-add-essential-oil-aromatherapy-with-timing-setting-for-home-bedroom-office",
+        image: "https://cdn.shopify.com/s/files/1/0811/7842/7641/files/Sa36633311b7f462a8c63080c63ca08a0V.webp"
     },
     {
         nom: "Mon rituel lifting doux",
@@ -84,7 +88,8 @@ const PRODUITS_CLES = [
         description: "Gua Sha quartz rose. 3 minutes par jour = visage qui se réveille.",
         prix: "14.90€",
         keywords: ["visage", "peau", "soin", "beauté", "gua sha", "lifting", "fatigue visage"],
-        shopifyHandle: "gua-sha-massage-board-for-face-rose-pink-guasha-plate-jade-face-massager-scrapers-tools-for-face-neck-back-body"
+        shopifyHandle: "gua-sha-massage-board-for-face-rose-pink-guasha-plate-jade-face-massager-scrapers-tools-for-face-neck-back-body",
+        image: "https://cdn.shopify.com/s/files/1/0811/7842/7641/files/Sad96deab282848a19adcba03582e23ebm.webp"
     },
     {
         nom: "Pour bien dormir et avoir de beaux cheveux",
@@ -92,7 +97,8 @@ const PRODUITS_CLES = [
         description: "Taie d'oreiller soie pure OEKO-TEX. Anti-rides du sommeil, anti-frizz cheveux.",
         prix: "49.90€",
         keywords: ["oreiller", "soie", "cheveux", "peau", "luxe", "beauté", "rides"],
-        shopifyHandle: "100-natural-mulberry-silk-pillowcase-with-oeko-tex-19-momme-luxry-silk-pillow-case-free-shipping"
+        shopifyHandle: "100-natural-mulberry-silk-pillowcase-with-oeko-tex-19-momme-luxry-silk-pillow-case-free-shipping",
+        image: "https://cdn.shopify.com/s/files/1/0811/7842/7641/files/S47d148ea2543483d8492db1e964d7e08J.webp"
     },
     {
         nom: "Mon cocon entre l'école et le boulot",
@@ -100,7 +106,8 @@ const PRODUITS_CLES = [
         description: "Diffuseur de voiture. Tes trajets deviennent ton moment à toi.",
         prix: "19.90€",
         keywords: ["voiture", "trajet", "travail", "stress", "matin", "respirer", "transport"],
-        shopifyHandle: "car-diffuser-humidifier-5-modes-car-humidifier-aromatherapy-diffusers-car-air-freshener-for-car-home-office-bedroom-long"
+        shopifyHandle: "car-diffuser-humidifier-5-modes-car-humidifier-aromatherapy-diffusers-car-air-freshener-for-car-home-office-bedroom-long",
+        image: "https://cdn.shopify.com/s/files/1/0811/7842/7641/files/S9ff436dafc8d4887b2b0939d82c92ed7p.webp"
     },
     {
         nom: "Mon atelier cocooning",
@@ -108,7 +115,8 @@ const PRODUITS_CLES = [
         description: "Kit DIY pour créer tes propres bougies. Activité câlin pour soi ou avec les copines.",
         prix: "49.90€",
         keywords: ["DIY", "création", "bougie", "atelier", "cadeau", "week-end", "activité"],
-        shopifyHandle: "simple-diy-candle-making-set-easy-to-make-with-essential-oil-for-aromatherapy-high-quality-soy-wax-handcrafted"
+        shopifyHandle: "simple-diy-candle-making-set-easy-to-make-with-essential-oil-for-aromatherapy-high-quality-soy-wax-handcrafted",
+        image: "https://cdn.shopify.com/s/files/1/0811/7842/7641/files/Sf3ac986bf57847008e2267f7fc790903w.webp"
     },
     {
         nom: "Mes 6 pierres pour les bons vibes",
@@ -116,7 +124,8 @@ const PRODUITS_CLES = [
         description: "Coffret cristaux bien-être. Pour méditation, intention, ou jolie déco.",
         prix: "19.90€",
         keywords: ["cristaux", "pierres", "énergie", "méditation", "spirituel", "vibes", "intention"],
-        shopifyHandle: "crystals-and-healing-stones-set-for-abundance-and-prosperity-spiritual-crystals-and-gift-for-metaphysical-witchcraft-meditati"
+        shopifyHandle: "crystals-and-healing-stones-set-for-abundance-and-prosperity-spiritual-crystals-and-gift-for-metaphysical-witchcraft-meditati",
+        image: "https://cdn.shopify.com/s/files/1/0811/7842/7641/files/Sa52102ac005d4c83b4cb3cb698047638X.webp"
     },
     {
         nom: "Mon ancre de calme",
@@ -124,9 +133,35 @@ const PRODUITS_CLES = [
         description: "Pyramide quartz cristal. Pour la table de chevet, ou ramener du calme dans une pièce.",
         prix: "16.90€",
         keywords: ["pyramide", "cristal", "calme", "méditation", "chambre", "déco", "ancrage"],
-        shopifyHandle: "natural-crystal-clear-quartz-pyramid-quartz-healing-stone-chakra-reiki-crystal-point-tower-home-decor-meditation-ore-mineral"
+        shopifyHandle: "natural-crystal-clear-quartz-pyramid-quartz-healing-stone-chakra-reiki-crystal-point-tower-home-decor-meditation-ore-mineral",
+        image: "https://cdn.shopify.com/s/files/1/0811/7842/7641/files/H7af71c53a5a1468c8c09cde96d5b6accn.webp"
     }
 ];
+
+// ============================================================
+// 🆕 EXTRACTION VIGNETTE PRODUIT — détecte si Sophie a mentionné un produit
+// ============================================================
+function extractProductFromReply(replyText) {
+    if (!replyText) return null;
+    // Cherche un lien Shopify dans la réponse de Sophie
+    const escapedUrl = SHOPIFY_URL.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`${escapedUrl}/products/([\\w-]+)`, 'i');
+    const match = replyText.match(regex);
+    if (!match) return null;
+
+    const handle = match[1];
+    const produit = PRODUITS_CLES.find(p => p.shopifyHandle === handle);
+    if (!produit) return null;
+
+    return {
+        title: produit.nom,
+        subtitle: produit.description,
+        emoji: produit.emoji,
+        price: produit.prix,
+        image: produit.image,
+        url: `${SHOPIFY_URL}/products/${produit.shopifyHandle}`
+    };
+}
 
 const SOURCES_PROSPECTS = [
     { nom: "Reddit r/SingleParents", url: "https://reddit.com/r/SingleParents", actif: true },
@@ -355,7 +390,7 @@ async function analyserConversationAnonyme(history) {
 }
 
 // ============================================================
-// ROUTE SOPHIE
+// ROUTE SOPHIE — 🆕 retourne désormais aussi { product } quand pertinent
 // ============================================================
 app.post('/api/sophie', async (req, res) => {
     const { message, sessionId } = req.body;
@@ -365,7 +400,8 @@ app.post('/api/sophie', async (req, res) => {
     if (!ANTHROPIC_KEY) {
         return res.json({
             reply: "Coucou toi 🤍 Je suis Sophie. Je me prépare. Reviens dans un instant, ou jette un œil à <a href='" + SHOPIFY_URL + "' target='_blank' style='color:#C9A87C;text-decoration:underline'>la boutique</a>.",
-            mode: "demo"
+            mode: "demo",
+            product: null
         });
     }
     let history = sessionsChat.get(sessionId) || [];
@@ -401,7 +437,11 @@ app.post('/api/sophie', async (req, res) => {
                 if (insight) ajouterInsight(insight);
             });
         }
-        res.json({ reply, mode: "live" });
+
+        // 🆕 Si Sophie a mentionné un produit, on retourne la vignette structurée
+        const product = extractProductFromReply(reply);
+
+        res.json({ reply, mode: "live", product });
     } catch (e) {
         console.error("Erreur Sophie:", e.message);
         res.status(500).json({ error: "Sophie réfléchit... réessaie 🤍" });
@@ -628,4 +668,5 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`📊 Insights anonymisés: collectés en arrière-plan`);
     console.log(`🤍 Sophie+ waitlist: prête à recevoir des inscriptions`);
     console.log(`🛒 Shopify: ${SHOPIFY_URL}`);
+    console.log(`🖼️  Vignettes produits: actives sur /api/sophie 🟢`);
 });
