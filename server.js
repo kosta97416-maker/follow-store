@@ -26,6 +26,13 @@
 //
 // 6. extractProductFromReply, insights, waitlist, scan prospects,
 //    routes API, login — tout est IDENTIQUE.
+//
+// 7. 💸 CORRECTIF FUITE DE CRÉDIT (seul changement de cette version) :
+//    la fonction analyserIntentionAchat() n'appelle PLUS l'API payante.
+//    Elle était appelée par le scan prospects toutes les 45 secondes,
+//    24h/24, sur des posts factices — ce qui vidait le crédit Anthropic.
+//    Voir le bloc de commentaire au-dessus de la fonction. Le reste du
+//    fichier est strictement identique.
 // ============================================================
 
 const express = require('express');
@@ -277,28 +284,31 @@ const SOURCES_PROSPECTS = [
 ];
 
 // ============================================================
-// ANALYSE D'INTENTION (inchangée)
+// 💸 ANALYSE D'INTENTION — CORRECTIF FUITE DE CRÉDIT
+// ============================================================
+// AVANT : cette fonction appelait l'API Anthropic (donc PAYANTE).
+// Elle est utilisée par scannerProspects(), qui tourne en boucle
+// AUTOMATIQUE toutes les 45 secondes, 24h/24 — sur des posts FACTICES
+// (la liste FAUX_POSTS plus bas). Résultat : ~1900 appels payants par
+// jour sur des données bidon, même sans aucune visiteuse sur le site.
+// >>> C'ÉTAIT LA FUITE QUI A VIDÉ TON CRÉDIT ANTHROPIC. <<<
+//
+// APRÈS : analyse 100% LOCALE et GRATUITE (aucun appel API).
+// Le scan prospects continue d'alimenter le dashboard exactement
+// comme avant, mais il ne coûte plus un seul centime.
+//
+// Note : ça ne change RIEN à Sophie. Sophie (/api/sophie) appelle
+// toujours l'API normalement — c'est ton vrai produit, et une vraie
+// conversation coûte très peu. Seul le faux-scan est neutralisé.
 // ============================================================
 async function analyserIntentionAchat(texte) {
-    if (!ANTHROPIC_KEY) {
-        const score = Math.floor(Math.random() * 40) + 50;
-        return { score, produit: PRODUITS_CLES[Math.floor(Math.random() * PRODUITS_CLES.length)].nom, resume: "Cherche un moment de douceur.", urgence: score > 75 ? "haute" : "moyenne" };
-    }
-    try {
-        const response = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01" },
-            body: JSON.stringify({
-                model: "claude-haiku-4-5-20251001",
-                max_tokens: 300,
-                messages: [{ role: "user", content: `JSON: {"score": 0-100, "produit": "nom", "resume": "1 phrase", "urgence": "haute|moyenne|basse"}\nProduits: ${PRODUITS_CLES.map(p => p.nom).join(", ")}\nTexte: "${texte.substring(0, 500)}"` }]
-            })
-        });
-        const data = await response.json();
-        return JSON.parse(data.content[0].text.match(/\{.*\}/s)[0]);
-    } catch (e) {
-        return { score: 60, produit: "Le masque qui efface le monde", resume: "Intérêt douceur.", urgence: "moyenne" };
-    }
+    const score = Math.floor(Math.random() * 40) + 50;
+    return {
+        score,
+        produit: PRODUITS_CLES[Math.floor(Math.random() * PRODUITS_CLES.length)].nom,
+        resume: "Cherche un moment de douceur.",
+        urgence: score > 75 ? "haute" : "moyenne"
+    };
 }
 
 async function genererScriptVideo(produit, plateforme) {
@@ -920,7 +930,8 @@ app.get('/api/sophie-plus/waitlist', (req, res) => {
 });
 
 // ============================================================
-// SCAN PROSPECTS (inchangée)
+// SCAN PROSPECTS (inchangée — mais désormais 100% GRATUITE,
+// car analyserIntentionAchat() n'appelle plus l'API payante)
 // ============================================================
 const FAUX_POSTS = [
     "Comment retrouver le sommeil quand on est maman solo épuisée ?",
@@ -1051,11 +1062,12 @@ app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html'))
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ FOLLOW.LIFE opérationnel sur port ${PORT}`);
-    console.log(`🤖 Agent IA: actif - scan 45s`);
+    console.log(`🤖 Agent IA: actif - scan 45s (analyse locale, 0€)`);
     console.log(`💬 Sophie IA bilingue (FR/EN): ${ANTHROPIC_KEY ? 'ACTIVE 🟢' : 'MODE DÉMO'}`);
     console.log(`🌍 Détection auto de la langue + override via { lang: "en" | "fr" }`);
     console.log(`📖 Backstory Sophie intégrée (Normandie, lettres) — racontée si demandée`);
     console.log(`📊 Insights anonymisés: collectés en arrière-plan (FR + EN)`);
+    console.log(`💸 Correctif fuite: le scan prospects n'appelle plus l'API payante`);
     console.log(`🤍 Sophie+ waitlist: prête (FR 6,99€/mois — EN $7.99/month)`);
     console.log(`🛒 Shopify: ${SHOPIFY_URL}`);
     console.log(`🇫🇷 About FR: ${SHOPIFY_URL}/pages/sophie-et-moi`);
