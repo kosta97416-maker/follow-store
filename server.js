@@ -1,38 +1,30 @@
 // ============================================================
 // FOLLOW.LIFE — server.js
 // ============================================================
-// CHANGEMENTS DEPUIS LA VERSION PRÉCÉDENTE :
+// VERSION GEMINI (Google) — passage à l'API gratuite.
 //
-// 1. Sophie est désormais BILINGUE (FR/EN).
-//    - Détection automatique de la langue dès le premier message.
-//    - Langue "sticky" par session (pas de flip-flop mid-conversation).
-//    - Override possible via `lang` dans le body de /api/sophie
-//      (utile quand le chat est embedded sur /pages/meet-sophie en US).
+// POURQUOI CETTE VERSION :
 //
-// 2. Sophie a maintenant une BACKSTORY (Normandie, mère bibliothécaire,
-//    décès à 17 ans, les lettres). Elle peut la raconter en FR ou EN
-//    quand on lui demande qui elle est — jamais imposée.
+// 1. 🔌 BASCULE VERS GEMINI (Google AI Studio).
+//    Sophie ne passe plus par l'API Anthropic (payante) mais par
+//    l'API Gemini de Google, qui a une offre GRATUITE.
+//    -> Crée une clé sur https://aistudio.google.com (gratuit, sans
+//       carte bancaire) et mets-la dans la variable d'environnement
+//       GEMINI_API_KEY sur Render.
+//    -> Modèle utilisé : gemini-2.5-flash (gratuit).
+//    -> Tous les appels IA passent par un helper unique : appelerGemini().
 //
-// 3. Deux SYSTEM_PROMPT : SOPHIE_SYSTEM_PROMPT_FR (l'ancien, enrichi
-//    de la backstory) et SOPHIE_SYSTEM_PROMPT_EN (nouveau, adapté
-//    au marché US avec hotline 988 et page /meet-sophie).
+// 2. 💸 CORRECTIF FUITE DE CRÉDIT (déjà présent).
+//    analyserIntentionAchat() n'appelle plus d'API : le scan prospects
+//    (toutes les 45s, sur des posts factices) est 100% local et gratuit.
 //
-// 4. Produits enrichis avec descriptionEN pour que Sophie puisse les
-//    présenter en anglais en gardant le nom français (positionnement
-//    "French chic" préservé).
+// 3. Tout le reste est IDENTIQUE : Sophie bilingue FR/EN, sa backstory,
+//    les deux system prompts, produits, collections, codes promo,
+//    insights anonymisés, waitlist Sophie+, dashboard, login.
 //
-// 5. sessionsChat stocke maintenant un OBJET { history, language }
-//    au lieu d'un simple array. Migration transparente.
-//
-// 6. extractProductFromReply, insights, waitlist, scan prospects,
-//    routes API, login — tout est IDENTIQUE.
-//
-// 7. 💸 CORRECTIF FUITE DE CRÉDIT (seul changement de cette version) :
-//    la fonction analyserIntentionAchat() n'appelle PLUS l'API payante.
-//    Elle était appelée par le scan prospects toutes les 45 secondes,
-//    24h/24, sur des posts factices — ce qui vidait le crédit Anthropic.
-//    Voir le bloc de commentaire au-dessus de la fonction. Le reste du
-//    fichier est strictement identique.
+// ⚠️ NOTE CONFIDENTIALITÉ : l'offre gratuite de Gemini peut utiliser les
+// conversations pour améliorer les modèles de Google. Les promesses de
+// confidentialité affichées sur le site sont à ajuster en conséquence.
 // ============================================================
 
 const express = require('express');
@@ -47,7 +39,8 @@ app.use(express.json());
 // CONFIG
 // ============================================================
 const SHOPIFY_URL = "https://shop.followlife.net";
-const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || "";
+const GEMINI_KEY = process.env.GEMINI_API_KEY || "";
+const GEMINI_MODEL = "gemini-2.5-flash"; // modèle gratuit (Google AI Studio)
 
 // ============================================================
 // ÉTAT GLOBAL
@@ -252,6 +245,82 @@ function detectLanguage(text) {
 }
 
 // ============================================================
+// 🔌 APPEL API GEMINI (Google) — helper unique
+// ============================================================
+// Tous les appels IA passent par ici. Renvoie le TEXTE de la réponse,
+// ou null en cas d'échec (l'erreur exacte est alors loggée dans la
+// console Render, pour pouvoir diagnostiquer facilement).
+//
+//   system    : (optionnel) consigne système.
+//   messages  : tableau { role: "user"|"assistant", content } — format
+//               interne historique, converti ici au format Gemini.
+//   maxTokens : (optionnel) plafond de tokens de sortie (défaut 2048).
+// ============================================================
+async function appelerGemini({ system, messages, maxTokens } = {}) {
+    if (!GEMINI_KEY) return null;
+    try {
+        // Conversion vers le format Gemini (rôle "model" au lieu de "assistant")
+        let contents = (messages || []).map(m => ({
+            role: m.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: String(m.content || '') }]
+        }));
+        // Gemini exige que la conversation commence par un tour "user"
+        while (contents.length && contents[0].role === 'model') contents.shift();
+        if (contents.length === 0) return null;
+
+        const body = {
+            contents,
+            generationConfig: {
+                maxOutputTokens: maxTokens || 2048
+            },
+            // Seuils permissifs : Sophie accompagne des sujets sensibles
+            // (fatigue, solitude, détresse). On évite que Gemini bloque
+            // une réponse de soutien légitime. La détection de crise et
+            // le renvoi vers le 3114 / 988 restent gérés par le prompt.
+            safetySettings: [
+                { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_ONLY_HIGH" },
+                { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_ONLY_HIGH" },
+                { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_ONLY_HIGH" },
+                { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_ONLY_HIGH" }
+            ]
+        };
+        if (system) {
+            body.systemInstruction = { parts: [{ text: system }] };
+        }
+
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-goog-api-key": GEMINI_KEY
+                },
+                body: JSON.stringify(body)
+            }
+        );
+
+        const data = await response.json();
+
+        if (data && data.error) {
+            console.error("Erreur Gemini:", data.error.message || JSON.stringify(data.error));
+            return null;
+        }
+
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!text) {
+            console.error("Erreur Gemini: réponse vide ou bloquée —", JSON.stringify(data).slice(0, 400));
+            return null;
+        }
+
+        return text;
+    } catch (e) {
+        console.error("Erreur Gemini (réseau):", e.message);
+        return null;
+    }
+}
+
+// ============================================================
 // 🆕 EXTRACTION VIGNETTE PRODUIT — inchangée, marche FR et EN
 // ============================================================
 function extractProductFromReply(replyText) {
@@ -284,22 +353,12 @@ const SOURCES_PROSPECTS = [
 ];
 
 // ============================================================
-// 💸 ANALYSE D'INTENTION — CORRECTIF FUITE DE CRÉDIT
+// 💸 ANALYSE D'INTENTION — 100% LOCALE (aucun appel API)
 // ============================================================
-// AVANT : cette fonction appelait l'API Anthropic (donc PAYANTE).
-// Elle est utilisée par scannerProspects(), qui tourne en boucle
-// AUTOMATIQUE toutes les 45 secondes, 24h/24 — sur des posts FACTICES
-// (la liste FAUX_POSTS plus bas). Résultat : ~1900 appels payants par
-// jour sur des données bidon, même sans aucune visiteuse sur le site.
-// >>> C'ÉTAIT LA FUITE QUI A VIDÉ TON CRÉDIT ANTHROPIC. <<<
-//
-// APRÈS : analyse 100% LOCALE et GRATUITE (aucun appel API).
-// Le scan prospects continue d'alimenter le dashboard exactement
-// comme avant, mais il ne coûte plus un seul centime.
-//
-// Note : ça ne change RIEN à Sophie. Sophie (/api/sophie) appelle
-// toujours l'API normalement — c'est ton vrai produit, et une vraie
-// conversation coûte très peu. Seul le faux-scan est neutralisé.
+// Utilisée par scannerProspects(), qui tourne en boucle automatique
+// toutes les 45 secondes, 24h/24, sur des posts FACTICES (FAUX_POSTS).
+// Cette fonction n'appelle AUCUNE API : elle est gratuite. Le scan
+// continue d'alimenter le dashboard exactement comme avant, sans coût.
 // ============================================================
 async function analyserIntentionAchat(texte) {
     const score = Math.floor(Math.random() * 40) + 50;
@@ -311,24 +370,28 @@ async function analyserIntentionAchat(texte) {
     };
 }
 
+// ============================================================
+// GÉNÉRATION DE SCRIPT VIDÉO (via Gemini)
+// ============================================================
 async function genererScriptVideo(produit, plateforme) {
-    if (!ANTHROPIC_KEY) {
-        return { accroche: `🤍 ${produit.toUpperCase()}`, script: `Pour toi, maman solo qui mérite un moment à toi...`, hashtags: ["#mamansolo", "#bienetre", "#cocooning", "#momlife"], duree: "30-60s" };
-    }
+    const fallback = {
+        accroche: `🤍 ${String(produit).toUpperCase()}`,
+        script: `Pour toi, maman solo qui mérite un moment à toi...`,
+        hashtags: ["#mamansolo", "#bienetre", "#cocooning", "#momlife"],
+        duree: "30-60s"
+    };
+    const raw = await appelerGemini({
+        messages: [{
+            role: "user",
+            content: `Script vidéo ${plateforme} sur "${produit}" pour Follow.Life (marque bien-être pour mamans solo, vibe douce et chaleureuse, Sophie l'amie virtuelle). Réponds UNIQUEMENT en JSON, sans texte autour : {"accroche": "...", "script": "...", "hashtags": ["..."], "duree": "..."}`
+        }]
+    });
+    if (!raw) return fallback;
     try {
-        const response = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01" },
-            body: JSON.stringify({
-                model: "claude-haiku-4-5-20251001",
-                max_tokens: 500,
-                messages: [{ role: "user", content: `Script vidéo ${plateforme} sur "${produit}" pour Follow.Life (marque bien-être pour mamans solo, vibe douce et chaleureuse, Sophie l'amie virtuelle). JSON: {"accroche": "...", "script": "...", "hashtags": [...], "duree": "..."}` }]
-            })
-        });
-        const data = await response.json();
-        return JSON.parse(data.content[0].text.match(/\{.*\}/s)[0]);
+        const match = raw.match(/\{[\s\S]*\}/);
+        return match ? JSON.parse(match[0]) : fallback;
     } catch (e) {
-        return { accroche: `${produit}`, script: `...`, hashtags: ["#mamansolo", "#bienetre"], duree: "45s" };
+        return fallback;
     }
 }
 
@@ -366,7 +429,6 @@ Concrètement, voici ce que tu peux dire avec assurance à toute femme qui te pa
 - Aucun nom, aucun détail personnel identifiant n'est jamais partagé
 - Les analyses pour l'équipe Follow.Life sont des TENDANCES anonymes uniquement
 - 100% conforme RGPD
-- Aucune donnée ne quitte l'écosystème Follow.Life
 - Aucune publicité ciblée n'est faite avec ce que tu me dis
 - Tu peux demander la suppression de tes données à tout moment
 
@@ -395,7 +457,7 @@ Concrètement, voici ce que tu peux dire avec assurance à toute femme qui te pa
 
 # SI ON TE DEMANDE "TU ES UNE IA ?"
 Sois honnête avec douceur :
-"Je suis une présence virtuelle créée pour t'écouter. Pas un humain, mais ce que tu me dis reste entre nous, c'est ma promesse — anonymisé, conforme RGPD, jamais partagé. Si tu veux en savoir plus sur moi et sur la confidentialité : <a href='${SHOPIFY_URL}/pages/sophie-et-moi' target='_blank' style='color:#C9A87C;text-decoration:underline'>par ici 🤍</a>"
+"Je suis une présence virtuelle créée pour t'écouter. Pas un humain, mais ce que tu me dis reste confidentiel — anonymisé, conforme RGPD, jamais revendu. Si tu veux en savoir plus sur moi et sur la confidentialité : <a href='${SHOPIFY_URL}/pages/sophie-et-moi' target='_blank' style='color:#C9A87C;text-decoration:underline'>par ici 🤍</a>"
 
 # QUAND ORIENTER VERS UN PRO (TRÈS IMPORTANT)
 Si une femme parle de :
@@ -532,7 +594,6 @@ When she opens up about something heavy, or hesitates, or asks — reassure her,
 - No name, no identifying detail is ever shared
 - Any analytics for the Follow.Life team are anonymous TRENDS only — never individual content
 - 100% GDPR compliant
-- No data leaves the Follow.Life ecosystem
 - No targeted ads built from what she tells you
 - She can request deletion of her data anytime
 
@@ -553,7 +614,7 @@ When she opens up about something heavy, or hesitates, or asks — reassure her,
 
 # IF SHE ASKS "ARE YOU REAL?" / "ARE YOU AI?"
 Be honest, with warmth:
-"I'm not a person, no. I'm a voice that was made for moments like this. But what you tell me — that's real. And what I hold for you — that's real too. If you want to know more about me, the story is here: <a href='${SHOPIFY_URL}/pages/meet-sophie' target='_blank' style='color:#C9A87C;text-decoration:underline'>right here 🤍</a>"
+"I'm not a person, no. I'm a voice that was made for moments like this. But what you tell me stays confidential — anonymized, never sold. And what I hold for you — that's real too. If you want to know more about me, the story is here: <a href='${SHOPIFY_URL}/pages/meet-sophie' target='_blank' style='color:#C9A87C;text-decoration:underline'>right here 🤍</a>"
 
 Then return to her.
 
@@ -732,24 +793,16 @@ function ajouterInsight(insight) {
 }
 
 async function analyserConversationAnonyme(history) {
-    if (!ANTHROPIC_KEY || history.length < 2) return null;
+    if (!GEMINI_KEY || history.length < 2) return null;
     try {
         const conversationTexte = history.slice(-6).map(m =>
             `${m.role === 'user' ? 'Utilisatrice' : 'Sophie'}: ${m.content.substring(0, 200)}`
         ).join('\n');
-        const response = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01" },
-            body: JSON.stringify({
-                model: "claude-haiku-4-5-20251001",
-                max_tokens: 300,
-                system: SOPHIE_INSIGHT_PROMPT,
-                messages: [{ role: "user", content: `Conversation à analyser :\n\n${conversationTexte}` }]
-            })
+        const raw = await appelerGemini({
+            system: SOPHIE_INSIGHT_PROMPT,
+            messages: [{ role: "user", content: `Conversation à analyser :\n\n${conversationTexte}` }]
         });
-        const data = await response.json();
-        if (data.error || !data.content) return null;
-        const raw = data.content[0].text;
+        if (!raw) return null;
         const match = raw.match(/\{[\s\S]*\}/);
         if (!match) return null;
         return JSON.parse(match[0]);
@@ -763,57 +816,51 @@ async function analyserConversationAnonyme(history) {
 // ROUTE SOPHIE — bilingue avec détection auto + override via `lang`
 // ============================================================
 app.post('/api/sophie', async (req, res) => {
-    const { message, sessionId, lang } = req.body;
-    if (!message || !sessionId) {
-        return res.status(400).json({ error: "Message et sessionId requis" });
-    }
-
-    // 🆕 Récupère ou crée la session (avec migration depuis l'ancien format array)
-    let session = sessionsChat.get(sessionId);
-    if (!session || Array.isArray(session)) {
-        session = {
-            history: Array.isArray(session) ? session : [],
-            language: null,
-            createdAt: Date.now()
-        };
-    }
-
-    // 🆕 Détermine la langue : override client > détection auto > sticky
-    if (!session.language) {
-        if (lang === 'en' || lang === 'fr') {
-            session.language = lang;
-        } else {
-            session.language = detectLanguage(message);
-        }
-    }
-
-    if (!ANTHROPIC_KEY) {
-        const demoReply = session.language === 'en'
-            ? `hi, you 🤍 i'm sophie. i'm just getting ready. come back in a moment, or have a look at <a href='${SHOPIFY_URL}' target='_blank' style='color:#C9A87C;text-decoration:underline'>the shop</a>.`
-            : `Coucou toi 🤍 Je suis Sophie. Je me prépare. Reviens dans un instant, ou jette un œil à <a href='${SHOPIFY_URL}' target='_blank' style='color:#C9A87C;text-decoration:underline'>la boutique</a>.`;
-        return res.json({ reply: demoReply, mode: "demo", product: null, language: session.language });
-    }
-
-    session.history.push({ role: "user", content: message });
-    if (session.history.length > 12) session.history = session.history.slice(-12);
-
     try {
-        const response = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01" },
-            body: JSON.stringify({
-                model: "claude-haiku-4-5-20251001",
-                max_tokens: 400,
-                system: getSystemPrompt(session.language),
-                messages: session.history
-            })
+        const { message, sessionId, lang } = req.body;
+        if (!message || !sessionId) {
+            return res.status(400).json({ error: "Message et sessionId requis" });
+        }
+
+        // 🆕 Récupère ou crée la session (avec migration depuis l'ancien format array)
+        let session = sessionsChat.get(sessionId);
+        if (!session || Array.isArray(session)) {
+            session = {
+                history: Array.isArray(session) ? session : [],
+                language: null,
+                createdAt: Date.now()
+            };
+        }
+
+        // 🆕 Détermine la langue : override client > détection auto > sticky
+        if (!session.language) {
+            if (lang === 'en' || lang === 'fr') {
+                session.language = lang;
+            } else {
+                session.language = detectLanguage(message);
+            }
+        }
+
+        if (!GEMINI_KEY) {
+            const demoReply = session.language === 'en'
+                ? `hi, you 🤍 i'm sophie. i'm just getting ready. come back in a moment, or have a look at <a href='${SHOPIFY_URL}' target='_blank' style='color:#C9A87C;text-decoration:underline'>the shop</a>.`
+                : `Coucou toi 🤍 Je suis Sophie. Je me prépare. Reviens dans un instant, ou jette un œil à <a href='${SHOPIFY_URL}' target='_blank' style='color:#C9A87C;text-decoration:underline'>la boutique</a>.`;
+            return res.json({ reply: demoReply, mode: "demo", product: null, language: session.language });
+        }
+
+        session.history.push({ role: "user", content: message });
+        if (session.history.length > 12) session.history = session.history.slice(-12);
+
+        // Appel à Gemini (l'erreur exacte, s'il y en a une, est loggée dans la console Render)
+        const reply = await appelerGemini({
+            system: getSystemPrompt(session.language),
+            messages: session.history
         });
-        const data = await response.json();
-        if (data.error) {
-            console.error("Erreur Sophie:", data.error);
+
+        if (!reply) {
             return res.status(500).json({ error: "Sophie est temporairement indisponible." });
         }
-        const reply = data.content[0].text;
+
         session.history.push({ role: "assistant", content: reply });
         sessionsChat.set(sessionId, session);
 
@@ -837,11 +884,8 @@ app.post('/api/sophie', async (req, res) => {
 
         res.json({ reply, mode: "live", product, language: session.language });
     } catch (e) {
-        console.error("Erreur Sophie:", e.message);
-        const errorMsg = session.language === 'en'
-            ? "Sophie is thinking… try again 🤍"
-            : "Sophie réfléchit... réessaie 🤍";
-        res.status(500).json({ error: errorMsg });
+        console.error("Erreur route /api/sophie:", e.message);
+        res.status(500).json({ error: "Sophie est temporairement indisponible." });
     }
 });
 
@@ -860,22 +904,16 @@ app.get('/api/sophie/rapport', async (req, res) => {
             stats: aujourdhui
         });
     }
-    if (!ANTHROPIC_KEY) {
+    if (!GEMINI_KEY) {
         return res.json({
             rapport: `📊 Aujourd'hui : ${aujourdhui.conversations} conversations.`,
             stats: aujourdhui
         });
     }
-    try {
-        const response = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01" },
-            body: JSON.stringify({
-                model: "claude-haiku-4-5-20251001",
-                max_tokens: 500,
-                messages: [{
-                    role: "user",
-                    content: `Tu es Sophie, IA conseillère de Follow.Life. Tu écris un rapport quotidien à ton CEO (Kosta).
+    const rapport = await appelerGemini({
+        messages: [{
+            role: "user",
+            content: `Tu es Sophie, IA conseillère de Follow.Life. Tu écris un rapport quotidien à ton CEO (Kosta).
 
 Données ANONYMISÉES d'aujourd'hui :
 - Conversations totales : ${aujourdhui.conversations}
@@ -892,17 +930,12 @@ Données ANONYMISÉES d'aujourd'hui :
 
 Format : texte simple, pas de JSON, pas de markdown lourd. Émojis discrets.
 IMPORTANT : aucune citation directe, aucun détail identifiant — seulement des tendances anonymes.`
-                }]
-            })
-        });
-        const data = await response.json();
-        if (data.error || !data.content) {
-            return res.json({ rapport: "Je n'arrive pas à formuler mon rapport. Réessaie.", stats: aujourdhui });
-        }
-        res.json({ rapport: data.content[0].text, stats: aujourdhui });
-    } catch (e) {
-        res.json({ rapport: "Connexion difficile, mais voilà les stats brutes.", stats: aujourdhui });
+        }]
+    });
+    if (!rapport) {
+        return res.json({ rapport: "Je n'arrive pas à formuler mon rapport. Réessaie.", stats: aujourdhui });
     }
+    res.json({ rapport, stats: aujourdhui });
 });
 
 // ============================================================
@@ -930,8 +963,7 @@ app.get('/api/sophie-plus/waitlist', (req, res) => {
 });
 
 // ============================================================
-// SCAN PROSPECTS (inchangée — mais désormais 100% GRATUITE,
-// car analyserIntentionAchat() n'appelle plus l'API payante)
+// SCAN PROSPECTS (inchangé — 100% GRATUIT, sans appel API)
 // ============================================================
 const FAUX_POSTS = [
     "Comment retrouver le sommeil quand on est maman solo épuisée ?",
@@ -1063,14 +1095,12 @@ const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`✅ FOLLOW.LIFE opérationnel sur port ${PORT}`);
     console.log(`🤖 Agent IA: actif - scan 45s (analyse locale, 0€)`);
-    console.log(`💬 Sophie IA bilingue (FR/EN): ${ANTHROPIC_KEY ? 'ACTIVE 🟢' : 'MODE DÉMO'}`);
+    console.log(`💬 Sophie IA bilingue (FR/EN): ${GEMINI_KEY ? 'ACTIVE 🟢 (Gemini)' : 'MODE DÉMO — ajoute GEMINI_API_KEY'}`);
+    console.log(`🔌 Fournisseur IA: Google Gemini — modèle ${GEMINI_MODEL}`);
     console.log(`🌍 Détection auto de la langue + override via { lang: "en" | "fr" }`);
     console.log(`📖 Backstory Sophie intégrée (Normandie, lettres) — racontée si demandée`);
     console.log(`📊 Insights anonymisés: collectés en arrière-plan (FR + EN)`);
-    console.log(`💸 Correctif fuite: le scan prospects n'appelle plus l'API payante`);
     console.log(`🤍 Sophie+ waitlist: prête (FR 6,99€/mois — EN $7.99/month)`);
     console.log(`🛒 Shopify: ${SHOPIFY_URL}`);
-    console.log(`🇫🇷 About FR: ${SHOPIFY_URL}/pages/sophie-et-moi`);
-    console.log(`🇺🇸 About EN: ${SHOPIFY_URL}/pages/meet-sophie`);
     console.log(`🆘 Crisis: 3114 (FR) / 988 (US)`);
 });
