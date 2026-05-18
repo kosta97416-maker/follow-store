@@ -1,51 +1,49 @@
 // ============================================================
 // FOLLOW.LIFE — server.js
 // ============================================================
-// VERSION GROQ + CEREBRAS + MISTRAL — Sophie tourne sur Llama 3.3 70B
-// (Groq/Cerebras) et Mistral Small, avec bascule automatique entre
-// trois fournisseurs gratuits.
+// VERSION GROQ + CEREBRAS + MISTRAL — Sophie tourne avec bascule
+// automatique entre trois fournisseurs IA gratuits.
 //
 // COMMENT ÇA MARCHE :
 //
 // 1. 🔌 TROIS FOURNISSEURS EN RELAIS.
 //    Tous les appels IA passent par appelerIA(), qui essaie :
-//      1) GROQ en priorité      (api.groq.com — Llama 3.3 70B)
-//      2) CEREBRAS en secours   (api.cerebras.ai — Llama 3.3 70B)
-//      3) MISTRAL en 2e secours (api.mistral.ai — Mistral Small)
-//    Si un quota gratuit est à sec, Sophie passe au suivant. Avec
-//    trois quotas en relais, elle ne tombe quasiment jamais. 0€.
+//      1) GROQ en priorité      (api.groq.com)
+//      2) CEREBRAS en secours   (api.cerebras.ai — 1M tokens/jour gratuits)
+//      3) MISTRAL en 2e secours (api.mistral.ai)
+//    Si un quota gratuit est à sec, Sophie passe au suivant. 0€.
 //    -> Clé Groq     : https://console.groq.com    → GROQ_API_KEY
 //    -> Clé Cerebras : https://cloud.cerebras.ai    → CEREBRAS_API_KEY
 //    -> Clé Mistral  : https://console.mistral.ai   → MISTRAL_API_KEY
 //    (Sophie marche déjà avec UNE seule des trois clés.)
-//    -> Les trois APIs sont compatibles OpenAI.
 //
-// 2. 🔒 CONFIDENTIALITÉ — IMPORTANT, À LIRE.
-//    - Groq    : n'entraîne pas sur les conversations, pas de
-//                rétention par défaut. RGPD OK.
-//    - Cerebras: ne conserve pas et n'entraîne pas sur les données.
-//                RGPD OK.
-//    - Mistral : ⚠️ le palier gratuit "Experiment" PEUT utiliser les
-//                requêtes API pour entraîner les modèles de Mistral —
-//                SAUF si tu te désinscris (opt-out). À FAIRE AVANT de
-//                déployer : console.mistral.ai → Admin → Privacy →
-//                désactiver le partage de données pour l'entraînement.
-//                Une fois l'opt-out fait : Mistral ne conserve les
-//                données que 30 j (anti-abus) puis les supprime, sans
-//                entraînement. RGPD OK. (Mistral est français / hébergé
-//                en UE / sous CNIL — un bon point pour la marque.)
-//    -> Pense à mettre à jour la page confidentialité du site : elle
-//       doit mentionner Groq, Cerebras ET Mistral.
+// 2. ⚙️ NOMS DE MODÈLES CONFIGURABLES (IMPORTANT).
+//    Les fournisseurs retirent parfois des modèles sans prévenir
+//    (ex : Cerebras a supprimé "llama-3.3-70b" le 16/02/2026). Pour
+//    ne plus jamais être bloqué, les noms de modèles sont des
+//    VARIABLES D'ENVIRONNEMENT : GROQ_MODEL, CEREBRAS_MODEL,
+//    MISTRAL_MODEL. Si un modèle disparaît, tu changes la variable
+//    sur Render — aucune modif de code. Les valeurs par défaut
+//    ci-dessous sont à jour à la livraison de ce fichier.
 //
-// 3. ⚠️ LIMITES DES OFFRES GRATUITES.
-//    Chaque fournisseur a ses propres limites gratuites. En les
-//    cumulant (trois quotas), Sophie a beaucoup de marge. Si les TROIS
-//    saturent en même temps, Sophie répond avec douceur "réécris-moi
-//    dans une minute" (géré proprement, code HTTP 429). Pas de panne.
+// 3. 🔒 CONFIDENTIALITÉ.
+//    - Groq    : n'entraîne pas, pas de rétention par défaut. RGPD OK.
+//    - Cerebras: ne conserve pas et n'entraîne pas. RGPD OK.
+//    - Mistral : ⚠️ le palier gratuit "Experiment" PEUT entraîner sur
+//                les requêtes API — SAUF si tu fais l'opt-out :
+//                console.mistral.ai → Admin → Privacy → désactiver le
+//                partage de données. À FAIRE. Mistral est français/EU.
+//    -> Mets à jour la page confidentialité du site (Groq, Cerebras,
+//       Mistral).
 //
-// 4. 💸 CORRECTIF FUITE DE CRÉDIT (déjà présent, conservé).
+// 4. ⚠️ LIMITES GRATUITES.
+//    Si les TROIS fournisseurs saturent en même temps, Sophie répond
+//    avec douceur "réécris-moi dans une minute" (code HTTP 429 géré
+//    proprement). Pas de panne.
+//
+// 5. 💸 CORRECTIF FUITE DE CRÉDIT (conservé).
 //    analyserIntentionAchat() n'appelle aucune API : le scan prospects
-//    (toutes les 45s, sur des posts factices) est 100% local et gratuit.
+//    (toutes les 45s, posts factices) est 100% local et gratuit.
 //
 // Tout le reste est IDENTIQUE : Sophie bilingue FR/EN, sa backstory,
 // les deux system prompts, produits, collections, codes promo,
@@ -65,17 +63,24 @@ app.use(express.json());
 // ============================================================
 const SHOPIFY_URL = "https://shop.followlife.net";
 
-// --- Fournisseur principal : Groq ---
+// --- Noms de modèles : configurables via variables d'environnement ---
+// Si un fournisseur retire un modèle, change juste la variable
+// correspondante sur Render (onglet Environment) — aucune modif de code.
+
+// Fournisseur principal : Groq
 const GROQ_KEY = process.env.GROQ_API_KEY || "";
-const GROQ_MODEL = "llama-3.3-70b-versatile"; // Llama 3.3 70B sur Groq
+const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
-// --- Fournisseur de secours n°1 : Cerebras ---
+// Fournisseur de secours n°1 : Cerebras (gratuit : ~1M tokens/jour)
+// NB : "llama-3.3-70b" a été supprimé par Cerebras le 16/02/2026.
+// Modèle par défaut actuel : gpt-oss-120b. Liste des modèles dispo
+// sur ton compte : cloud.cerebras.ai → Models.
 const CEREBRAS_KEY = process.env.CEREBRAS_API_KEY || "";
-const CEREBRAS_MODEL = "llama-3.3-70b"; // même modèle Llama 3.3 70B, nom différent chez Cerebras
+const CEREBRAS_MODEL = process.env.CEREBRAS_MODEL || "gpt-oss-120b";
 
-// --- Fournisseur de secours n°2 : Mistral (français, EU/RGPD) ---
+// Fournisseur de secours n°2 : Mistral (français, EU/RGPD)
 const MISTRAL_KEY = process.env.MISTRAL_API_KEY || "";
-const MISTRAL_MODEL = "mistral-small-latest"; // modèle Mistral, excellent en français
+const MISTRAL_MODEL = process.env.MISTRAL_MODEL || "mistral-small-latest";
 
 // ============================================================
 // ÉTAT GLOBAL
@@ -397,8 +402,13 @@ async function appelerCerebras({ system, messages, maxTokens, temperature } = {}
 
         const data = await response.json();
 
+        // Cerebras renvoie ses erreurs dans data.error ou data.message
         if (data && data.error) {
             console.error("Erreur Cerebras:", data.error.message || JSON.stringify(data.error));
+            return { text: null, rateLimited: false };
+        }
+        if (data && data.message && !data.choices) {
+            console.error("Erreur Cerebras:", typeof data.message === 'string' ? data.message : JSON.stringify(data.message));
             return { text: null, rateLimited: false };
         }
 
@@ -441,7 +451,7 @@ async function appelerMistral({ system, messages, maxTokens, temperature } = {})
         );
 
         if (response.status === 429) {
-            console.error("⚠️ Mistral: limite gratuite atteinte (429).");
+            console.error("⚠️ Mistral: limite gratuite atteinte / capacité saturée (429).");
             return { text: null, rateLimited: true };
         }
 
@@ -1317,6 +1327,7 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`   • Groq     : ${GROQ_KEY ? 'OK ✅ (' + GROQ_MODEL + ')' : 'non configuré'}`);
     console.log(`   • Cerebras : ${CEREBRAS_KEY ? 'OK ✅ (' + CEREBRAS_MODEL + ')' : 'non configuré'}`);
     console.log(`   • Mistral  : ${MISTRAL_KEY ? 'OK ✅ (' + MISTRAL_MODEL + ')' : 'non configuré'}`);
+    console.log(`⚙️  Modèles configurables via GROQ_MODEL / CEREBRAS_MODEL / MISTRAL_MODEL`);
     console.log(`🌍 Détection auto de la langue + override via { lang: "en" | "fr" }`);
     console.log(`📖 Backstory Sophie intégrée (Normandie, lettres) — racontée si demandée`);
     console.log(`📊 Insights anonymisés: collectés en arrière-plan (FR + EN)`);
