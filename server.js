@@ -222,11 +222,11 @@ const PRODUITS_CLES = [
 // "code" = code court écrit par Sophie entre [[ ]].
 // ============================================================
 const COLLECTIONS_EMOTIONNELLES = [
-    { code: "craquer", nom: "🌙 Quand je craque", nomEN: "🌙 When I break", handle: "🌙-quand-je-craque", contexte: "stress intense, craquage, besoin de tout poser", contexteEN: "overwhelm, breaking point, needing to put it all down" },
-    { code: "recharger", nom: "💆‍♀️ Me recharger", nomEN: "💆‍♀️ Recharge me", handle: "💆‍-️-me-recharger", contexte: "fatigue, besoin de se ressourcer", contexteEN: "exhaustion, needing to refill yourself" },
-    { code: "matin", nom: "☀️ Mes rituels du matin", nomEN: "☀️ Morning rituals", handle: "☀️-mes-rituels-du-matin", contexte: "démarrer la journée plus douce", contexteEN: "starting the day softer" },
+    { code: "craquer", nom: "🌙 Quand je craque", nomEN: "🌙 When I break", handle: "quand-je-craque", contexte: "stress intense, craquage, besoin de tout poser", contexteEN: "overwhelm, breaking point, needing to put it all down" },
+    { code: "recharger", nom: "💆‍♀️ Me recharger", nomEN: "💆‍♀️ Recharge me", handle: "me-recharger", contexte: "fatigue, besoin de se ressourcer", contexteEN: "exhaustion, needing to refill yourself" },
+    { code: "matin", nom: "☀️ Mes rituels du matin", nomEN: "☀️ Morning rituals", handle: "mes-rituels-du-matin", contexte: "démarrer la journée plus douce", contexteEN: "starting the day softer" },
     { code: "cocon", nom: "🤍 Cocon douceur", nomEN: "🤍 Soft cocoon", handle: "cocon-douceur", contexte: "envie d'enveloppe douce, soir, week-end", contexteEN: "longing for softness, evenings, weekends" },
-    { code: "quotidien", nom: "🌸 Mes petits riens du quotidien", nomEN: "🌸 Tiny everyday rituals", handle: "💪-survie-maman-du-quotidien", contexte: "petits gestes pour les mamans débordées", contexteEN: "small gestures for overwhelmed moms" },
+    { code: "quotidien", nom: "🌸 Mes petits riens du quotidien", nomEN: "🌸 Tiny everyday rituals", handle: "petits-riens-du-quotidien", contexte: "petits gestes pour les mamans débordées", contexteEN: "small gestures for overwhelmed moms" },
     { code: "dormir", nom: "💤 Pour bien dormir", nomEN: "💤 To sleep well", handle: "pour-bien-dormir", contexte: "insomnie, sommeil difficile, nuit agitée", contexteEN: "insomnia, restless nights, sleepless hours" },
     { code: "parfums", nom: "🌿 Mes parfums qui apaisent", nomEN: "🌿 Scents that calm me", handle: "aromatherapie-diffuseurs", contexte: "anxiété, respirer, ambiance maison", contexteEN: "anxiety, breath, home atmosphere" },
     { code: "pierres", nom: "💎 Mes pierres de réconfort", nomEN: "💎 My comfort stones", handle: "cristaux-bonnes-vibes", contexte: "ancrage, calme, méditation, spiritualité", contexteEN: "grounding, calm, meditation, spirituality" },
