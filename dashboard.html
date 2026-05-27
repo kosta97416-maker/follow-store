@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sophie · Mon bureau virtuel 🤍</title>
+<title>Sophie · Mon bureau 🤍</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -11,7 +11,7 @@
   --or: #C9A87C; --or-clair: #E8C99E; --or-doux: #8B7355;
   --creme: #F5EDE0; --creme-doux: #DDC9B0; --gris: #847b6f;
   --vert-doux: #7da97e; --rouge-doux: #c97a7a; --rose: #E8B8B8;
-  --shadow: 0 20px 50px -20px rgba(0,0,0,0.5);
+  --violet-doux: #b29bc4;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:var(--noir); color:var(--creme); font-family:'DM Sans',sans-serif; font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased; min-height:100vh; }
@@ -61,7 +61,7 @@ main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-directi
   font-family:'Caveat',cursive; font-size:1.2rem; color:var(--or-clair); margin-bottom:0.5rem;
 }
 
-/* === RAPPORT SOPHIE (hero) === */
+/* === RAPPORT SOPHIE (HERO) === */
 .rapport {
   background:linear-gradient(135deg, var(--noir-doux) 0%, var(--terre) 100%);
   border:1px solid rgba(201,168,124,0.3);
@@ -100,27 +100,26 @@ main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-directi
 .rapport-loading { color:var(--gris); font-style:italic; animation:pulse 1.5s infinite; }
 
 /* === STATS ROW === */
-.stats-row { display:grid; grid-template-columns:repeat(4, 1fr); gap:1rem; }
+.stats-row { display:grid; grid-template-columns:repeat(5, 1fr); gap:1rem; }
 .stat {
   background:var(--noir-doux); border:1px solid rgba(201,168,124,0.12);
-  border-radius:14px; padding:1.5rem; text-align:center; transition:all 0.3s;
+  border-radius:14px; padding:1.3rem 1rem; text-align:center; transition:all 0.3s;
 }
 .stat:hover { border-color:rgba(201,168,124,0.3); transform:translateY(-2px); }
 .stat-val {
-  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:3rem;
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:2.6rem;
   color:var(--creme); line-height:1; margin-bottom:0.5rem; font-weight:400;
 }
 .stat-val.or { color:var(--or-clair); }
 .stat-val.vert { color:var(--vert-doux); }
 .stat-val.rose { color:var(--rose); }
-.stat-label { font-size:0.7rem; color:var(--gris); letter-spacing:0.15em; text-transform:uppercase; font-weight:500; }
+.stat-val.violet { color:var(--violet-doux); }
+.stat-label { font-size:0.65rem; color:var(--gris); letter-spacing:0.12em; text-transform:uppercase; font-weight:500; }
 
 /* === INSIGHTS (2 cols) === */
 .insights-grid { display:grid; grid-template-columns:1.2fr 1fr; gap:1rem; }
-
-/* Émotions bars */
 .emotions-list { display:flex; flex-direction:column; gap:0.8rem; }
-.emotion-row { display:grid; grid-template-columns:120px 1fr 40px; align-items:center; gap:1rem; }
+.emotion-row { display:grid; grid-template-columns:140px 1fr 40px; align-items:center; gap:1rem; }
 .emotion-name { font-size:0.85rem; color:var(--creme-doux); text-transform:capitalize; }
 .emotion-name .emoji { margin-right:0.4rem; }
 .emotion-bar { background:rgba(201,168,124,0.08); height:8px; border-radius:100px; overflow:hidden; }
@@ -129,12 +128,11 @@ main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-directi
   border-radius:100px; transition:width 1s ease;
 }
 .emotion-count { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem; color:var(--or); text-align:right; }
-.empty-state { text-align:center; padding:2rem 1rem; color:var(--gris); font-style:italic; font-family:'Cormorant Garamond',serif; font-size:1rem; }
+.empty-state { text-align:center; padding:1.5rem 1rem; color:var(--gris); font-style:italic; font-family:'Cormorant Garamond',serif; font-size:1rem; }
 
-/* Tags besoins/sujets */
-.tags-section { margin-bottom:1.5rem; }
+.tags-section { margin-bottom:1.3rem; }
 .tags-section:last-child { margin-bottom:0; }
-.tags-section-title { font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--or-doux); margin-bottom:0.8rem; font-weight:500; }
+.tags-section-title { font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--or-doux); margin-bottom:0.7rem; font-weight:500; }
 .tags-list { display:flex; flex-wrap:wrap; gap:0.5rem; }
 .tag {
   background:rgba(201,168,124,0.08); border:1px solid rgba(201,168,124,0.2);
@@ -147,7 +145,43 @@ main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-directi
   font-size:0.65rem; font-weight:600; margin-left:0.3rem;
 }
 
-/* === IDÉES DE CONTENU === */
+/* === DEMANDES DE LIVRES (la pépite stratégique) === */
+.book-requests {
+  background:linear-gradient(135deg, rgba(178,155,196,0.06) 0%, var(--noir-doux) 100%);
+  border:1px solid rgba(178,155,196,0.25);
+}
+.book-requests:hover { border-color:rgba(178,155,196,0.4); }
+.book-requests .card-label-caveat { color:var(--violet-doux); }
+.requests-list { display:flex; flex-direction:column; gap:0.8rem; max-height:380px; overflow-y:auto; padding-right:0.5rem; }
+.request-row {
+  background:rgba(178,155,196,0.04); border-left:3px solid var(--violet-doux);
+  padding:0.9rem 1rem; border-radius:0 10px 10px 0; transition:all 0.2s;
+}
+.request-row:hover { background:rgba(178,155,196,0.08); }
+.request-theme {
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.05rem;
+  color:var(--creme); line-height:1.5; margin-bottom:0.3rem;
+}
+.request-meta { display:flex; gap:0.6rem; align-items:center; font-size:0.7rem; color:var(--gris); flex-wrap:wrap; }
+.request-genre {
+  background:rgba(178,155,196,0.15); color:var(--violet-doux);
+  padding:0.15rem 0.55rem; border-radius:100px; font-size:0.65rem; letter-spacing:0.05em;
+}
+.request-spec-high { color:var(--or-clair); font-weight:600; }
+.request-spec-medium { color:var(--creme-doux); }
+.request-spec-low { color:var(--gris); }
+.requests-summary {
+  display:flex; gap:1rem; margin-bottom:1rem; padding-bottom:1rem;
+  border-bottom:1px solid rgba(201,168,124,0.1); flex-wrap:wrap;
+}
+.summary-pill {
+  background:rgba(178,155,196,0.1); border:1px solid rgba(178,155,196,0.3);
+  color:var(--violet-doux); padding:0.4rem 0.9rem; border-radius:100px;
+  font-size:0.72rem; display:inline-flex; align-items:center; gap:0.4rem;
+}
+.summary-pill strong { color:var(--creme); font-weight:600; }
+
+/* === IDÉES DE CONTENU BOOKTOK === */
 .idea-box {
   background:rgba(201,168,124,0.05); border-left:3px solid var(--or);
   padding:1rem 1.2rem; border-radius:0 12px 12px 0; margin-bottom:0.8rem;
@@ -167,15 +201,13 @@ main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-directi
 
 /* === TOOLS (2 cols) === */
 .tools-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
-
-/* Video generator */
 .video-form { display:flex; flex-direction:column; gap:0.8rem; }
-.video-select {
+.video-select, .video-input {
   background:rgba(245,237,224,0.05); border:1px solid rgba(201,168,124,0.2);
   color:var(--creme); font-family:'DM Sans',sans-serif; font-size:0.85rem;
   padding:0.8rem 1rem; border-radius:8px; width:100%; outline:none; transition:border-color 0.2s;
 }
-.video-select:focus { border-color:var(--or); }
+.video-select:focus, .video-input:focus { border-color:var(--or); }
 .video-buttons { display:flex; gap:0.5rem; }
 .btn {
   background:transparent; border:1px solid rgba(201,168,124,0.3); color:var(--or);
@@ -187,10 +219,7 @@ main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-directi
 .btn:disabled { opacity:0.4; cursor:wait; }
 .btn.primary { background:var(--or); color:var(--noir); border-color:var(--or); }
 .btn.primary:hover:not(:disabled) { background:var(--or-clair); border-color:var(--or-clair); }
-.btn.danger { color:var(--rouge-doux); border-color:rgba(201,122,122,0.3); }
-.btn.danger:hover:not(:disabled) { background:rgba(201,122,122,0.1); border-color:var(--rouge-doux); color:var(--rouge-doux); }
 .btn.flex1 { flex:1; }
-
 .video-result {
   background:var(--noir); border:1px solid rgba(201,168,124,0.1);
   border-radius:10px; padding:1.2rem; min-height:120px; margin-top:0.5rem;
@@ -208,25 +237,24 @@ main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-directi
 .video-duree { font-size:0.7rem; color:var(--gris); font-style:italic; }
 .video-empty { color:var(--gris); font-style:italic; font-size:0.9rem; font-family:'Cormorant Garamond',serif; }
 
-/* === REVENUS === */
-.revenu-row { margin-bottom:1.2rem; }
-.revenu-row:last-child { margin-bottom:0; }
-.revenu-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; }
-.revenu-name { font-size:0.85rem; color:var(--creme-doux); }
-.revenu-val { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.2rem; color:var(--or-clair); }
-.revenu-track { background:rgba(201,168,124,0.08); height:8px; border-radius:100px; overflow:hidden; }
-.revenu-fill { height:100%; border-radius:100px; transition:width 1s ease; background:linear-gradient(90deg, var(--or-doux), var(--or-clair)); }
-.revenu-fill.sage { background:linear-gradient(90deg, #5a8a6e, var(--vert-doux)); }
-.objectif-box {
-  margin-top:1.5rem; padding:1.5rem; background:var(--noir);
-  border:1px solid rgba(201,168,124,0.15); border-radius:12px;
+/* === WAITLIST SOPHIE+ === */
+.waitlist-card {
+  background:linear-gradient(135deg, rgba(201,168,124,0.08) 0%, var(--noir-doux) 100%);
+  border:1px solid rgba(201,168,124,0.3);
 }
-.objectif-label { font-size:0.65rem; color:var(--or-doux); letter-spacing:0.25em; text-transform:uppercase; margin-bottom:0.5rem; }
-.objectif-val {
-  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:2.5rem;
-  color:var(--creme); line-height:1; margin-bottom:0.3rem;
+.waitlist-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem; flex-wrap:wrap; gap:1rem; }
+.waitlist-count {
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:3.2rem;
+  color:var(--or-clair); line-height:1;
 }
-.objectif-detail { font-size:0.8rem; color:var(--gris); margin-bottom:0.8rem; }
+.waitlist-text { font-size:0.85rem; color:var(--creme-doux); line-height:1.5; max-width:500px; }
+.waitlist-progress { margin-top:1rem; padding-top:1rem; border-top:1px solid rgba(201,168,124,0.1); }
+.waitlist-objectif { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.5rem; }
+.waitlist-obj-label { font-size:0.7rem; color:var(--or-doux); letter-spacing:0.15em; text-transform:uppercase; }
+.waitlist-obj-val { font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--or-clair); }
+.waitlist-track { background:rgba(201,168,124,0.08); height:10px; border-radius:100px; overflow:hidden; }
+.waitlist-fill { height:100%; background:linear-gradient(90deg, var(--or-doux), var(--or-clair)); border-radius:100px; transition:width 1s ease; }
+.waitlist-note { margin-top:0.8rem; font-size:0.75rem; color:var(--gris); font-style:italic; line-height:1.5; }
 
 /* === TECH (collapsible) === */
 .tech-toggle {
@@ -238,15 +266,15 @@ main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-directi
 .tech-toggle.open .arrow { transform:rotate(180deg); }
 .tech-panel { display:none; }
 .tech-panel.open { display:block; }
-.tech-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
 .logs-box {
   background:var(--noir); border:1px solid rgba(201,168,124,0.1); border-radius:8px;
-  padding:1rem; max-height:240px; overflow-y:auto; font-size:0.75rem; line-height:1.8;
+  padding:1rem; max-height:300px; overflow-y:auto; font-size:0.75rem; line-height:1.8;
   font-family:'DM Sans',sans-serif;
 }
-.log-line { color:var(--gris); padding:0.15rem 0; }
+.log-line { color:var(--gris); padding:0.15rem 0; word-break:break-word; }
 .log-line.ok { color:var(--vert-doux); }
 .log-line.warn { color:var(--or); }
+.log-line.book { color:var(--violet-doux); }
 .log-line.err { color:var(--rouge-doux); }
 .log-line .time { color:var(--gris); margin-right:0.5rem; }
 
@@ -256,20 +284,24 @@ main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-directi
 .fade-in { animation:fadeIn 0.4s ease; }
 
 /* === RESPONSIVE === */
+@media (max-width:1100px) {
+  .stats-row { grid-template-columns:repeat(3, 1fr); }
+}
 @media (max-width:900px) {
   main { padding:1rem; gap:1rem; }
   .stats-row { grid-template-columns:repeat(2, 1fr); }
-  .insights-grid, .tools-grid, .tech-grid { grid-template-columns:1fr; }
+  .insights-grid, .tools-grid { grid-template-columns:1fr; }
   .rapport { padding:1.5rem; }
   .rapport-title { font-size:1.3rem; }
   .rapport-body { font-size:1rem; }
   header { padding:1rem; }
   .header-right { gap:0.8rem; }
   .header-clock { display:none; }
-  .stat-val { font-size:2.2rem; }
+  .stat-val { font-size:2rem; }
+  .waitlist-count { font-size:2.5rem; }
 }
 @media (max-width:600px) {
-  .stats-row { grid-template-columns:1fr; }
+  .stats-row { grid-template-columns:1fr 1fr; }
   .header-nav a { padding:0.4rem 0.7rem; font-size:0.6rem; }
 }
 </style>
@@ -314,19 +346,23 @@ main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-directi
     <div class="rapport-time" id="rapportTime"></div>
   </section>
 
-  <!-- STATS ROW -->
+  <!-- STATS ROW (5 cartes) -->
   <section class="stats-row">
     <div class="stat">
       <div class="stat-val or" id="sConversations">0</div>
-      <div class="stat-label">Conversations Sophie</div>
+      <div class="stat-label">Conversations</div>
     </div>
     <div class="stat">
       <div class="stat-val" id="sVisiteuses">0</div>
-      <div class="stat-label">Visiteuses aujourd'hui</div>
+      <div class="stat-label">Visiteuses du jour</div>
     </div>
     <div class="stat">
-      <div class="stat-val vert" id="sVentes">0€</div>
-      <div class="stat-label">Ventes estimées</div>
+      <div class="stat-val vert" id="sLivres">0</div>
+      <div class="stat-label">Livres recommandés</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val violet" id="sBookReq">0</div>
+      <div class="stat-label">Demandes livres captées</div>
     </div>
     <div class="stat">
       <div class="stat-val rose" id="sAlertes">0</div>
@@ -340,15 +376,21 @@ main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-directi
       <div class="card-label-caveat">Comment elles se sentent</div>
       <div class="card-label">Émotions du jour</div>
       <div id="emotionsList" class="emotions-list">
-        <div class="empty-state">Sophie attend tes premières utilisatrices 🤍</div>
+        <div class="empty-state">Sophie attend ses premières lectrices 🤍</div>
       </div>
     </div>
     <div class="card">
-      <div class="card-label-caveat">Ce qu'elles cherchent</div>
-      <div class="card-label">Besoins & Sujets récurrents</div>
+      <div class="card-label-caveat">Ce qu'elles cherchent à lire</div>
+      <div class="card-label">Moods · Genres · Profils</div>
       <div class="tags-section">
-        <div class="tags-section-title">Besoins détectés</div>
-        <div class="tags-list" id="besoinsTags">
+        <div class="tags-section-title">Moods de lecture</div>
+        <div class="tags-list" id="moodsTags">
+          <div class="empty-state" style="padding:0.5rem">—</div>
+        </div>
+      </div>
+      <div class="tags-section">
+        <div class="tags-section-title">Genres recherchés</div>
+        <div class="tags-list" id="genresTags">
           <div class="empty-state" style="padding:0.5rem">—</div>
         </div>
       </div>
@@ -359,7 +401,7 @@ main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-directi
         </div>
       </div>
       <div class="tags-section">
-        <div class="tags-section-title">Profils types</div>
+        <div class="tags-section-title">Profils de lectrices</div>
         <div class="tags-list" id="profilsTags">
           <div class="empty-state" style="padding:0.5rem">—</div>
         </div>
@@ -367,16 +409,53 @@ main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-directi
     </div>
   </section>
 
+  <!-- DEMANDES DE LIVRES (la pépite stratégique) -->
+  <section class="card book-requests">
+    <div class="card-label-caveat">L'arme secrète éditoriale 🤫</div>
+    <div class="card-label">Livres demandés (captés en silence)</div>
+    <div class="requests-summary" id="requestsSummary">
+      <span class="summary-pill"><strong>0</strong> demandes captées</span>
+    </div>
+    <div id="requestsList" class="requests-list">
+      <div class="empty-state">Sophie n'a encore capté aucune demande de livre. Quand une lectrice dira "j'aimerais un livre sur…", ça apparaîtra ici. 🤍</div>
+    </div>
+  </section>
+
+  <!-- WAITLIST SOPHIE+ -->
+  <section class="card waitlist-card">
+    <div class="card-label-caveat">Ton chiffre clé long terme</div>
+    <div class="card-label">Liste d'attente Sophie+</div>
+    <div class="waitlist-header">
+      <div>
+        <div class="waitlist-count" id="waitlistCount">0</div>
+        <div style="font-size:0.7rem; color:var(--or-doux); letter-spacing:0.15em; text-transform:uppercase; margin-top:0.3rem;">Emails captés</div>
+      </div>
+      <div class="waitlist-text">
+        À <strong style="color:var(--or-clair)">500-1000 emails</strong>, on bascule Sophie+ Premium à 4,99€/mois. C'est là que le business devient durable. Chaque email compte.
+      </div>
+    </div>
+    <div class="waitlist-progress">
+      <div class="waitlist-objectif">
+        <span class="waitlist-obj-label">Objectif palier Premium</span>
+        <span class="waitlist-obj-val" id="waitlistObjVal">0 / 500</span>
+      </div>
+      <div class="waitlist-track"><div class="waitlist-fill" id="waitlistBar" style="width:0%"></div></div>
+    </div>
+    <div class="waitlist-note">
+      💡 Astuce : Sophie doit proposer la waitlist UNIQUEMENT à la fin d'une vraie conversation, jamais en pression. Si le taux de capture stagne, c'est qu'elle propose trop tôt ou pas assez.
+    </div>
+  </section>
+
   <!-- TOOLS (2 cols) -->
   <section class="tools-grid">
     <div class="card">
-      <div class="card-label-caveat">Inspiré par ce qu'elles te disent</div>
-      <div class="card-label">Idées de contenu TikTok</div>
+      <div class="card-label-caveat">Inspiré par ce qu'elles lisent</div>
+      <div class="card-label">Idées de contenu BookTok</div>
       <div id="ideasContainer">
         <div class="idea-box">
           <div class="idea-subject">Une idée pour démarrer</div>
-          <div class="idea-text">Fais une vidéo "POV : tu rentres crevée du boulot" → finis par <strong>Le masque qui efface le monde</strong> 🌙</div>
-          <button class="idea-cta" onclick="document.getElementById('produitSelect').value='Le masque qui efface le monde'; generateVideo('tiktok');">Générer le script →</button>
+          <div class="idea-text">POV : tu dis à Sophie ce que tu ressens, elle te trouve LE livre. Termine par <strong>Twisted Love</strong> 🖤</div>
+          <button class="idea-cta" onclick="document.getElementById('themeInput').value='POV: a reader tells Sophie she just got dumped, Sophie finds her Twisted Love'; generateVideo('tiktok');">Générer le script →</button>
         </div>
       </div>
     </div>
@@ -384,76 +463,42 @@ main { padding:2rem; max-width:1400px; margin:0 auto; display:flex; flex-directi
       <div class="card-label-caveat">Sophie t'aide à créer</div>
       <div class="card-label">Générateur de scripts vidéo</div>
       <div class="video-form">
-        <select class="video-select" id="produitSelect">
-          <option>Le masque qui efface le monde</option>
-          <option>Mes petites bouteilles magiques</option>
-          <option>Mon rituel petit bonheur</option>
-          <option>Mes 7 couleurs apaisantes</option>
-          <option>Mon rituel lifting doux</option>
-          <option>Pour bien dormir et avoir de beaux cheveux</option>
-          <option>Mon cocon entre l'école et le boulot</option>
-          <option>Mon atelier cocooning</option>
-          <option>Mes 6 pierres pour les bons vibes</option>
-          <option>Mon ancre de calme</option>
+        <select class="video-select" id="themeSelect" onchange="document.getElementById('themeInput').value=this.value">
+          <option value="">— Choisir un angle BookTok —</option>
+          <option value="POV: a reader tells Sophie she just got dumped, Sophie finds her a dark romance">💔 POV breakup → dark romance</option>
+          <option value="The book Sophie sent me at 3am that I couldn't put down">🌙 Le livre que Sophie m'a envoyé à 3h</option>
+          <option value="A whispered review of a slow-burn romance that wrecked me">🐌 Slow burn qui m'a brisée</option>
+          <option value="Sophie's morally grey hero recommendation for women tired of nice guys">🖤 Morally grey hero pour les femmes fatiguées des gentils</option>
+          <option value="When Sophie sends you to Velaris (ACOTAR fan content)">🐉 Quand Sophie t'envoie à Velaris (romantasy)</option>
+          <option value="Trigger warning content: how Sophie helps you avoid the wrong book">⚠️ Sophie évite la lecture qui te blesse</option>
+          <option value="The book Sophie wrote herself - introducing 'Becoming the One We Wish We'd Had'">📖 Sophie présente SON livre</option>
+          <option value="Spice 5/5 recommendations Sophie won't say out loud">🔥 Les reco spice 5/5 que Sophie chuchote</option>
         </select>
+        <input type="text" class="video-input" id="themeInput" placeholder="Ou écris ton propre angle BookTok…" />
         <div class="video-buttons">
           <button class="btn flex1 primary" onclick="generateVideo('tiktok')">▶ TikTok</button>
           <button class="btn flex1" onclick="generateVideo('instagram')">◉ Instagram</button>
         </div>
         <div class="video-result" id="videoResult">
-          <div class="video-empty">Sélectionne un produit et clique sur TikTok ou Instagram...</div>
+          <div class="video-empty">Sélectionne un angle ou écris le tien, puis clique TikTok ou Instagram…</div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- REVENUS -->
-  <section class="card">
-    <div class="card-label-caveat">L'argent qui rentre</div>
-    <div class="card-label">Revenus & Performance</div>
-    <div class="revenu-row">
-      <div class="revenu-header">
-        <span class="revenu-name">🛒 Ventes Shopify estimées</span>
-        <span class="revenu-val" id="rShopify">0€</span>
-      </div>
-      <div class="revenu-track"><div class="revenu-fill sage" id="barShopify" style="width:0%"></div></div>
-    </div>
-    <div class="revenu-row">
-      <div class="revenu-header">
-        <span class="revenu-name">📈 Taux de conversion (visiteur → vente)</span>
-        <span class="revenu-val" id="rTaux">0%</span>
-      </div>
-      <div class="revenu-track"><div class="revenu-fill" id="barTaux" style="width:0%"></div></div>
-    </div>
-    <div class="objectif-box">
-      <div class="objectif-label">Objectif du mois</div>
-      <div class="objectif-val" id="objPct">0%</div>
-      <div class="objectif-detail" id="objDetail">0€ / 500€</div>
-      <div class="revenu-track"><div class="revenu-fill" id="barObj" style="width:0%"></div></div>
     </div>
   </section>
 
   <!-- TECH PANEL (collapsible) -->
   <div class="tech-toggle" id="techToggle" onclick="toggleTech()">
-    🔧 Outils techniques · Logs & Simulateur <span class="arrow">▼</span>
+    🔧 Activité technique de Sophie <span class="arrow">▼</span>
   </div>
   <div class="tech-panel" id="techPanel">
-    <div class="tech-grid">
-      <div class="card">
-        <div class="card-label">Agent simulateur prospects</div>
-        <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
-          <button class="btn" id="btnToggleAgent" onclick="toggleAgent()">⏸ Pause</button>
-          <button class="btn" onclick="forcerScan()">⚡ Scan maintenant</button>
-        </div>
-        <div style="font-size:0.75rem; color:var(--gris); line-height:1.6;">
-          Le simulateur génère des "prospects" fictifs basés sur des forums de mamans. C'est un outil de démo, pas des vraies utilisatrices.
-        </div>
+    <div class="card">
+      <div class="card-label">Logs récents</div>
+      <div class="logs-box" id="logsBox">
+        <div class="log-line ok"><span class="time">[init]</span>Sophie literary companion initialisée 🤍</div>
       </div>
-      <div class="card">
-        <div class="card-label">Activité de Sophie</div>
-        <div class="logs-box" id="logsBox">
-          <div class="log-line ok"><span class="time">[init]</span>Sophie initialisée 🤍</div>
-        </div>
+      <div style="margin-top:1rem; font-size:0.75rem; color:var(--gris); line-height:1.6;">
+        💡 Les demandes de livres captées apparaissent en violet. Les orientations pro (3114 / 988) en orange.
+        Les conversations sont stockées de manière éphémère côté serveur — aucun message individuel n'est conservé après redémarrage.
       </div>
     </div>
   </div>
@@ -470,51 +515,66 @@ function logout() {
   window.location.href = '/login';
 }
 
-// === CONFIG ===
-const SUJET_TO_PRODUIT = {
-  'sommeil': { produit: 'Le masque qui efface le monde', emoji: '🌙', angle: 'Pour les nuits où tu n\'en peux plus' },
-  'dormir': { produit: 'Le masque qui efface le monde', emoji: '🌙', angle: 'Pour les nuits où tu n\'en peux plus' },
-  'fatigue': { produit: 'Le masque qui efface le monde', emoji: '🌙', angle: 'POV : tu rentres crevée du boulot' },
-  'stress': { produit: 'Mes petites bouteilles magiques', emoji: '🌿', angle: 'Mes 3 huiles essentielles pour respirer' },
-  'anxiete': { produit: 'Mes petites bouteilles magiques', emoji: '🌿', angle: 'Quand l\'angoisse monte, fais ça' },
-  'charge': { produit: 'Mon rituel petit bonheur', emoji: '🕯️', angle: 'Mon rituel du dimanche soir pour décompresser' },
-  'mentale': { produit: 'Mon rituel petit bonheur', emoji: '🕯️', angle: 'Mon rituel du dimanche soir' },
-  'cocon': { produit: 'Mes 7 couleurs apaisantes', emoji: '🔥', angle: 'Spa à la maison en 30 secondes' },
-  'beaute': { produit: 'Mon rituel lifting doux', emoji: '🌸', angle: 'Le Gua Sha qui réveille ma peau' },
-  'visage': { produit: 'Mon rituel lifting doux', emoji: '🌸', angle: '3 min de Gua Sha le matin' },
-  'cheveux': { produit: 'Pour bien dormir et avoir de beaux cheveux', emoji: '✨', angle: 'La taie d\'oreiller en soie qui sauve mes cheveux' },
-  'voiture': { produit: 'Mon cocon entre l\'école et le boulot', emoji: '🚗', angle: 'Mon trajet boulot devient ma pause à moi' },
-  'meditation': { produit: 'Mes 6 pierres pour les bons vibes', emoji: '💎', angle: 'Mes 6 cristaux pour bonne énergie' },
-  'spirituel': { produit: 'Mes 6 pierres pour les bons vibes', emoji: '💎', angle: 'Pour les copines spirituelles' },
-  'calme': { produit: 'Mon ancre de calme', emoji: '🔮', angle: 'Cette pyramide sur ma table de chevet' },
-  'famille': { produit: 'Mon rituel petit bonheur', emoji: '🕯️', angle: 'Quand les enfants sont enfin couchés...' },
-  'solitude': { produit: 'Le masque qui efface le monde', emoji: '🌙', angle: 'Le rituel qui me reconnecte à moi' },
-  'isolement': { produit: 'Mon ancre de calme', emoji: '🔮', angle: 'Ce que je fais quand je me sens seule' }
-};
-
+// === LABELS ===
 const EMOTION_EMOJI = {
-  'anxiete': '😰', 'fatigue': '😴', 'espoir': '✨', 'tristesse': '🥺',
-  'colere': '😤', 'serenite': '🌿', 'peur': '😨', 'solitude': '🌙', 'stress': '😖'
+  'tristesse': '🥺', 'solitude': '🌙', 'colere': '😤', 'espoir': '✨',
+  'peur': '😨', 'fatigue': '😴', 'joie': '🌸', 'nostalgie': '🍂',
+  'excitation': '🔥', 'vide': '🤍', 'anxiete': '😰', 'stress': '😖', 'serenite': '🌿'
 };
 
-const BESOIN_LABEL = {
-  'soutien_moral': '🫂 Soutien moral',
-  'sommeil': '🌙 Sommeil',
-  'securite_famille': '🏠 Sécurité famille',
-  'isolement': '💭 Isolement',
-  'materiel_concret': '🎁 Objets concrets'
+const MOOD_LABEL = {
+  'evasion': '🌌 Évasion',
+  'introspection': '🪞 Introspection',
+  'spice': '🔥 Spice',
+  'guerison': '🌿 Guérison',
+  'aventure': '⚔️ Aventure',
+  'comfort_read': '☕ Comfort read',
+  'reflexion': '💭 Réflexion'
+};
+
+const GENRE_LABEL = {
+  'dark_romance': '🖤 Dark romance',
+  'romance': '💗 Romance',
+  'romantasy': '🐉 Romantasy',
+  'fantasy': '⚔️ Fantasy',
+  'thriller': '🔪 Thriller',
+  'literary': '📚 Littéraire',
+  'memoir': '📖 Mémoire',
+  'self_help': '🌱 Self-help',
+  'autre': '✨ Autre'
 };
 
 const PROFIL_LABEL = {
-  'maman_solo': '👩 Maman solo',
-  'maman_couple': '👨‍👩‍👧 Maman en couple',
-  'femme_active': '💼 Femme active',
-  'senior': '🌟 Senior',
-  'jeune_femme': '🌸 Jeune femme'
+  'lectrice_intensive': '📚 Lectrice intensive',
+  'lectrice_occasionnelle': '🌸 Lectrice occasionnelle',
+  'nouvelle_lectrice': '🌱 Nouvelle lectrice',
+  'reprise_lecture': '🔄 Reprise de lecture'
 };
 
-let agentActif = true;
-let totalVentes = 0;
+const SPEC_LABEL = {
+  'haute': { txt: 'très spécifique', cls: 'request-spec-high' },
+  'moyenne': { txt: 'moyennement spécifique', cls: 'request-spec-medium' },
+  'basse': { txt: 'vague', cls: 'request-spec-low' }
+};
+
+// Mapping genre → angle TikTok pour les idées contextuelles
+const GENRE_TO_IDEA = {
+  'dark_romance': { angle: 'POV : tu dis à Sophie ce que tu cherches, elle te tend un héros moralement gris', book: 'Twisted Love' },
+  'romance': { angle: 'Sophie te trouve LE livre qui colle à ton humeur exacte', book: 'Beach Read' },
+  'romantasy': { angle: 'Quand Sophie t\'envoie à Velaris pour la première fois', book: 'A Court of Mist and Fury' },
+  'thriller': { angle: 'Le livre que Sophie m\'a envoyé et que j\'ai lu en une nuit', book: 'Verity' },
+  'memoir': { angle: 'Sophie raconte un peu de son histoire à travers ce livre', book: 'mybook' },
+  'self_help': { angle: 'Le livre que Sophie envoie quand on touche le fond', book: 'Untamed' }
+};
+
+const MOOD_TO_IDEA = {
+  'spice': 'Les reco spice 5/5 que Sophie murmure quand personne d\'autre n\'écoute',
+  'evasion': 'POV : tu rentres crevée, tu dis à Sophie "fais-moi partir d\'ici"',
+  'guerison': 'Quand un livre te répare. Sophie sait lesquels.',
+  'comfort_read': 'Le livre Sophie pour les soirs où tu veux juste te blottir',
+  'introspection': 'Le livre qui m\'a fait comprendre ce que je portais'
+};
+
 let alertesCount = 0;
 
 // === HORLOGE ===
@@ -542,7 +602,6 @@ async function fetchRapport() {
   const btn = document.getElementById('btnRefreshRapport');
   btn.disabled = true;
   body.innerHTML = '<span class="rapport-loading">Sophie écrit son rapport...</span>';
-  
   try {
     const res = await fetch('/api/sophie/rapport');
     const data = await res.json();
@@ -556,7 +615,6 @@ async function fetchRapport() {
     btn.disabled = false;
   }
 }
-
 document.getElementById('btnRefreshRapport').addEventListener('click', fetchRapport);
 
 // === INSIGHTS ===
@@ -565,16 +623,14 @@ async function fetchInsights() {
     const res = await fetch('/api/sophie/insights');
     const data = await res.json();
     const today = data.aujourdhui || {};
-    
-    // Conversations count
     document.getElementById('sConversations').textContent = today.conversations || 0;
-    
+
     // Émotions
     const emotionsList = document.getElementById('emotionsList');
     const emotions = today.emotions || {};
     const emotionsEntries = Object.entries(emotions).sort((a,b) => b[1] - a[1]);
     if (emotionsEntries.length === 0) {
-      emotionsList.innerHTML = '<div class="empty-state">Sophie attend tes premières utilisatrices 🤍</div>';
+      emotionsList.innerHTML = '<div class="empty-state">Sophie attend ses premières lectrices 🤍</div>';
     } else {
       const max = Math.max(...emotionsEntries.map(e => e[1]));
       emotionsList.innerHTML = emotionsEntries.map(([name, count]) => {
@@ -587,21 +643,15 @@ async function fetchInsights() {
         </div>`;
       }).join('');
     }
-    
-    // Besoins tags
-    const besoinsTags = document.getElementById('besoinsTags');
-    const besoins = today.besoins || {};
-    const besoinsEntries = Object.entries(besoins).sort((a,b) => b[1] - a[1]);
-    if (besoinsEntries.length === 0) {
-      besoinsTags.innerHTML = '<div class="empty-state" style="padding:0.5rem">—</div>';
-    } else {
-      besoinsTags.innerHTML = besoinsEntries.map(([name, count]) => {
-        const label = BESOIN_LABEL[name] || name;
-        return `<span class="tag">${label}<span class="count">${count}</span></span>`;
-      }).join('');
-    }
-    
-    // Sujets tags
+
+    // Moods
+    renderTags('moodsTags', today.moods || {}, MOOD_LABEL);
+    // Genres
+    renderTags('genresTags', today.genres_recherches || {}, GENRE_LABEL);
+    // Profils
+    renderTags('profilsTags', today.profils || {}, PROFIL_LABEL);
+
+    // Sujets récurrents
     const sujetsTags = document.getElementById('sujetsTags');
     const sujets = today.sujetsRecurrents || [];
     if (sujets.length === 0) {
@@ -609,80 +659,140 @@ async function fetchInsights() {
     } else {
       sujetsTags.innerHTML = sujets.slice(0, 10).map(s => `<span class="tag">#${s.replace(/_/g, ' ')}</span>`).join('');
     }
-    
-    // Profils tags
-    const profilsTags = document.getElementById('profilsTags');
-    const profils = today.profils || {};
-    const profilsEntries = Object.entries(profils).sort((a,b) => b[1] - a[1]);
-    if (profilsEntries.length === 0) {
-      profilsTags.innerHTML = '<div class="empty-state" style="padding:0.5rem">—</div>';
-    } else {
-      profilsTags.innerHTML = profilsEntries.map(([name, count]) => {
-        const label = PROFIL_LABEL[name] || name;
-        return `<span class="tag">${label}<span class="count">${count}</span></span>`;
-      }).join('');
-    }
-    
-    // Idées de contenu (basées sur sujets)
-    updateContentIdeas(sujets);
-    
-    // Alertes détresse (estimé via logs)
-    // Pas directement dispo, on regarde les logs pour "détresse"
-    
-  } catch(e) {
-    // Silently fail, pas grave
+
+    // Idées contextuelles
+    updateContentIdeas(today.genres_recherches || {}, today.moods || {}, sujets);
+  } catch(e) { /* silent */ }
+}
+
+function renderTags(elementId, dataObj, labelMap) {
+  const el = document.getElementById(elementId);
+  const entries = Object.entries(dataObj).sort((a,b) => b[1] - a[1]);
+  if (entries.length === 0) {
+    el.innerHTML = '<div class="empty-state" style="padding:0.5rem">—</div>';
+  } else {
+    el.innerHTML = entries.map(([name, count]) => {
+      const label = labelMap[name] || name;
+      return `<span class="tag">${label}<span class="count">${count}</span></span>`;
+    }).join('');
   }
 }
 
-function updateContentIdeas(sujets) {
+function updateContentIdeas(genres, moods, sujets) {
   const container = document.getElementById('ideasContainer');
-  if (!sujets || sujets.length === 0) {
+  const ideas = [];
+
+  // Idée basée sur genre dominant
+  const topGenre = Object.entries(genres).sort((a,b) => b[1] - a[1])[0];
+  if (topGenre && GENRE_TO_IDEA[topGenre[0]]) {
+    const g = GENRE_TO_IDEA[topGenre[0]];
+    ideas.push({
+      subject: `Tes lectrices cherchent : ${GENRE_LABEL[topGenre[0]] || topGenre[0]}`,
+      text: `${g.angle} → <strong>${g.book}</strong>`,
+      angle: g.angle
+    });
+  }
+
+  // Idée basée sur mood dominant
+  const topMood = Object.entries(moods).sort((a,b) => b[1] - a[1])[0];
+  if (topMood && MOOD_TO_IDEA[topMood[0]]) {
+    ideas.push({
+      subject: `Mood dominant : ${MOOD_LABEL[topMood[0]] || topMood[0]}`,
+      text: MOOD_TO_IDEA[topMood[0]],
+      angle: MOOD_TO_IDEA[topMood[0]]
+    });
+  }
+
+  // Idée basée sur sujets récurrents
+  if (sujets.length > 0) {
+    ideas.push({
+      subject: `Sujets du jour : #${sujets.slice(0, 3).join(' #')}`,
+      text: `Parle des thèmes qui reviennent. Les lectrices se reconnaîtront.`,
+      angle: `A whispered TikTok about ${sujets[0]} and the book Sophie sends for it`
+    });
+  }
+
+  if (ideas.length === 0) {
     container.innerHTML = `
       <div class="idea-box">
         <div class="idea-subject">Une idée pour démarrer</div>
-        <div class="idea-text">Fais une vidéo "POV : tu rentres crevée du boulot" → finis par <strong>Le masque qui efface le monde</strong> 🌙</div>
-        <button class="idea-cta" onclick="document.getElementById('produitSelect').value='Le masque qui efface le monde'; generateVideo('tiktok');">Générer le script →</button>
+        <div class="idea-text">POV : tu dis à Sophie ce que tu ressens, elle te trouve LE livre. Termine par <strong>Twisted Love</strong> 🖤</div>
+        <button class="idea-cta" onclick="document.getElementById('themeInput').value='POV: a reader tells Sophie she just got dumped, Sophie finds her Twisted Love'; generateVideo('tiktok');">Générer le script →</button>
       </div>
       <div class="idea-box">
-        <div class="idea-subject">Idée du soir</div>
-        <div class="idea-text">Montre ton rituel du dimanche soir → <strong>Mon rituel petit bonheur</strong> 🕯️</div>
-        <button class="idea-cta" onclick="document.getElementById('produitSelect').value='Mon rituel petit bonheur'; generateVideo('tiktok');">Générer le script →</button>
+        <div class="idea-subject">Idée slow burn</div>
+        <div class="idea-text">A whispered review of a book that wrecked you in the best way → <strong>Beach Read</strong></div>
+        <button class="idea-cta" onclick="document.getElementById('themeInput').value='A whispered review of a slow-burn romance that wrecked me'; generateVideo('tiktok');">Générer le script →</button>
       </div>
     `;
     return;
   }
-  
-  // Match sujets to products
-  const matchedIdeas = [];
-  const usedProducts = new Set();
-  
-  for (const sujet of sujets) {
-    if (matchedIdeas.length >= 3) break;
-    const sujetLower = sujet.toLowerCase();
-    for (const [keyword, match] of Object.entries(SUJET_TO_PRODUIT)) {
-      if (sujetLower.includes(keyword) && !usedProducts.has(match.produit)) {
-        matchedIdeas.push({ sujet, ...match });
-        usedProducts.add(match.produit);
-        break;
-      }
-    }
-  }
-  
-  if (matchedIdeas.length === 0) {
-    container.innerHTML = `<div class="idea-box">
-      <div class="idea-subject">À explorer</div>
-      <div class="idea-text">Tes sujets du jour : <strong>${sujets.slice(0,3).join(', ')}</strong>. Parle-en dans tes vidéos !</div>
-    </div>`;
-    return;
-  }
-  
-  container.innerHTML = matchedIdeas.map(idea => `
+
+  container.innerHTML = ideas.map(idea => `
     <div class="idea-box fade-in">
-      <div class="idea-subject">Sujet du jour : #${idea.sujet.replace(/_/g, ' ')}</div>
-      <div class="idea-text">${idea.angle} → <strong>${idea.produit}</strong> ${idea.emoji}</div>
-      <button class="idea-cta" onclick="document.getElementById('produitSelect').value='${idea.produit}'; generateVideo('tiktok');">Générer le script →</button>
+      <div class="idea-subject">${idea.subject}</div>
+      <div class="idea-text">${idea.text}</div>
+      <button class="idea-cta" onclick="document.getElementById('themeInput').value='${idea.angle.replace(/'/g, '\\\'')}'; generateVideo('tiktok');">Générer le script →</button>
     </div>
   `).join('');
+}
+
+// === DEMANDES DE LIVRES (la pépite éditoriale) ===
+async function fetchBookRequests() {
+  try {
+    const res = await fetch('/api/sophie/book-requests?auth=CEO_FOLLOW');
+    if (!res.ok) return;
+    const data = await res.json();
+
+    document.getElementById('sBookReq').textContent = data.total || 0;
+
+    // Summary par genre
+    const summary = document.getElementById('requestsSummary');
+    const total = data.total || 0;
+    const parGenre = data.par_genre || {};
+    const genreEntries = Object.entries(parGenre).sort((a,b) => b[1].length - a[1].length);
+    let summaryHTML = `<span class="summary-pill"><strong>${total}</strong> demandes captées</span>`;
+    genreEntries.slice(0, 5).forEach(([genre, items]) => {
+      const label = GENRE_LABEL[genre] || genre;
+      summaryHTML += `<span class="summary-pill">${label} · <strong>${items.length}</strong></span>`;
+    });
+    summary.innerHTML = summaryHTML;
+
+    // Liste détaillée
+    const list = document.getElementById('requestsList');
+    const recentes = data.recentes || [];
+    if (recentes.length === 0) {
+      list.innerHTML = '<div class="empty-state">Sophie n\'a encore capté aucune demande de livre. Quand une lectrice dira "j\'aimerais un livre sur…", ça apparaîtra ici. 🤍</div>';
+    } else {
+      list.innerHTML = recentes.map(r => {
+        const spec = SPEC_LABEL[r.specificite] || SPEC_LABEL.moyenne;
+        const genreLabel = GENRE_LABEL[r.genre] || r.genre;
+        const date = new Date(r.date).toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+        return `<div class="request-row fade-in">
+          <div class="request-theme">« ${r.theme} »</div>
+          <div class="request-meta">
+            <span class="request-genre">${genreLabel}</span>
+            <span class="${spec.cls}">${spec.txt}</span>
+            <span>· ${date}</span>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  } catch(e) { /* silent */ }
+}
+
+// === WAITLIST SOPHIE+ ===
+async function fetchWaitlist() {
+  try {
+    const res = await fetch('/api/sophie-plus/waitlist?auth=CEO_FOLLOW');
+    if (!res.ok) return;
+    const data = await res.json();
+    const total = data.total || 0;
+    const objectif = 500;
+    document.getElementById('waitlistCount').textContent = total;
+    document.getElementById('waitlistObjVal').textContent = `${total} / ${objectif}`;
+    document.getElementById('waitlistBar').style.width = Math.min(100, (total / objectif) * 100) + '%';
+  } catch(e) { /* silent */ }
 }
 
 // === STATS ===
@@ -691,112 +801,66 @@ async function fetchStats() {
     const res = await fetch('/api/stats');
     const data = await res.json();
     document.getElementById('sVisiteuses').textContent = data.visiteursAujourdhui || 0;
-    
-    // Ventes estimées
-    totalVentes = data.revenusEstimes || 0;
-    document.getElementById('sVentes').textContent = totalVentes + '€';
-    
-    // Agent state
-    agentActif = data.agentActif !== undefined ? data.agentActif : agentActif;
-    document.getElementById('agentTxt').textContent = agentActif ? 'Sophie en ligne' : 'Sophie en pause';
-    document.getElementById('statusDot').style.background = agentActif ? 'var(--vert-doux)' : 'var(--gris)';
-    document.getElementById('btnToggleAgent').textContent = agentActif ? '⏸ Pause' : '▶ Activer';
-    
-    updateRevenus();
-  } catch(e) {}
+    document.getElementById('sLivres').textContent = data.livresRecommandes || 0;
+  } catch(e) { /* silent */ }
 }
 
+// === LOGS ===
 async function fetchLogs() {
   try {
     const res = await fetch('/api/logs');
     const logs = await res.json();
     const box = document.getElementById('logsBox');
-    const existing = Array.from(box.children).map(c => c.textContent);
-    let newCount = 0;
+    box.innerHTML = '';
+
     let alertes = 0;
     logs.forEach(l => {
-      if (!existing.some(e => e.includes(l.substring(15, 50)))) {
-        const line = document.createElement('div');
-        const isWarn = l.includes('⚠️') || l.toLowerCase().includes('détresse');
-        line.className = `log-line ${isWarn ? 'warn' : 'ok'}`;
-        line.textContent = l;
-        box.prepend(line);
-        newCount++;
-        if (isWarn) alertes++;
-      }
+      const line = document.createElement('div');
+      let cls = 'ok';
+      if (l.includes('⚠️') || l.toLowerCase().includes('orient')) { cls = 'warn'; alertes++; }
+      else if (l.includes('📚')) cls = 'book';
+      else if (l.includes('🤍 Sophie+')) cls = 'ok';
+      line.className = `log-line ${cls}`;
+      line.textContent = l;
+      box.appendChild(line);
     });
-    if (box.children.length > 40) {
-      while (box.children.length > 40) box.lastChild.remove();
+
+    if (logs.length === 0) {
+      box.innerHTML = '<div class="log-line"><span class="time">[—]</span>Pas encore d\'activité aujourd\'hui.</div>';
     }
-    
-    // Update alertes count
-    alertesCount = logs.filter(l => l.includes('⚠️') || l.toLowerCase().includes('détresse') || l.toLowerCase().includes('orient')).length;
+
+    alertesCount = alertes;
     document.getElementById('sAlertes').textContent = alertesCount;
-  } catch(e) {}
-}
-
-// === REVENUS ===
-function updateRevenus() {
-  const obj = 500;
-  document.getElementById('rShopify').textContent = totalVentes + '€';
-  document.getElementById('barShopify').style.width = Math.min(100, (totalVentes / obj) * 100) + '%';
-  
-  // Taux conversion estimé (très simplifié)
-  const visiteurs = parseInt(document.getElementById('sVisiteuses').textContent) || 1;
-  const taux = visiteurs > 0 ? ((totalVentes / 20) / visiteurs * 100).toFixed(1) : 0;
-  document.getElementById('rTaux').textContent = taux + '%';
-  document.getElementById('barTaux').style.width = Math.min(100, taux * 5) + '%';
-  
-  // Objectif mensuel
-  const pct = Math.round((totalVentes / obj) * 100);
-  document.getElementById('objPct').textContent = pct + '%';
-  document.getElementById('objDetail').textContent = totalVentes + '€ / ' + obj + '€';
-  document.getElementById('barObj').style.width = Math.min(100, pct) + '%';
-}
-
-// === AGENT CONTROLS ===
-async function toggleAgent() {
-  try {
-    const res = await fetch('/api/agent/toggle', { method: 'POST' });
-    const data = await res.json();
-    agentActif = data.actif;
-    addLog(agentActif ? 'Simulateur activé' : 'Simulateur en pause', agentActif ? 'ok' : 'warn');
-    fetchStats();
-  } catch(e) { addLog('Erreur toggle: ' + e.message, 'err'); }
-}
-
-async function forcerScan() {
-  addLog('Scan forcé...', 'warn');
-  try {
-    await fetch('/api/agent/scan', { method: 'POST' });
-    addLog('Scan terminé', 'ok');
-    fetchLogs();
-  } catch(e) { addLog('Erreur scan', 'err'); }
+  } catch(e) { /* silent */ }
 }
 
 // === VIDEO GENERATOR ===
 async function generateVideo(plateforme) {
-  const produit = document.getElementById('produitSelect').value;
+  const theme = document.getElementById('themeInput').value.trim() || document.getElementById('themeSelect').value;
+  if (!theme) {
+    document.getElementById('videoResult').innerHTML = '<div class="video-empty" style="color:var(--rouge-doux)">Choisis un angle ou écris le tien d\'abord 🤍</div>';
+    return;
+  }
   const result = document.getElementById('videoResult');
   result.innerHTML = '<div class="video-empty" style="animation:pulse 1s infinite">Sophie écrit ton script...</div>';
-  
+
   try {
     const res = await fetch('/api/video/generer', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ produit, plateforme })
+      body: JSON.stringify({ theme, plateforme })
     });
     const data = await res.json();
     result.innerHTML = `
-      <div class="video-accroche">${plateforme === 'tiktok' ? '▶' : '◉'} ${data.accroche || produit}</div>
+      <div class="video-accroche">${plateforme === 'tiktok' ? '▶' : '◉'} ${data.accroche || theme}</div>
       <div class="video-script">${data.script || ''}</div>
       <div class="video-tags">${(data.hashtags || []).map(h => `<span class="video-tag">${h}</span>`).join('')}</div>
-      <div class="video-duree">⏱ Durée cible : ${data.duree || '30-60s'}</div>
+      <div class="video-duree">⏱ Durée cible : ${data.duree || '20-30s'}</div>
       <button class="btn primary" style="margin-top:0.8rem;font-size:0.65rem;" onclick="copyScript()">📋 Copier le script</button>
     `;
-    addLog(`Script ${plateforme} : ${produit}`, 'ok');
+    addLog(`Script ${plateforme} BookTok généré`, 'ok');
   } catch(e) {
-    result.innerHTML = '<div class="video-empty" style="color:var(--rouge-doux)">Erreur — vérifie la clé API Anthropic</div>';
+    result.innerHTML = '<div class="video-empty" style="color:var(--rouge-doux)">Erreur — vérifie les clés API IA sur Render</div>';
   }
 }
 
@@ -816,11 +880,15 @@ fetchRapport();
 fetchInsights();
 fetchStats();
 fetchLogs();
+fetchBookRequests();
+fetchWaitlist();
 
 // === POLLING ===
 setInterval(fetchInsights, 30000);
 setInterval(fetchStats, 15000);
 setInterval(fetchLogs, 25000);
+setInterval(fetchBookRequests, 40000);
+setInterval(fetchWaitlist, 60000);
 </script>
 </body>
 </html>
