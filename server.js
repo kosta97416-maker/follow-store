@@ -76,6 +76,10 @@ const RESEND_FROM = process.env.RESEND_FROM || "Sophie Lumière <sophie@followli
 const RESEND_AUDIENCE_ID = process.env.RESEND_AUDIENCE_ID || "";
 // URL publique du site (pour les liens dans l'email de bienvenue)
 const SITE_URL = process.env.SITE_URL || "https://followtrend.shop";
+// 🆕 Adresse perso où recevoir une notif à CHAQUE nouvelle inscrite au Cercle.
+// = liste PERMANENTE dans ta boîte Gmail (jamais perdue, zéro audience à gérer).
+// Tu peux la changer en ajoutant la variable d'env NOTIF_EMAIL sur Render.
+const NOTIF_EMAIL = process.env.NOTIF_EMAIL || "karma97416@gmail.com";
 
 // ============================================================
 // ÉTAT GLOBAL
@@ -1264,6 +1268,37 @@ async function envoyerEmailBienvenue(email, lang) {
     }
 }
 
+// 🆕 Notif perso : un petit mail dans TA boîte à chaque nouvelle inscrite.
+// → ta liste est gravée pour toujours dans ton Gmail (cherche "Nouvelle inscrite Cercle"
+//   pour la retrouver entièrement), même si Render redéploie. Zéro audience nécessaire.
+async function notifierNouvelInscrit(email, lang) {
+    if (!RESEND_API_KEY || !NOTIF_EMAIL) return;
+    try {
+        const r = await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${RESEND_API_KEY}` },
+            body: JSON.stringify({
+                from: RESEND_FROM,
+                to: NOTIF_EMAIL,
+                subject: `🤍 Nouvelle inscrite Cercle : ${email}`,
+                html: `<div style="font-family:Georgia,serif;color:#1a1410">
+<b>Nouvelle inscrite au Cercle de Sophie Lumière 🤍</b><br><br>
+Email : <b>${email}</b><br>
+Langue : ${lang === 'fr' ? 'FR 🇫🇷' : 'EN 🇬🇧'}<br>
+Date : ${new Date().toLocaleString('fr-FR')}<br><br>
+<span style="color:#847b6f;font-size:13px">Conserve ce mail : c'est ta liste permanente. Filtre Gmail "Nouvelle inscrite Cercle" pour tout retrouver.</span>
+</div>`
+            })
+        });
+        if (!r.ok) {
+            const t = await r.text();
+            console.error("Resend notif KO:", r.status, t.substring(0, 200));
+        }
+    } catch (e) {
+        console.error("Resend notif (réseau):", e.message);
+    }
+}
+
 // ============================================================
 // ROUTE PRINCIPALE — /api/sophie
 // ============================================================
@@ -1444,6 +1479,7 @@ app.post('/api/sophie-plus/waitlist', (req, res) => {
     // Persistance (Resend Audience) + email de bienvenue — sans bloquer la réponse
     ajouterContactResend(email);
     envoyerEmailBienvenue(email, langue);
+    notifierNouvelInscrit(email, langue); // 🆕 copie permanente dans ta boîte Gmail
 
     res.json({ ok: true, total: sophiePlusWaitlist.length });
 });
@@ -1548,5 +1584,6 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`🤍 Cercle (inscription email) : opérationnel`);
     console.log(`💌 Resend (mail de bienvenue) : ${RESEND_API_KEY ? '✅ configuré (from: ' + RESEND_FROM + ')' : '⚠️ RESEND_API_KEY absent — pas de mail de bienvenue'}`);
     console.log(`   • Audience persistante : ${RESEND_AUDIENCE_ID ? '✅ ' + RESEND_AUDIENCE_ID : '⚠️ RESEND_AUDIENCE_ID absent — contacts en MÉMOIRE seulement (perdus au redéploiement)'}`);
+    console.log(`   • Notif perso (liste permanente Gmail) : ${(RESEND_API_KEY && NOTIF_EMAIL) ? '✅ ' + NOTIF_EMAIL : '⚠️ désactivée'}`);
     console.log(`🆘 Crisis : 3114 (FR) / 988 (US)`);
 });
