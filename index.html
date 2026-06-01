@@ -209,7 +209,7 @@ section { padding:7rem 6vw; max-width:1400px; margin:0 auto; }
 .permission-title strong { color:var(--or); font-weight:400; font-style:italic; }
 .permission-text { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.3rem; color:var(--creme-doux); line-height:1.6; }
 
-/* === SOPHIE+ === */
+/* === SOPHIE+ / LE CERCLE === */
 .sophie-plus { padding:7rem 6vw; background:linear-gradient(180deg, var(--noir) 0%, var(--terre) 50%, var(--noir-doux) 100%); position:relative; overflow:hidden; }
 .sophie-plus::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at center top, rgba(201,168,124,0.15) 0%, transparent 60%); pointer-events:none; }
 .sophie-plus-content { max-width:920px; margin:0 auto; text-align:center; position:relative; z-index:1; }
@@ -392,7 +392,7 @@ footer { background:var(--noir); padding:3rem 6vw 2rem; text-align:center; borde
       <li><a href="#" onclick="openChat();return false;" data-fr="Sophie" data-en="Sophie">Sophie</a></li>
       <li><a href="#bookshelf" data-fr="Bibliothèque" data-en="Bookshelf">Bookshelf</a></li>
       <li><a href="#temoignages" data-fr="Lectrices" data-en="Readers">Readers</a></li>
-      <li><a href="#sophie-plus" style="color:var(--or-clair)">Sophie+</a></li>
+      <li><a href="#sophie-plus" style="color:var(--or-clair)" data-fr="Le Cercle" data-en="The Circle">The Circle</a></li>
       <li>
         <button class="lang-toggle" id="langToggle" onclick="toggleLang()">FR / <strong>EN</strong></button>
       </li>
@@ -648,67 +648,45 @@ footer { background:var(--noir); padding:3rem 6vw 2rem; text-align:center; borde
 
 <section class="sophie-plus" id="sophie-plus">
   <div class="sophie-plus-content reveal">
-    <div class="badge-soon" data-fr="Bientôt · Liste d'attente ouverte" data-en="Coming soon · Waitlist open">Coming soon · Waitlist open</div>
-    <div class="section-label" data-fr="Sophie+ · Pour qu'on continue" data-en="Sophie+ · So we keep going">Sophie+ · So we keep going</div>
+    <div class="badge-soon" data-fr="Gratuit · Le cercle de Sophie Lumière" data-en="Free · Sophie Lumière's circle">Free · Sophie Lumière's circle</div>
+    <div class="section-label" data-fr="Le Cercle des lectrices" data-en="The Reader Circle">The Reader Circle</div>
     <h2 class="section-title">
-      <span class="lang-en">For the readers who want her <em>every day.</em></span>
-      <span class="lang-fr" hidden>Pour les lectrices qui la veulent <em>tous les jours.</em></span>
+      <span class="lang-en">Want <em>more books</em> from Sophie? Join her circle.</span>
+      <span class="lang-fr" hidden>Tu veux <em>plus de livres</em> de Sophie ? Rejoins son cercle.</span>
     </h2>
     <p class="sophie-plus-intro">
-      <span class="lang-en">You want her to <strong>really remember</strong> you? You want a personal reading letter once a month? Sophie+ is being built — just for that.</span>
-      <span class="lang-fr" hidden>Tu veux qu'elle se <strong>souvienne vraiment</strong> de toi ? Tu veux une lettre de lecture personnelle une fois par mois ? Sophie+ est en préparation — pour ça.</span>
+      <span class="lang-en">Leave your email and you'll be the <strong>first to know</strong> when Sophie releases a new book — plus a monthly reading letter and recommendations she picks just for the circle. Free, and you can leave anytime.</span>
+      <span class="lang-fr" hidden>Laisse ton email et tu seras la <strong>première prévenue</strong> quand Sophie sort un nouveau livre — avec une lettre de lecture chaque mois et des recos qu'elle choisit rien que pour le cercle. Gratuit, et tu pars quand tu veux.</span>
     </p>
     <div class="features-grid">
       <div class="feature-item">
-        <span class="feature-emoji">🤍</span>
-        <div class="feature-text" data-fr="Conversations illimitées" data-en="Unlimited conversations">Unlimited conversations</div>
-      </div>
-      <div class="feature-item">
-        <span class="feature-emoji">📝</span>
-        <div class="feature-text" data-fr="Elle se souvient de toi" data-en="She remembers you">She remembers you</div>
+        <span class="feature-emoji">📖</span>
+        <div class="feature-text" data-fr="Ses nouveaux livres en avant-première" data-en="Her new books, first">Her new books, first</div>
       </div>
       <div class="feature-item">
         <span class="feature-emoji">✉️</span>
-        <div class="feature-text" data-fr="Lettre de lecture mensuelle" data-en="Monthly reading letter">Monthly reading letter</div>
+        <div class="feature-text" data-fr="Une lettre de lecture chaque mois" data-en="A monthly reading letter">A monthly reading letter</div>
       </div>
       <div class="feature-item">
-        <span class="feature-emoji">📖</span>
-        <div class="feature-text" data-fr="Accès anticipé aux livres Sophie Lumière" data-en="Early access to Sophie Lumière books">Early access to Sophie Lumière books</div>
+        <span class="feature-emoji">🤍</span>
+        <div class="feature-text" data-fr="Des recos rien que pour le cercle" data-en="Recommendations just for the circle">Recommendations just for the circle</div>
       </div>
-    </div>
-    <div class="pricing-cards">
-      <div class="price-card">
-        <div class="price-label" data-fr="Mensuel" data-en="Monthly">Monthly</div>
-        <div class="price-amount">
-          <span class="lang-en">$4.99<span>/mo</span></span>
-          <span class="lang-fr" hidden>4,99€<span>/mois</span></span>
-        </div>
-        <div class="price-detail" data-fr="Annule quand tu veux" data-en="Cancel anytime">Cancel anytime</div>
-      </div>
-      <div class="price-card featured">
-        <div class="price-badge">-30%</div>
-        <div class="price-label" data-fr="Annuel · le malin" data-en="Yearly · best deal">Yearly · best deal</div>
-        <div class="price-amount">
-          <span class="lang-en">$42<span>/yr</span></span>
-          <span class="lang-fr" hidden>42€<span>/an</span></span>
-        </div>
-        <div class="price-detail">
-          <span class="lang-en">$3.50/mo</span>
-          <span class="lang-fr" hidden>soit 3,50€/mois</span>
-        </div>
+      <div class="feature-item">
+        <span class="feature-emoji">🎁</span>
+        <div class="feature-text" data-fr="Des bonus exclusifs de lectrice" data-en="Reader-only bonuses">Reader-only bonuses</div>
       </div>
     </div>
     <form class="waitlist-form" id="waitlistForm" onsubmit="submitWaitlist(event)">
       <input type="email" id="waitlistEmail" placeholder="Your email" required>
-      <button type="submit" id="waitlistBtn" data-fr="Réserve ma place 🤍" data-en="Save my spot 🤍">Save my spot 🤍</button>
+      <button type="submit" id="waitlistBtn" data-fr="Rejoins le cercle 🤍" data-en="Join the circle 🤍">Join the circle 🤍</button>
     </form>
     <div class="waitlist-success">
-      <span class="lang-en">You're on the list 🤍 I'll write you when I open.</span>
-      <span class="lang-fr" hidden>Tu es sur la liste 🤍 Je t'écris à l'ouverture.</span>
+      <span class="lang-en">You're in the circle 🤍 Watch your inbox — Sophie writes to you soon.</span>
+      <span class="lang-fr" hidden>Tu es dans le cercle 🤍 Surveille ta boîte mail — Sophie t'écrit très vite.</span>
     </div>
     <p class="waitlist-reassure">
-      <span class="lang-en">No spam. Just me, when I open.</span>
-      <span class="lang-fr" hidden>Pas de spam. Juste moi, à l'ouverture.</span>
+      <span class="lang-en">Free. No spam. Leave anytime.</span>
+      <span class="lang-fr" hidden>Gratuit. Pas de spam. Tu pars quand tu veux.</span>
     </p>
   </div>
 </section>
@@ -720,7 +698,7 @@ footer { background:var(--noir); padding:3rem 6vw 2rem; text-align:center; borde
   </h2>
   <div class="hero-cta">
     <button class="btn-primary" onclick="openChat()" data-fr="Parler à Sophie" data-en="Talk to Sophie now">Talk to Sophie now</button>
-    <a href="#sophie-plus" class="btn-secondary" data-fr="Rejoindre Sophie+" data-en="Join Sophie+">Join Sophie+</a>
+    <a href="#sophie-plus" class="btn-secondary" data-fr="Rejoindre le cercle" data-en="Join the circle">Join the circle</a>
   </div>
 </section>
 
@@ -732,7 +710,7 @@ footer { background:var(--noir); padding:3rem 6vw 2rem; text-align:center; borde
     <span class="lang-fr" hidden>Une compagne de lecture pour les femmes qui veulent plus qu'un algorithme.<br>Inspiré d'une histoire vraie. Fait avec 🤍 depuis La Réunion.</span>
   </p>
   <div class="footer-links">
-    <a href="#sophie-plus">Sophie+</a>
+    <a href="#sophie-plus" data-fr="Le Cercle" data-en="The Circle">The Circle</a>
     <a href="#" onclick="openChat();return false;" data-fr="Parler à Sophie" data-en="Talk to Sophie">Talk to Sophie</a>
     <a href="#bookshelf" data-fr="Bibliothèque" data-en="Bookshelf">Bookshelf</a>
     <a href="https://6bbgv0-f4.myshopify.com" target="_blank" rel="noopener" data-fr="Boutique" data-en="Shop">Shop</a>
@@ -1121,7 +1099,7 @@ function sendQuick(text) {
 }
 
 // ============================================================
-// WAITLIST
+// LE CERCLE — inscription email (newsletter lectrices)
 // ============================================================
 async function submitWaitlist(e) {
   e.preventDefault();
@@ -1129,11 +1107,11 @@ async function submitWaitlist(e) {
   const btn = document.getElementById('waitlistBtn');
   const form = document.getElementById('waitlistForm');
   btn.disabled = true;
-  btn.textContent = currentLang === 'fr' ? 'Sophie te place…' : 'Sophie is saving you…';
+  btn.textContent = currentLang === 'fr' ? 'Sophie t\'ajoute…' : 'Adding you…';
   try {
     const res = await fetch('/api/sophie-plus/waitlist', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ email })
+      body:JSON.stringify({ email, lang: currentLang, source: 'cercle' })
     });
     if (res.ok) {
       form.classList.add('success');
